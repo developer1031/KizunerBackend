@@ -1,0 +1,50 @@
+version: '3.1'
+
+services:
+
+  app:
+    platform: linux/amd64
+    build:
+      args:
+        user: sammy
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: kizuner-app
+    container_name: kizuner-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/php/php.ini:/usr/local/etc/php/php.ini
+
+  redis:
+    image: redis:latest
+    container_name: kizuner-redis
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+
+  mysql:
+    image: mysql:latest
+    container_name: kizuner-mysql
+    profiles:
+      - local
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:3306
+    volumes:
+      - ./docker-compose/data/mysql:/var/lib/mysql
+
+  nginx:
+    image: nginx:latest
+    container_name: kizuner-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/

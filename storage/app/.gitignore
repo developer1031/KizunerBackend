@@ -1,0 +1,4 @@
+*
+!public/
+!.gitignore
+!tmp-video-thumb/.gitkeep

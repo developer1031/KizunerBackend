@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../Framework/etc/def/routes.xsd">
+    <route namespace="Modules\Wallet\Http\Controllers"
+           path="routes/api.php"
+           prefix="api/wallets"
+           middleware="api, auth:api"
+    />
+    <route namespace="Modules\Wallet\Http\Controllers"
+           path="routes/api-not-auth.php"
+           prefix="api/wallets"
+           middleware="api"
+    />
+</routes>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../Framework/etc/def/services.xsd">
+    <singleton alias="Modules\User\Contracts\UserRepositoryInterface"
+          concreate="Modules\User\Repositories\UserRepository"/>
+
+    <singleton alias="Modules\User\Contracts\RoleRepositoryInterface"
+          concreate="Modules\User\Repositories\RoleRepository"/>
+</services>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../Framework/etc/def/services.xsd">
+
+    <bind   alias="Modules\Auth\Contracts\AuthManagerInterface"
+               concreate="Modules\Auth\Services\AuthManager" />
+
+    <bind   alias="Modules\Auth\Contracts\SocialUserResolverInterface"
+            concreate="Modules\Auth\Resolvers\SocialUserResolver" />
+
+</services>

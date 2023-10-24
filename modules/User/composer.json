@@ -1,0 +1,10 @@
+{
+    "name": "inapps/user",
+    "type": "package",
+    "description": "User Management Module.",
+    "license": "MIT",
+    "require": {
+        "laravel/passport": "^8.3",
+        "spatie/laravel-permission": "^3.6"
+    }
+}

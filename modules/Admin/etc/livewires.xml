@@ -1,0 +1,8 @@
+<components
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../Framework/etc/def/livewires.xsd">
+<!--    <component-->
+<!--        alias="user.form"-->
+<!--        class="Modules\Admin\View\Components\UserFormComponent"-->
+<!--    />-->
+</components>

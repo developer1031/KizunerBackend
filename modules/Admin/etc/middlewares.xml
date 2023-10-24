@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<middlewares xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../Framework/etc/def/middlewares.xsd">
+    <middleware name="admin.subdomain"
+                class="Modules\Admin\Http\Middleware\AdminSubDomainCheck" />
+</middlewares>

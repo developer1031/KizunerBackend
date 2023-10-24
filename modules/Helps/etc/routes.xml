@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../Framework/etc/def/routes.xsd">
+   <route namespace="Modules\Helps\Http\Controllers"
+          path="routes/api.php"
+          prefix="api"
+          middleware="auth:api,api,block"
+   />
+
+   <route namespace="Modules\Helps\Http\Controllers"
+          path="routes/api-not-auth.php"
+          prefix="api"
+          middleware="api,block"
+   />
+</routes>

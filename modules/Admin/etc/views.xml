@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../Framework/etc/def/views.xsd">
+    <view alias="layouts" path="resources/views" />
+    <view alias="_components" path="resources/views/_components" />
+    <view alias="user" path="resources/views/user" />
+    <view alias="dashboard" path="resources/views/dashboard" />
+    <view alias="content" path="resources/views/content" />
+    <view alias="package" path="resources/views/package" />
+    <view alias="skill" path="resources/views/skill" />
+    <view alias="category" path="resources/views/category" />
+    <view alias="hangout" path="resources/views/hangout" />
+    <view alias="help" path="resources/views/help" />
+    <view alias="status" path="resources/views/status" />
+    <view alias="supports" path="resources/views/supports" />
+    <view alias="report" path="resources/views/report" />
+    <view alias="chat-intent" path="resources/views/chat-intent" />
+    <view alias="chat-location" path="resources/views/chat-location" />
+    <view alias="chat-public-group" path="resources/views/chat-public-group" />
+    <view alias="reward-setting" path="resources/views/reward-setting" />
+    <view alias="sample-help" path="resources/views/sample-help" />
+    <view alias="config" path="resources/views/config" />
+    <view alias="hangout-offer-cancel" path="resources/views/hangout-offer-cancel" />
+    <view alias="help-offer-cancel" path="resources/views/help-offer-cancel" />
+</routes>

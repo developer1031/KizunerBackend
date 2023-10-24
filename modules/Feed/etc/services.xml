@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../Framework/etc/def/services.xsd">
+
+    <factory   alias="Modules\Feed\Contracts\Data\TimelineInterface"
+               concreate="Modules\Feed\Models\Timeline" />
+
+    <factory   alias="Modules\Feed\Contracts\Data\FeedFollowerInterface"
+               concreate="Modules\Feed\Models\FeedFollower" />
+
+    <singleton alias="Modules\Feed\Contracts\Repositories\TimelineRepositoryInterface"
+               concreate="Modules\Feed\Repositories\TimelineRepository"/>
+
+    <singleton alias="Modules\Feed\Contracts\Repositories\FeedFollowerRepositoryInterface"
+               concreate="Modules\Feed\Repositories\FeedFollowerRepository"/>
+
+</services>

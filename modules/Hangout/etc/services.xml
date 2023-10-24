@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../Framework/etc/def/services.xsd">
+    <factory alias="Modules\Kizuner\Contracts\Data\HangoutInterface"
+             concreate="Modules\Kizuner\Models\Hangout" />
+
+    <singleton alias="Modules\Kizuner\Contracts\HangoutRepositoryInterface"
+               concreate="Modules\Kizuner\Repositories\HangoutRepository"/>
+
+    <singleton alias="Modules\Kizuner\Contracts\OfferRepositoryInterface"
+               concreate="Modules\Kizuner\Repositories\OfferRepository"/>
+</services>

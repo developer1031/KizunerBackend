@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../Framework/etc/def/services.xsd">
+    <singleton alias="Modules\Comment\Contracts\Repositories\CommentRepositoryInterface"
+        concreate="Modules\Comment\Repositories\CommentRepository"/>
+
+    <singleton alias="CommentSecurity"
+               concreate="Modules\Comment\Services\CommentSecurity"/>
+
+    <factory alias="Modules\Comment\Contracts\Data\CommentInterface"
+            concreate="Modules\Comment\Models\Comment" />
+</services>

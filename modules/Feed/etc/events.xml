@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<events xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../Framework/etc/def/events.xsd">
+    <subscriber name="Modules\Feed\Listeners\FollowEventSubscriber" />
+    <subscriber name="Modules\Feed\Listeners\FriendEventSubscriber" />
+    <subscriber name="Modules\Feed\Listeners\BlockEventSubscriber" />
+    <subscriber name="Modules\Feed\Listeners\HangoutEventSubscriber" />
+    <subscriber name="Modules\Feed\Listeners\StatusEventSubscriber" />
+    <subscriber name="Modules\Feed\Listeners\HelpEventSubscriber" />
+</events>

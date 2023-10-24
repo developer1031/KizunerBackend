@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../Framework/etc/def/routes.xsd">
+   <route namespace="Modules\Admin\Http\Controllers"
+          path="routes/web.php"
+          middleware="web, auth, admin.subdomain"
+   />
+</routes>

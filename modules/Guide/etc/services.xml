@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../Framework/etc/def/services.xsd">
+    <singleton alias="Modules\Guide\Domains\Repositories\Contracts\GuideRepositoryInterface"
+               concreate="Modules\Guide\Domains\Repositories\GuideRepository"/>
+</services>
