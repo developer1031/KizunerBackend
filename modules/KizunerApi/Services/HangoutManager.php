@@ -148,14 +148,12 @@ class HangoutManager
                 $hangout->media()->save($media);
             }
         }
-        Log::debug('____HERE____');
+
         $hangout->skills()->sync($request->get('skills') ?? []);
-        Log::debug('0');
         $hangout->categories()->sync($request->get('categories') ?? []);
-        Log::debug('1');
 
         // + Point to leaderBoard
-        addPoint();
+        // addPoint();
         /*
         $leaderboard = LeaderBoard::where('user_id', app('request')->user()->id)->first();
         if($leaderboard) {
