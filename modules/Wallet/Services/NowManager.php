@@ -59,11 +59,12 @@ class NowManager
 
     public function transfer(float $amount, string $cryptoWalletId)
     {
-        if ($this->isSandbox) {
-            return (object)[
-                "id" => date("YmdHis"),
-            ];
-        }
+        // if ($this->isSandbox) {
+        //     return (object)[
+        //         "id" => date("YmdHis"),
+        //     ];
+        // }
+        Log::debug("transfer: " . $amount . " " . $cryptoWalletId);
 
         $wallet = CryptoWalletEntity::where('id', $cryptoWalletId)->first();
 

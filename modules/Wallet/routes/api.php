@@ -30,8 +30,12 @@ Route::get('crypto-wallets', 'CryptoWalletController@index');
 // Delete user crypto wallet
 Route::delete('crypto-wallets/{id}', 'CryptoWalletController@destroy');
 
+// Get Stripe Custom Account
+Route::get('/stripe/account', 'StripeController@getStripeCustomAccount');
 // Create connected account
 Route::post('/stripe/connect', 'StripeController@createStripeConnect');
+// Payout
+Route::post('/stripe/payout', 'StripeController@payout');
 // Upload identity document
 Route::post('/stripe/identity-document', 'StripeController@uploadIdentityDocument');
 // Create connected account

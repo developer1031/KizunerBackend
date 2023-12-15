@@ -181,11 +181,16 @@ class AuthManager
         if (isset($request['name'])) {
             $request['username'] = $this->random_username($request['name']);
         }
-        Log::debug($request->all());
+        // Log::debug($request->all());
         $data = $request->all(['name', 'email', 'password', 'username']);
 
         $user = $this->userRepository->create($data);
         $token = $this->createToken($user);
+        
+        $verifyEmail = EmailVerify::updateOrCreate([
+          'email' => $user->email
+        ], ['pin' => rand(100000, 999999)]);
+        $user->notify(new VerifyEmail($verifyEmail->pin));
 
         event(new UserCreatedEvent($user));
 
@@ -220,6 +225,8 @@ class AuthManager
     {
         /** @var User $user */
         $tokenResult = $user->createToken($user->email);
+        Log::debug($tokenResult);
+        
         $token = $tokenResult->token;
         $token->save();
 

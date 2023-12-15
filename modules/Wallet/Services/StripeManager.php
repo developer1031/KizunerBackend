@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Exception;
 use Modules\Wallet\Domains\Wallet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Modules\Wallet\Domains\Card;
 use Modules\Wallet\Domains\Entities\WalletEntity;
 use Stripe\Account;
@@ -13,6 +14,16 @@ use Stripe\Balance;
 
 class StripeManager
 {
+    public function getStripeCustomAccount() {
+      $user = auth()->user();
+      $wallet = Wallet::findByUserId($user->id);
+
+      if (!$wallet->stripe_connect_id) {
+          throw new Exception("This user has no stripe connect account");
+      }
+
+      return Account::retrieve($wallet->stripe_connect_id);
+    }
     /**
      * The function creates a Stripe Connect account for a user and saves the account ID in the user's
      * wallet.
@@ -28,68 +39,105 @@ class StripeManager
         $user = auth()->user();
         $wallet = Wallet::findByUserId($user->id);
 
-        if ($wallet->stripe_connect_id) {
-            throw new Exception("You already have a stripe connect account");
+        $dob = Carbon::parse($request->get('dob'));
+        $countryCode = $request->get('country_code');
+
+        $accountParams = [
+          'type' => 'custom',
+          'country' => $countryCode,
+          'business_type' => 'individual',
+          'individual' => [
+              'dob' => [
+                  'day' => $dob->day,
+                  'month' => $dob->month,
+                  'year' => $dob->year
+              ],
+              'email' => $user->email,
+              'phone' => $request->get('phone'),
+              'id_number' => $request->get('id_number'),
+              'verification' => [
+                  'document' => [
+                      'front' => $request->get('identity_document'),
+                      'back' => $request->get('identity_document_back')
+                  ],
+              ]
+          ],
+          'external_account' => [
+              'object' => 'bank_account',
+              'country' => $countryCode,
+              'currency' => $request->get('currency'),
+              // 'currency' => 'usd',
+              'routing_number' => $request->get('routing_number'),
+              'account_number' => $request->get('account_number'),
+              'account_holder_name' => $request->get('account_name'),
+          ],
+          'capabilities' => [
+              // 'card_payments' => ['requested' => true],
+              'transfers' => ['requested' => true],
+          ],
+          'tos_acceptance' => [
+              'date' => Carbon::now()->timestamp,
+              'ip' => request()->ip(),
+              'service_agreement' => 'recipient',
+          ],
+          'settings' => [
+              'payouts' => [
+                  'schedule' => [
+                      'interval' => 'manual'
+                  ]
+              ]
+          ],
+          'business_profile' => [
+              'url' => config('app.url'),
+              'mcc' => '5817',
+              'product_description' => 'Kizuner is a social media platform that allows users to share their thoughts and ideas with the world.',
+          ],
+        ];
+
+        if ($countryCode == 'JP') {
+          $accountParams['individual']['first_name_kanji'] = $request->get('first_name');
+          $accountParams['individual']['last_name_kanji'] = $request->get('last_name');
+          $accountParams['individual']['first_name_kana'] = $request->get('first_name_kana');
+          $accountParams['individual']['last_name_kana'] = $request->get('last_name_kana');
+          $accountParams['individual']['address_kanji'] = [
+            "postal_code" => $request->get('postal_code'),
+            "country" => $countryCode,
+            // "state" => $request->get('address_state'),
+            // "city" => $request->get('address_city'),
+            "line1" => $request->get('address_line1'),
+            "line2" => $request->get('address_line2'),
+          ];
+          $accountParams['individual']['address_kana'] = [
+            "postal_code" => $request->get('postal_code'),
+            "country" => $countryCode,
+            // "state" => $request->get('address_state'),
+            // "city" => $request->get('address_city'),
+            "line1" => $request->get('address_line1_kana'),
+            "line2" => $request->get('address_line2_kana'),
+          ];
+        } else {
+          $accountParams['individual']['first_name'] = $request->get('first_name');
+          $accountParams['individual']['last_name'] = $request->get('last_name');
+          $accountParams['individual']['address'] = [
+            "postal_code" => $request->get('postal_code'),
+            "country" => $countryCode,
+            // "state" => $request->get('address_state'),
+            // "city" => $request->get('address_city'),
+            "line1" => $request->get('address_line1'),
+            "line2" => $request->get('address_line2'),
+          ];
         }
 
-        $dob = Carbon::parse($request->get('dob'));
+        Log::debug($accountParams);
 
-        $account = \Stripe\Account::create([
-            'type' => 'custom',
-            'country' => 'US',
-            'business_type' => 'individual',
-            'individual' => [
-                'dob' => [
-                    'day' => $dob->day,
-                    'month' => $dob->month,
-                    'year' => $dob->year
-                ],
-                'email' => $user->email,
-                'first_name' => $user->name,
-                'last_name' => $user->email,
-                'phone' => $request->get('phone'),
-                'id_number' => $request->get('id_number'),
-                "address" => [ // TODO kizuner's address
-                    "city" => "Ho Chi Minh",
-                    "country" => "US",
-                    "line1" => "Dang Van Ngu",
-                    "line2" => "186",
-                    "postal_code" => "99950",
-                    "state" => "AL"
-                ],
-                'verification' => [
-                    'document' => [
-                        'front' => $request->get('identity_document'),
-                        'back' => $request->get('identity_document_back')
-                    ],
-                ]
-            ],
-            'external_account' => [
-                'object' => 'bank_account',
-                'country' => 'US',
-                'routing_number' => $request->get('routing_number'),
-                'account_number' => $request->get('account_number')
-            ],
-            'capabilities' => [
-                'card_payments' => ['requested' => true],
-                'transfers' => ['requested' => true],
-            ],
-            'tos_acceptance' => [
-                'date' => Carbon::now()->timestamp,
-                'ip' => request()->ip(),
-            ],
-            'settings' => [
-                'payouts' => [
-                    'schedule' => [
-                        'interval' => 'manual'
-                    ]
-                ]
-            ],
-            'business_profile' => [
-                'url' => config('app.url'),
-                'mcc' => '7623'
-            ],
-        ]);
+        if ($wallet->stripe_connect_id) {
+          unset($accountParams['type']);
+          unset($accountParams['country']);
+          unset($accountParams['individual']['verification']);
+          $account = Account::update($wallet->stripe_connect_id, $accountParams);
+        } else {
+          $account = \Stripe\Account::create($accountParams);
+        }
 
         $wallet->stripe_connect_id = $account->id;
         $wallet->payouts_enabled = false;
@@ -126,8 +174,12 @@ class StripeManager
             'stripe_account' => $wallet->stripe_connect_id,
         ]);
 
+        $currency = $balance->available[0]->currency;
+        $amount = $balance->available[0]->amount / ($currency == 'jpy' ? 1 : 1);
+
         return [
-            'amount' => $balance->available[0]->amount / 100,
+            'amount' => $amount,
+            'currency' => $currency,
             'status' => 'CONNECTED'
         ];
     }
@@ -168,23 +220,35 @@ class StripeManager
 
         return \Stripe\PaymentIntent::create([
             'amount' => $amount * 100,
+            // 'application_fee_amount' => $amount * WalletEntity::STRIPE_FEE * 100,
             'currency' => 'usd',
             'customer' => $wallet->stripe_id,
             'payment_method' => $card->payment_method,
             'off_session' => true,
             'confirm' => true,
             'description' => $description
+            // "on_behalf_of" => $destination,
         ]);
     }
 
     public function transfer(string $userId, float $amount, string $description)
     {
-        $wallet = Wallet::findByUserId($userId);
+        $destination = Wallet::findByUserId($userId)->stripe_connect_id;
 
         return \Stripe\Transfer::create([
             'amount' => ($amount - $amount * WalletEntity::STRIPE_FEE) * 100,
             'currency' => 'usd',
-            'destination' => $description
+            'destination' => $destination
+        ]);
+    }
+
+    public function payout(float $amount, string $externalAccountId, string $currency)
+    {
+        $stripeConnectId = Wallet::findByUserId(auth()->user()->id)->stripe_connect_id;
+
+        return \Stripe\Payout::create([
+            'amount' => $amount,
+            'currency' => $currency,
         ]);
     }
 
@@ -216,7 +280,7 @@ class StripeManager
 
         return \Stripe\Payout::create([
             'amount' => $balance->available[0]->amount,
-            'currency' => 'USD'
+            'currency' => $balance->available[0]->currency
         ], [
             'stripe_account' => $wallet->stripe_connect_id,
         ]);

@@ -46,6 +46,22 @@ class StripeController
         }
     }
 
+
+    public function getStripeCustomAccount() {
+        try {
+            $res = $this->stripeManager->getStripeCustomAccount();
+            Log::debug($res);
+            return new JsonResponse($res, Response::HTTP_OK);
+        } catch (\Exception $th) {
+            Log::debug($th->getMessage());
+            return response()->json([
+                'errors' => [
+                    'message' => $th->getMessage()
+                ]
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     /**
      * The function `uploadIdentityDocument` handles the uploading of an identity document file and
      * returns a JSON response with the created file data or an error message.
@@ -168,6 +184,25 @@ class StripeController
     {
         try {
             $res = $this->stripeManager->withdraw();
+            return new JsonResponse($res, Response::HTTP_OK);
+        } catch (\Exception $th) {
+            Log::error($th->getMessage());
+            return response()->json([
+                'errors' => [
+                    'message' => $th->getMessage()
+                ]
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function payout(Request $request) {
+        try {
+            $res = $this->stripeManager->payout(
+              $request->get('amount'),
+              $request->get('externalAccountId'),
+              $request->get('currency')
+            );
+
             return new JsonResponse($res, Response::HTTP_OK);
         } catch (\Exception $th) {
             Log::error($th->getMessage());

@@ -34,10 +34,12 @@ class CardStoreRequest extends FormRequest
 
               $wallet = Wallet::findByUserId(auth()->user()->id);
               $payment       = PaymentMethod::retrieve($paymentMethod);
+              $payment->attach(['customer' => $wallet->stripe_id]);
               $cardBrand     = $payment->card->brand;
               $cardLastFour  = $payment->card->last4;
               $name          = $payment->billing_details->name;
               $cardDto       = new CardDto($name, $wallet->id, $paymentMethod, $cardBrand, $cardLastFour);
+              
 
               // Save Card Token to Database
               return (new CreateCardAction($cardDto))->execute();

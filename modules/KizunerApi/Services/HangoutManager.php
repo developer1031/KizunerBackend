@@ -65,14 +65,14 @@ class HangoutManager
     public function createNewHangout(HangoutCreateRequest $request): \Spatie\Fractal\Fractal
     {
 
-        $wallet = Wallet::findByUserId(auth()->user()->id);
-        if (
-            ($request->get('payment_method') == Hangout::PAYMENT_METHOD_CREDIT ||
-                $request->get('payment_method') == Hangout::PAYMENT_METHOD_BOTH) &&
-            !$wallet->payouts_enabled
-        ) {
-            throw new Exception('Stripe connect is required');
-        }
+        // $wallet = Wallet::findByUserId(auth()->user()->id);
+        // if (
+        //     ($request->get('payment_method') == Hangout::PAYMENT_METHOD_CREDIT ||
+        //         $request->get('payment_method') == Hangout::PAYMENT_METHOD_BOTH) &&
+        //     !$wallet->payouts_enabled
+        // ) {
+        //     throw new Exception('Stripe connect is required');
+        // }
 
 
         if ($request->get('type') == Hangout::$type['single']) {

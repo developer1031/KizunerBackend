@@ -25,6 +25,7 @@ use Modules\Wallet\Domains\History;
 use Modules\Wallet\Domains\Transaction;
 use Modules\Wallet\Services\NowManager;
 use Modules\Wallet\Services\StripeManager;
+use Modules\Wallet\Domains\Wallet;
 
 class OfferManager
 {
@@ -208,7 +209,8 @@ class OfferManager
                 }
                 break;
             case 'paid':
-                if ($offer->status != Offer::$status['accept'] || $offer->payment_status != null) {
+                if ($offer->status != Offer::$status['accept']) {
+                // if ($offer->status != Offer::$status['accept'] || $offer->payment_status != null) {
                     throw new InCorrectFormatException('Cannot change to ' . $request->get('status'));
                 }
 
@@ -226,6 +228,7 @@ class OfferManager
 
                 switch ($offer->payment_method) {
                     case Hangout::PAYMENT_METHOD_CREDIT:
+
                         $paymentRes = $this->stripeManager->payment(
                             $request->get('card_id'),
                             $hangout->amount,
@@ -244,10 +247,16 @@ class OfferManager
                             $hangout->amount,
                             $request->get('currency')
                         );
-
+                        Log::debug(json_encode($paymentRes));
                         $offer->now_payments_id = $paymentRes->id;
                         $offer->invoice_url = $paymentRes->invoice_url;
                         $offer->refund_crypto_wallet_id = $request->get('refund_crypto_wallet_id');
+
+                        if ($this->nowManager->getIsSandbox()) {
+                          $offer->payment_status = Offer::PAYMENT_STATUS_PAID;
+                          $offer->status = Offer::$status[$request->get('status')];
+                        }
+
                         $offer->save();
 
                         break;
@@ -385,6 +394,7 @@ class OfferManager
                             $offer->amount,
                             $hangout->crypto_wallet_id
                         );
+                        Log::debug(json_encode($transferRes));
 
                         $offer->now_payments_transfer_id = $transferRes->id;
 
