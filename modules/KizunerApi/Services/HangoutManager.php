@@ -108,6 +108,7 @@ class HangoutManager
         
         $hangout = $this->hangoutRepository->create($hangoutData);
 
+        Log::debug($request->available_status);
         /** Save Location */
         if (!in_array($request->available_status, ['online', 'combine'])) {
             $locationData = $request->all([
@@ -129,6 +130,7 @@ class HangoutManager
         //        }
 
         /** Save Media */
+        Log::debug($request->cover);
         if ($request->get('cover')) {
             $cover = $request->get('cover');
             if (str_contains($cover, ';')) {
@@ -147,6 +149,7 @@ class HangoutManager
             }
         }
 
+        Log::debug('0');
         $hangout->skills()->sync($request->get('skills'));
         $hangout->categories()->sync($request->get('categories'));
 
@@ -170,8 +173,11 @@ class HangoutManager
         }
         */
 
+        Log::debug('1');
         generateFakeUserHelps($hangout, 3, $request);
+        Log::debug('2');
         event(new HangoutCreatedEvent($hangout));
+        Log::debug('3');
 
         //friends
         $friends = $request->get('friends');
@@ -180,6 +186,7 @@ class HangoutManager
             $hangout->save();
         }
 
+        Log::debug($friends);
         //Send notification
         HangoutTagJob::dispatch($hangout);
 

@@ -24,8 +24,6 @@ class HangoutController
      */
     public function createNewHangout(HangoutManager $hangoutManager, HangoutCreateRequest $request)
     {
-        Log::info('_-------------Create hangout -----');
-        Log::info($request->all());
         if ($request->validated()) {
             try {
                 $response = $hangoutManager->createNewHangout($request);
