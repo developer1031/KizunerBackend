@@ -39,6 +39,12 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect'      => env('GOOGLE_REDIRECT')
     ],
+    'twitter' => [
+        'client_id'     => env('TWITTER_CLIENT_ID'),
+        'client_secret' => env('TWITTER_CLIENT_SECRET'),
+        'redirect'      => env('TWITTER_REDIRECT'),
+        'oauth'         => 2
+    ],
     'stripe' => [
         'stripe_key'    => env('STRIPE_KEY'),
         'stripe_secret' => env('STRIPE_SECRET'),

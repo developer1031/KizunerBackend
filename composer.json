@@ -21,7 +21,7 @@
         "kreait/laravel-firebase": "^1.5",
         "laravel/framework": "^7.0",
         "laravel/passport": "^8.3",
-        "laravel/socialite": "^4.3",
+        "laravel/socialite": "^5.11",
         "laravel/telescope": "^3.0",
         "laravel/tinker": "^2.0",
         "livewire/livewire": "^1.0",

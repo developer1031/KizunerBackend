@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use GeneaLabs\LaravelSocialiter\Socialiter;
 use Laravel\Socialite\Facades\Socialite;
 use Modules\User\Events\UserCreatedEvent;
+use Illuminate\Support\Facades\Log;
 
 trait SocialLogin
 {
@@ -60,11 +61,14 @@ trait SocialLogin
      * @param $token
      * @return mixed
      */
-    private function getSocialUser($token)
+    private function getSocialUser($token, $secret = null)
     {
-        $socialUser = Socialite::driver($this->getProvider())->userFromToken($token);
+        try {
+          $provider = $this->getProvider();
+          $socialUser = Socialite::driver($provider)->userFromToken($token);
+  
 
-        if ($this->getProvider() == 'apple') {
+          if ($this->getProvider() == 'apple') {
             return [
                 'name'              => app('request')->name,
                 'email'             => $socialUser->email,
@@ -72,33 +76,40 @@ trait SocialLogin
                 'social_avatar'     => $socialUser->avatar,
                 'social_provider'   => $this->getProvider()
             ];
-        }
+          }
 
-        return [
-            'name'              => $socialUser->name,
-            'email'             => $socialUser->email,
-            'social_id'         => $socialUser->id,
-            'social_avatar'     => $socialUser->avatar,
-            'social_provider'   => $this->getProvider()
-        ];
+          return [
+              'name'              => $socialUser->name,
+              'email'             => $socialUser->email,
+              'social_id'         => $socialUser->id,
+              'social_avatar'     => $socialUser->avatar,
+              'social_provider'   => $this->getProvider()
+          ];
+        } catch (\Exception $e) {
+          Log::debug($e->getMessage());
+        }
     }
 
     /**
      * @inheritDoc
      */
-    public function create($token)
+    public function create($token, $secret = null)
     {
         // Check and verify Token
-        $data = $this->getSocialUser($token);
+        $data = $this->getSocialUser($token, $secret);
 
-        // Check User Exist
-        $user = $this->checkUserExist($data);
+        if ($data != null) {
+          // Check User Exist
+          $user = $this->checkUserExist($data);
 
-        if (!$user) {
-            $user = $this->createNewUser($data);
-            event(new UserCreatedEvent($user));
+          if (!$user) {
+              $user = $this->createNewUser($data);
+              event(new UserCreatedEvent($user));
+          }
+
+          return $user;
         }
-
-        return $user;
+        
+        return null;
     }
 }

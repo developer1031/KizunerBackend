@@ -68,9 +68,10 @@ class ChatSystem extends Migration
      */
     public function down()
     {
-        Schema::drop('chat_message_images');
-        Schema::drop('chat_messages');
-        Schema::drop('chat_group_members');
-        Schema::drop('chat_rooms');
+        Schema::dropIfExists('chat_user_statuses');
+        Schema::dropIfExists('chat_message_images');
+        Schema::dropIfExists('chat_messages');
+        Schema::dropIfExists('chat_members');
+        Schema::dropIfExists('chat_rooms');
     }
 }

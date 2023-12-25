@@ -25,6 +25,7 @@ class SignInBySocialRequest extends FormRequest
     {
         return [
             'token' => 'required',
+            'secret' => 'nullable',
             'name'  => 'nullable'
         ];
     }

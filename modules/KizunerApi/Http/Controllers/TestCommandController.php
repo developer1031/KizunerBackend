@@ -158,7 +158,7 @@ class TestCommandController
                     $offer->receiver_id,
                     0,
                     TransactionEntity::TYPE_OFFER,
-                    $amount,
+                    $amount
                 );
 
                 History::create(new HistoryDto(

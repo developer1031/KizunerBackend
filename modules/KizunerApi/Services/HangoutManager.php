@@ -172,11 +172,8 @@ class HangoutManager
         }
         */
 
-        Log::debug('1');
         generateFakeUserHelps($hangout, 3, $request);
-        Log::debug('2');
         event(new HangoutCreatedEvent($hangout));
-        Log::debug('3');
 
         //friends
         $friends = $request->get('friends');
@@ -185,7 +182,6 @@ class HangoutManager
             $hangout->save();
         }
 
-        Log::debug($friends);
         //Send notification
         HangoutTagJob::dispatch($hangout);
 

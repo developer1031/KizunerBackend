@@ -4,7 +4,7 @@ namespace Modules\User\Social;
 
 class SocialLoginFactory
 {
-    public function create($provider, $token)
+    public function create($provider, $token, $secret = null)
     {
         $instance = null;
         if ($provider == 'facebook') {
@@ -19,6 +19,10 @@ class SocialLoginFactory
             $instance = app(AppleLogin::class);
         }
 
-        return $instance->create($token);
+        if ($provider == 'twitter') {
+          $instance = app(TwitterLogin::class);
+        }
+
+        return $instance->create($token, $secret);
     }
 }

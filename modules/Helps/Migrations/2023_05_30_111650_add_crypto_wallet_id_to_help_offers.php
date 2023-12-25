@@ -26,7 +26,7 @@ class AddCryptoWalletIdToHelpOffers extends Migration
     public function down()
     {
         Schema::table('help_offers', function (Blueprint $table) {
-            $table->string('crypto_wallet_id')->nullable();
+            $table->dropColumn('crypto_wallet_id');
         });
     }
 }

@@ -26,7 +26,8 @@ class RenameChargesEnabledInWalletWallets extends Migration
     public function down()
     {
         Schema::table('wallet_wallets', function (Blueprint $table) {
-            $table->renameColumn('charges_enabled', 'payouts_enabled');
+            // $table->renameColumn('charges_enabled', 'payouts_enabled');
+            $table->dropColumn('payouts_enabled');
         });
     }
 }

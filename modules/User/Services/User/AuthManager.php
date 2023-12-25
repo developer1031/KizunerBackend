@@ -122,16 +122,17 @@ class AuthManager
      * @return JsonResponse
      * @throws MissingInfoException
      */
-    public function signInBySocial(SignInBySocialRequest $request)
+    public function signInBySocial($data)
     {
-        $provider = $request->input('provider');
+        $provider = $data['provider'];
 
         if (!$provider) {
             throw new MissingInfoException('Missing Provider Param in URL: provider={facebook, google}');
         }
 
         try {
-            $user = $this->socialLoginFactory->create($provider, $request->get('token'));
+            $user = $this->socialLoginFactory->create($provider, $data['token'], $data['secret']);
+
 
             $this->clearOldToken($user);
             $token = $this->createToken($user);

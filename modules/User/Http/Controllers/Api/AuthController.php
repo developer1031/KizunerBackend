@@ -18,7 +18,9 @@ use Modules\User\Http\Requests\Api\User\SignInBySocialRequest;
 use Modules\User\Http\Requests\Api\User\SignUpRequest;
 use Modules\User\Services\User\AuthManager;
 use Modules\User\Services\UserManager;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Http;
 
 class AuthController
 {
@@ -43,11 +45,8 @@ class AuthController
     public function socialSignIn(SignInBySocialRequest $request, AuthManager $authManager)
     {
         if ($request->validated()) {
-
-            //return $authManager->signInBySocial($request);
-
             try {
-                return $authManager->signInBySocial($request);
+                return $authManager->signInBySocial($request->all());
             } catch (\Exception $exception) {
                 return new JsonResponse([
                     'errors' => [
@@ -57,6 +56,35 @@ class AuthController
                 ], Response::HTTP_BAD_REQUEST);
             }
         }
+    }
+
+    public function authCode(Request $request, AuthManager $authManager)
+    {
+      $token = base64_encode(env('TWITTER_CLIENT_ID') . ":" . env('TWITTER_CLIENT_SECRET'));
+      // $authHeader = 'Basic ' . $token;
+
+      $response = Http::post('https://api.twitter.com/2/oauth2/token', [
+        'code' => $request->code,
+        'grant_type' => 'authorization_code',
+        'redirect_uri' => 'http://192.168.110.58:8000/api/redirect_code',
+        'code_verifier' => $request->state,
+        'client_id' => env('TWITTER_CLIENT_ID'),
+      ], [
+          'headers' => [
+              'Content-Type' => 'application/x-www-form-urlencoded'
+          ],
+      ]);
+
+      if ($response->successful()) {
+          $data = $response->json();
+
+          $appScheme = 'com.kizuner.auth://';
+          $deepLink = $appScheme . 'token=' . $data['access_token'];
+          return redirect()->away($deepLink);
+      } else {
+          $errorMessage = $response->body();
+          Log::debug($errorMessage);
+      }
     }
 
     /**
