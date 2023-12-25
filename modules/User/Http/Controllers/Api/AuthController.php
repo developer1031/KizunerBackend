@@ -66,7 +66,7 @@ class AuthController
       $response = Http::post('https://api.twitter.com/2/oauth2/token', [
         'code' => $request->code,
         'grant_type' => 'authorization_code',
-        'redirect_uri' => 'http://192.168.110.58:8000/api/redirect_code',
+        'redirect_uri' => config('app.url') . '/api/redirect_code',
         'code_verifier' => $request->state,
         'client_id' => env('TWITTER_CLIENT_ID'),
       ], [
