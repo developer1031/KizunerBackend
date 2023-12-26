@@ -63,6 +63,9 @@ class AuthController
       $token = base64_encode(env('TWITTER_CLIENT_ID') . ":" . env('TWITTER_CLIENT_SECRET'));
       // $authHeader = 'Basic ' . $token;
 
+      Log::debug(env('APP_URL'));
+      Log::debug(env('TWITTER_CLIENT_ID'));
+
       $response = Http::post('https://api.twitter.com/2/oauth2/token', [
         'code' => $request->code,
         'grant_type' => 'authorization_code',
