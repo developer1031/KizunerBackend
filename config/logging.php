@@ -47,13 +47,12 @@ return [
             'level' => 'debug',
         ],
 
-        // 'daily' => [
-        //     'driver' => 'daily',
-        //     'path' => storage_path('logs/laravel.log'),
-        //     'level' => 'debug',
-        //     'days' => 14,
-        //     'permission' => 0775,
-        // ],
+        'daily' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/laravel.log'),
+            'level' => 'debug',
+            'days' => 14,
+        ],
 
         'slack' => [
             'driver' => 'slack',

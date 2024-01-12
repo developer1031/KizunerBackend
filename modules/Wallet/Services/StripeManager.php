@@ -22,7 +22,21 @@ class StripeManager
           throw new Exception("This user has no stripe connect account");
       }
 
-      return Account::retrieve($wallet->stripe_connect_id);
+      $account = Account::retrieve($wallet->stripe_connect_id);
+
+      $frontFileId = $account->individual->verification->document->front;
+      $frontFile = \Stripe\File::retrieve($frontFileId);
+      $frontUrl = "";
+
+      $backFileId = $account->individual->verification->document->back;
+      $backFile = \Stripe\File::retrieve($backFileId);
+      $backUrl = $backFile->url;
+
+      return [
+        'account' => $account,
+        'frontUrl' => $frontUrl,
+        'backUrl' => $backUrl
+      ];
     }
     /**
      * The function creates a Stripe Connect account for a user and saves the account ID in the user's
@@ -88,11 +102,21 @@ class StripeManager
               ]
           ],
           'business_profile' => [
-              'url' => config('app.url'),
+              // 'url' => config('app.url'),
+              'url' => 'https://kizuner.com',
               'mcc' => '5817',
               'product_description' => 'Kizuner is a social media platform that allows users to share their thoughts and ideas with the world.',
           ],
         ];
+
+        if (!$request->id_number) {
+          unset($accountParams['individual']['id_number']);
+          unset($accountParams['individual']['verification']);
+        }
+
+        if (!$request->account_name) {
+          unset($accountParams['external_account']);
+        }
 
         if ($countryCode == 'JP') {
           $accountParams['individual']['first_name_kanji'] = $request->get('first_name');
@@ -102,16 +126,12 @@ class StripeManager
           $accountParams['individual']['address_kanji'] = [
             "postal_code" => $request->get('postal_code'),
             "country" => $countryCode,
-            // "state" => $request->get('address_state'),
-            // "city" => $request->get('address_city'),
             "line1" => $request->get('address_line1'),
             "line2" => $request->get('address_line2'),
           ];
           $accountParams['individual']['address_kana'] = [
             "postal_code" => $request->get('postal_code'),
             "country" => $countryCode,
-            // "state" => $request->get('address_state'),
-            // "city" => $request->get('address_city'),
             "line1" => $request->get('address_line1_kana'),
             "line2" => $request->get('address_line2_kana'),
           ];
@@ -128,12 +148,9 @@ class StripeManager
           ];
         }
 
-        Log::debug($accountParams);
-
         if ($wallet->stripe_connect_id) {
           unset($accountParams['type']);
           unset($accountParams['country']);
-          unset($accountParams['individual']['verification']);
           $account = Account::update($wallet->stripe_connect_id, $accountParams);
         } else {
           $account = \Stripe\Account::create($accountParams);
