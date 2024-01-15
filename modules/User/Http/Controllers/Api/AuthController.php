@@ -60,18 +60,15 @@ class AuthController
 
     public function authCode(Request $request, AuthManager $authManager)
     {
-      $token = base64_encode(env('TWITTER_CLIENT_ID') . ":" . env('TWITTER_CLIENT_SECRET'));
+      // $token = base64_encode(env('TWITTER_CLIENT_ID') . ":" . env('TWITTER_CLIENT_SECRET'));
       // $authHeader = 'Basic ' . $token;
-
-      Log::debug(env('APP_URL'));
-      Log::debug(env('TWITTER_CLIENT_ID'));
 
       $response = Http::post('https://api.twitter.com/2/oauth2/token', [
         'code' => $request->code,
         'grant_type' => 'authorization_code',
-        'redirect_uri' => env('APP_URL') . '/api/redirect_code',
+        'redirect_uri' => config('app.url') . '/api/redirect_code',
         'code_verifier' => $request->state,
-        'client_id' => env('TWITTER_CLIENT_ID'),
+        'client_id' => config('services.twitter.client_id'),
       ], [
           'headers' => [
               'Content-Type' => 'application/x-www-form-urlencoded'
