@@ -7,6 +7,8 @@ use League\Fractal\TransformerAbstract;
 use Modules\Kizuner\Models\Offer;
 use Modules\Rating\Domains\Entities\RatingEntity;
 use Modules\Rating\Domains\Rating;
+use Modules\Wallet\Domains\Entities\CryptoWalletEntity;
+use Illuminate\Support\Facades\Log;
 
 class OfferTransform extends TransformerAbstract
 {
@@ -22,6 +24,9 @@ class OfferTransform extends TransformerAbstract
 
         $hangout = $offer->hangout;
         $short_address = $hangout ? ($hangout->location ? $hangout->location->short_address : '') : '';
+
+        
+        $wallet = CryptoWalletEntity::where('id', $hangout->crypto_wallet_id)->first();
 
         $transform = [
             'id'                => $offer->id,
@@ -47,7 +52,8 @@ class OfferTransform extends TransformerAbstract
             'max_amount'       => $offer->max_amount,
             'payment_status' => $offer->payment_status,
             'invoice_url' => $offer->payment_status == Offer::PAYMENT_STATUS_UNPAID ? $offer->invoice_url : null,
-            'available_payment_method' => $hangout ? $hangout->payment_method : null
+            'available_payment_method' => $hangout ? $hangout->payment_method : null,
+            'crypto_currency' => $wallet ? $wallet->currency : null,
         ];
 
         if ($this->isSender($offer)) {

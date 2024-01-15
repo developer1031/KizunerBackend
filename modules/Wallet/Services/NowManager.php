@@ -23,7 +23,7 @@ class NowManager
     public function __construct(NowPaymentsAPI $nowPaymentsApi)
     {
         $this->nowPaymentsApi = $nowPaymentsApi;
-        $this->isSandbox = config('services.now_payments.now_payments_sandbox') == 'true';
+        $this->isSandbox = config('app.env') == 'local';
     }
 
     /**

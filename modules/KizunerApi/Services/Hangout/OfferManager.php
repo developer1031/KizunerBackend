@@ -247,7 +247,7 @@ class OfferManager
                             $hangout->amount,
                             $request->get('currency')
                         );
-                        Log::debug(json_encode($paymentRes));
+
                         $offer->now_payments_id = $paymentRes->id;
                         $offer->invoice_url = $paymentRes->invoice_url;
                         $offer->refund_crypto_wallet_id = $request->get('refund_crypto_wallet_id');
@@ -394,7 +394,6 @@ class OfferManager
                             $offer->amount,
                             $hangout->crypto_wallet_id
                         );
-                        Log::debug(json_encode($transferRes));
 
                         $offer->now_payments_transfer_id = $transferRes->id;
 
