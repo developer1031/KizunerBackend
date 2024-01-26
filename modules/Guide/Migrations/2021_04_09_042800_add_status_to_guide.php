@@ -25,6 +25,8 @@ class AddStatusToGuide extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('guide_guides');
+        Schema::table('guide_guides', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
     }
 }
