@@ -132,11 +132,13 @@ class AuthManager
 
         try {
             $user = $this->socialLoginFactory->create($provider, $data['token'], $data['secret']);
+            Log::debug("_________1");
 
 
             $this->clearOldToken($user);
+            Log::debug("_________2");
             $token = $this->createToken($user);
-
+            Log::debug("_________3");
             if ($this->isBlocked($user)) {
                 return new JsonResponse([
                     'message' => 'Your account is blocked',
@@ -151,6 +153,7 @@ class AuthManager
                 $user->username = rand(9999999, 99999999999);
             }
             $user->last_send_mail = null;
+            Log::debug("_________4");
             $user->save();
 
             return new JsonResponse([
