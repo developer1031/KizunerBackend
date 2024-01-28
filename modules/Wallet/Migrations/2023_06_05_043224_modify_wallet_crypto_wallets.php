@@ -13,9 +13,11 @@ class ModifyWalletCryptoWallets extends Migration
      */
     public function up()
     {
-        Schema::table('wallet_crypto_wallets', function (Blueprint $table) {
-            $table->renameColumn('memo', 'extra_id');
-        });
+        if (Schema::hasColumn('wallet_crypto_wallets', 'memo')) {
+          Schema::table('wallet_crypto_wallets', function (Blueprint $table) {
+              $table->renameColumn('memo', 'extra_id');
+          });
+        }
     }
 
     /**
@@ -26,8 +28,10 @@ class ModifyWalletCryptoWallets extends Migration
     public function down()
     {
 
-        Schema::table('wallet_crypto_wallets', function (Blueprint $table) {
-            $table->renameColumn('extra_id', 'memo');
-        });
+        if (Schema::hasColumn('wallet_crypto_wallets', 'extra_id')) {
+            Schema::table('wallet_crypto_wallets', function (Blueprint $table) {
+                $table->renameColumn('extra_id', 'memo');
+            });
+        }
     }
 }

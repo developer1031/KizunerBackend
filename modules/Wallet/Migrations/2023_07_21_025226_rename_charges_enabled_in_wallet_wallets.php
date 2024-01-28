@@ -13,9 +13,11 @@ class RenameChargesEnabledInWalletWallets extends Migration
      */
     public function up()
     {
-        Schema::table('wallet_wallets', function (Blueprint $table) {
-            $table->renameColumn('charges_enabled', 'payouts_enabled');
-        });
+        if (Schema::hasColumn('wallet_wallets', 'charges_enabled')) {
+          Schema::table('wallet_wallets', function (Blueprint $table) {
+              $table->renameColumn('charges_enabled', 'payouts_enabled');
+          });
+        }
     }
 
     /**
@@ -25,9 +27,11 @@ class RenameChargesEnabledInWalletWallets extends Migration
      */
     public function down()
     {
-        Schema::table('wallet_wallets', function (Blueprint $table) {
-            // $table->renameColumn('charges_enabled', 'payouts_enabled');
-            $table->dropColumn('payouts_enabled');
-        });
+        if (Schema::hasColumn('wallet_wallets', 'payouts_enabled')) {
+          Schema::table('wallet_wallets', function (Blueprint $table) {
+              $table->renameColumn('payouts_enabled', 'charges_enabled');
+              // $table->dropColumn('payouts_enabled');
+          });
+        }
     }
 }

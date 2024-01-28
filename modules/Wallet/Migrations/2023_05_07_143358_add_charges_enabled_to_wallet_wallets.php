@@ -25,8 +25,11 @@ class AddChargesEnabledToWalletWallets extends Migration
      */
     public function down()
     {
-        Schema::table('wallet_wallets', function (Blueprint $table) {
-            // $table->dropColumn('charges_enabled');
-        });
+      if (Schema::hasColumn('wallet_wallets', 'charges_enabled'))
+        {
+          Schema::table('wallet_wallets', function (Blueprint $table) {
+            $table->dropColumn('charges_enabled');
+          });
+        }
     }
 }
