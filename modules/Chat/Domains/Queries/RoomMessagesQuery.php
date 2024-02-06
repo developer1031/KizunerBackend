@@ -53,7 +53,8 @@ class RoomMessagesQuery
                 'hangouts.is_range_price as hangout_is_range_price',
                 'hangouts.min_amount as hangout_min_amount',
                 'hangouts.max_amount as hangout_max_amount',
-                'hangouts.amount as hangout_amount'
+                'hangouts.amount as hangout_amount',
+                'hangouts.room_id as hangout_room_id'
             )
             ->join('users', 'users.id', '=', 'chat_messages.user_id')
             ->leftJoin('hangout_hangouts as hangouts', 'hangouts.id', '=', 'chat_messages.hangout')

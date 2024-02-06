@@ -92,6 +92,7 @@ class MessageTransformer extends TransformerAbstract
                     'min_amount'  => $help->min_amount,
                     'max_amount'  => $help->max_amount,
                     'amount'  => $help->amount,
+                    'room_id'  => $help->room_id,
                 ];
             }
         }
@@ -157,6 +158,7 @@ class MessageTransformer extends TransformerAbstract
                 'min_amount'  => $message->hangout_min_amount,
                 'max_amount'  => $message->hangout_max_amount,
                 'amount'  => $message->hangout_amount,
+                'room_id'  => $message->hangout_room_id,
             ] : null,
             'help'      => $help_data,
             'user'      => [

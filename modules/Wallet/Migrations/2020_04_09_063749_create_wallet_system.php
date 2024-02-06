@@ -62,9 +62,9 @@ class CreateWalletSystem extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wallet_wallet_cards');
+        Schema::dropIfExists('wallet_cards');
         Schema::dropIfExists('wallet_transactions');
-        Schema::dropIfExists('wallet_package_purchases');
+        Schema::dropIfExists('wallet_purchases');
         Schema::dropIfExists('wallet_wallets');
     }
 }

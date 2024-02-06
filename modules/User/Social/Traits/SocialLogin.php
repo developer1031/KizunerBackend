@@ -48,6 +48,7 @@ trait SocialLogin
      */
     private function createNewUser($data)
     {
+
         return $this->userRepository->create([
             'name'              => $data['name'],
             'email'             => $data['email'],
@@ -65,10 +66,10 @@ trait SocialLogin
     {
         try {
           $provider = $this->getProvider();
-          $socialUser = Socialite::driver($provider)->userFromToken($token);
-  
-
+          
           if ($this->getProvider() == 'apple') {
+            $socialUser = Socialite::driver($provider)->userFromToken($token);
+
             return [
                 'name'              => app('request')->name,
                 'email'             => $socialUser->email,
@@ -78,6 +79,7 @@ trait SocialLogin
             ];
           }
 
+          $socialUser = Socialite::driver($provider)->userFromToken($token);
           return [
               'name'              => $socialUser->name,
               'email'             => $socialUser->email,
