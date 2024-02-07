@@ -16,6 +16,7 @@
                             <th>Addition Info</th>
                             <th>Capacity</th>
                             <th>Available</th>
+                            <th>Status</th>
                             <th>Updated At</th>
                             <th></th>
                         </tr>
@@ -81,6 +82,10 @@
                 {
                     data: "available",
                     name: "available"
+                },
+                {
+                    data: "status",
+                    name: "status"
                 },
                 {
                     data: "updated_at",

@@ -1,4 +1,4 @@
-<div class="nk-footer">
+<!-- <div class="nk-footer">
     <div class="container-fluid">
         <div class="nk-footer-wrap">
             <div class="nk-footer-copyright"> &copy; {{ date('Y') }} Kizuner. Developed by <a href="#">Inapps Technology</a>
@@ -11,4 +11,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->

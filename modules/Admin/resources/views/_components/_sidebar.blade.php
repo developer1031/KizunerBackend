@@ -131,12 +131,12 @@
 {{--    </a>--}}
 {{--</li>--}}
 
-<li class="nk-menu-item">
+<!-- <li class="nk-menu-item">
     <a href="{{ route('admin.package.index') }}" class="nk-menu-link" data-original-title="Term and Privacy" title="Term and Privacy">
         <span class="nk-menu-icon"><em class="icon ni ni-package"></em></span>
         <span class="nk-menu-text">Payment Packages</span>
     </a>
-</li>
+</li> -->
 <li class="nk-menu-item">
     <a href="{{ route('admin.skill.index') }}" class="nk-menu-link" data-original-title="Specialities suggest" title="Specialities suggest">
         <span class="nk-menu-icon"><em class="icon ni ni-bag"></em></span>

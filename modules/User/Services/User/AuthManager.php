@@ -143,11 +143,15 @@ class AuthManager
                     ]
                 ], Response::HTTP_FORBIDDEN);
             }
-            if (isset($user->name)) {
+
+            if ($user->username == null) {
+              if (isset($user->name)) {
                 $user->username = $this->random_username($user->name);
-            } else {
-                $user->username = rand(9999999, 99999999999);
+              } else {
+                  $user->username = rand(9999999, 99999999999);
+              }
             }
+            
             $user->last_send_mail = null;
             $user->save();
 

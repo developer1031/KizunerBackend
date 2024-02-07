@@ -31,14 +31,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <!-- <div class="col-6">
                                 <div class="form-group">
                                     <label class="form-label">First add post</label>
                                     <div class="form-control-wrap">
                                         <input type="number" class="form-control" name="kizuner_first_add_post" value="{{ @$kizuner_first_add_post }}" min="0"/>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row">
                             <div class="col-6">
