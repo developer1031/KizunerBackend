@@ -137,12 +137,16 @@ class UpdateManager
 
     public function updateAuthInfo(AuthUpdateRequest $request)
     {
-        if (!Hash::check(
-            $request->get('password_current'),
-            $request->user()->password
-        )) {
-            throw new AuthException('Wrong current password');
+        Log::debug($request->user()->password);
+        if (!is_null($request->user()->password)) {
+          if (!Hash::check(
+              $request->get('password_current'),
+              $request->user()->password
+          )) {
+              throw new AuthException('Wrong current password');
+          }
         }
+
         $user = $this->userRepository->updateInfo($request->user()->id, $request->all(['password']));
         $token = $this->createToken($user);
         $response = [
@@ -152,7 +156,7 @@ class UpdateManager
                 'expires_at' => Carbon::parse(
                     $token->token->expires_at
                 )->toDateTimeString(),
-                'self' => fractal($$user, new UserTransform())
+                'self' => fractal($user, new UserTransform())
             ]
         ];
         return $response;

@@ -26,7 +26,7 @@ class AuthUpdateRequest extends FormRequest
         return [
             'password' => "required|min:6|same:password_confirm|different:password_current",
             'password_confirm' => "required|min:6|same:password",
-            'password_current' => "required"
+            // 'password_current' => "required"
         ];
     }
 
