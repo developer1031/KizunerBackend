@@ -22,9 +22,6 @@ class UploadController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        //Log::info($request->file('file'));
-        //dd($request->file('file'));
-
         if ($request->validated()) {
             $response = $uploadManager->uploadSingleFile($request);
             return new JsonResponse($response, Response::HTTP_CREATED);

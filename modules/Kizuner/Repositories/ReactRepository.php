@@ -33,10 +33,11 @@ class ReactRepository implements ReactRepositoryInterface
             $react = new React(['user_id' => $userId, 'reacted_user_id' => $hangout->user_id, 'react_type' => $react_type]);
             $react->save();
             $hangout->reacts()->save($react);
-            //Send notification
-            if ($react->user_id != $react->reacted_user_id) {
-                HangoutLikeJob::dispatch($react);
-            }
+
+            // Send notification
+            // if ($react->user_id != $react->reacted_user_id) {
+            //     HangoutLikeJob::dispatch($react);
+            // }
             return true;
         }
         return false;

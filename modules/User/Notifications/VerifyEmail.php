@@ -40,7 +40,7 @@ class VerifyEmail extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->from('noreply@kizuner.com')
-            ->subject('Password Reset Email')
+            ->subject('Email Verification')
             ->line('This Email contain PIN code to help you verify your Email address.')
             ->line('Your Pin is: ' . $this->data)
             ->line('Please use this and enter in your pin verify step.');

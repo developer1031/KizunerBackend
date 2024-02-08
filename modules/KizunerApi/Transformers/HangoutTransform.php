@@ -87,7 +87,6 @@ class HangoutTransform extends TransformerAbstract
                 ->orderBy('is_fake', 'asc')
                 ->take(20)->get();
 
-
             //Cast
             if ($hangout->location && $lat && $lng) {
                 if ($lat && $lng) {
@@ -121,15 +120,15 @@ class HangoutTransform extends TransformerAbstract
                                             )
                             ) < ' . $radius)
 
-                            ->whereRaw('
-                            (6371 * acos (
-                                            cos ( radians('  . $lat .  ') )
-                                            * cos( radians( locations.lat ) )
-                                            * cos( radians( locations.lng ) - radians('  . $lng .  ') )
-                                            + sin ( radians(' . $lat . ') )
-                                            * sin( radians( locations.lat ) )
-                                            )
-                            ) > ' . 2)
+                            // ->whereRaw('
+                            // (6371 * acos (
+                            //                 cos ( radians('  . $lat .  ') )
+                            //                 * cos( radians( locations.lat ) )
+                            //                 * cos( radians( locations.lng ) - radians('  . $lng .  ') )
+                            //                 + sin ( radians(' . $lat . ') )
+                            //                 * sin( radians( locations.lat ) )
+                            //                 )
+                            // ) > ' . 2)
 
                             ->groupBy('group_distance')
                             ->orderBy('distance')->take(30)->get();
