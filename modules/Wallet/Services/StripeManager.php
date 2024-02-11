@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Log;
 use Modules\Wallet\Domains\Card;
 use Modules\Wallet\Domains\Entities\WalletEntity;
 use Stripe\Account;
+use Stripe\AccountLink;
 use Stripe\Balance;
+use Stripe\Stripe;
 
 class StripeManager
 {
@@ -24,18 +26,16 @@ class StripeManager
 
       $account = Account::retrieve($wallet->stripe_connect_id);
 
-      $frontFileId = $account->individual->verification->document->front;
-      $frontFile = \Stripe\File::retrieve($frontFileId);
-      $frontUrl = "";
+      // $frontFileId = $account->individual->verification->document->front;
+      // $frontFile = \Stripe\File::retrieve($frontFileId);
+      // $frontUrl = "";
 
-      $backFileId = $account->individual->verification->document->back;
-      $backFile = \Stripe\File::retrieve($backFileId);
-      $backUrl = $backFile->url;
+      // $backFileId = $account->individual->verification->document->back;
+      // $backFile = \Stripe\File::retrieve($backFileId);
+      // $backUrl = $backFile->url;
 
       return [
         'account' => $account,
-        'frontUrl' => $frontUrl,
-        'backUrl' => $backUrl
       ];
     }
     /**
@@ -53,114 +53,27 @@ class StripeManager
         $user = auth()->user();
         $wallet = Wallet::findByUserId($user->id);
 
-        $dob = Carbon::parse($request->get('dob'));
-        $countryCode = $request->get('country_code');
-
-        $accountParams = [
-          'type' => 'custom',
-          'country' => $countryCode,
-          'business_type' => 'individual',
-          'individual' => [
-              'dob' => [
-                  'day' => $dob->day,
-                  'month' => $dob->month,
-                  'year' => $dob->year
-              ],
-              'email' => $user->email,
-              'phone' => $request->get('phone'),
-              'id_number' => $request->get('id_number'),
-              'verification' => [
-                  'document' => [
-                      'front' => $request->get('identity_document'),
-                      'back' => $request->get('identity_document_back')
-                  ],
-              ]
-          ],
-          'external_account' => [
-              'object' => 'bank_account',
-              'country' => $countryCode,
-              'currency' => $request->get('currency'),
-              // 'currency' => 'usd',
-              'routing_number' => $request->get('routing_number'),
-              'account_number' => $request->get('account_number'),
-              'account_holder_name' => $request->get('account_name'),
-          ],
-          'capabilities' => [
-              // 'card_payments' => ['requested' => true],
-              'transfers' => ['requested' => true],
-          ],
-          'tos_acceptance' => [
-              'date' => Carbon::now()->timestamp,
-              'ip' => request()->ip(),
-              'service_agreement' => 'recipient',
-          ],
-          'settings' => [
-              'payouts' => [
-                  'schedule' => [
-                      'interval' => 'manual'
-                  ]
-              ]
-          ],
-          'business_profile' => [
-              // 'url' => config('app.url'),
-              'url' => 'https://kizuner.com',
-              'mcc' => '5817',
-              'product_description' => 'Kizuner is a social media platform that allows users to share their thoughts and ideas with the world.',
-          ],
-        ];
-
-        if (!$request->id_number) {
-          unset($accountParams['individual']['id_number']);
-          unset($accountParams['individual']['verification']);
-        }
-
-        if (!$request->account_name) {
-          unset($accountParams['external_account']);
-        }
-
-        if ($countryCode == 'JP') {
-          $accountParams['individual']['first_name_kanji'] = $request->get('first_name');
-          $accountParams['individual']['last_name_kanji'] = $request->get('last_name');
-          $accountParams['individual']['first_name_kana'] = $request->get('first_name_kana');
-          $accountParams['individual']['last_name_kana'] = $request->get('last_name_kana');
-          $accountParams['individual']['address_kanji'] = [
-            "postal_code" => $request->get('postal_code'),
-            "country" => $countryCode,
-            "line1" => $request->get('address_line1'),
-            "line2" => $request->get('address_line2'),
-          ];
-          $accountParams['individual']['address_kana'] = [
-            "postal_code" => $request->get('postal_code'),
-            "country" => $countryCode,
-            "line1" => $request->get('address_line1_kana'),
-            "line2" => $request->get('address_line2_kana'),
-          ];
-        } else {
-          $accountParams['individual']['first_name'] = $request->get('first_name');
-          $accountParams['individual']['last_name'] = $request->get('last_name');
-          $accountParams['individual']['address'] = [
-            "postal_code" => $request->get('postal_code'),
-            "country" => $countryCode,
-            // "state" => $request->get('address_state'),
-            // "city" => $request->get('address_city'),
-            "line1" => $request->get('address_line1'),
-            "line2" => $request->get('address_line2'),
-          ];
-        }
-
         if ($wallet->stripe_connect_id) {
-          unset($accountParams['type']);
-          unset($accountParams['country']);
-          $account = Account::update($wallet->stripe_connect_id, $accountParams);
+          $account = Account::retrieve($wallet->stripe_connect_id);
         } else {
-          $account = \Stripe\Account::create($accountParams);
+          $account = Account::create([
+            'type' => 'express',
+            'country' =>  $request->get('country_code'),
+          ]);
+
+          $wallet->stripe_connect_id = $account->id;
+          $wallet->payouts_enabled = false;
+          $wallet->save();
         }
 
-        $wallet->stripe_connect_id = $account->id;
-        $wallet->payouts_enabled = false;
-        $wallet->save();
+        $account_link = AccountLink::create([
+          'account' => $account->id,
+          'refresh_url' => 'https://kizuner.com/404',
+          'return_url' => 'https://kizuner.com/',
+          'type' => 'account_onboarding',
+        ]);
 
-        return $account;
+        return $account_link;
     }
 
     public function getStatus()

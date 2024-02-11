@@ -50,7 +50,6 @@ class StripeController
     public function getStripeCustomAccount() {
         try {
             $res = $this->stripeManager->getStripeCustomAccount();
-            Log::debug($res);
             return new JsonResponse($res, Response::HTTP_OK);
         } catch (\Exception $th) {
             Log::debug($th->getMessage());
@@ -227,5 +226,17 @@ class StripeController
                 ]
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function return_url(Request $request)
+    {
+        Log::debug("______RETURN");
+        Log::debug($request->all());
+    }
+
+    public function refresh_url(Request $request)
+    {
+        Log::debug("______REFRSH");
+        Log::debug($request->all());
     }
 }
