@@ -8,9 +8,7 @@ use Modules\Search\Domain\Queries\HangoutNearByQuery;
 use Modules\Search\Domain\Queries\HangoutOnlineQuery;
 use Modules\Search\Domain\Queries\HelpNearByQuery;
 use Modules\Search\Domain\Queries\HelpOnlineQuery;
-use Modules\Search\Http\Transformers\HangoutNearByTransform;
-use Modules\Search\Http\Transformers\HelpNearByTransform;
-use Modules\Search\Http\Transformers\NearByTransform;
+use Modules\Search\Http\Transformers\OnlineTransform;
 
 class HangoutOnlineAction
 {
@@ -23,13 +21,8 @@ class HangoutOnlineAction
 
         $sortedData = $dataMerge->sortBy('distance');
 
-
-        //$helps = fractal((new HelpNearByQuery($lat, $long, $radius, $perPage))->execute(), new HelpNearByTransform());
-        //$hangouts = fractal((new HangoutNearByQuery($lat, $long, $radius, $perPage))->execute(), new HangoutNearByTransform());
-        //dd($sortedData);
-
-        $helps = fractal(null, new NearByTransform());
-        $hangouts = fractal($sortedData, new NearByTransform());
+        $helps = fractal(null, new OnlineTransform());
+        $hangouts = fractal($sortedData, new OnlineTransform());
 
         return [
             'data' => [
@@ -37,6 +30,5 @@ class HangoutOnlineAction
                 'hangouts' => $hangouts
             ]
         ];
-        //return (new HangoutNearByQuery($lat, $long, $radius, $perPage))->execute();
     }
 }

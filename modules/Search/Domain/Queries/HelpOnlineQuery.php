@@ -40,28 +40,14 @@ class HelpOnlineQuery
                                 user_uploads.thumb as user_avatar_thumb,
                                 help_uploads.path as help_cover_origin,
                                 help_uploads.thumb as help_cover_thumb,
-                                locations.address as help_address,
-                                locations.lat as help_lat,
-                                locations.lng as help_lng,
-
                                 helps.is_fake as is_fake,
                                 helps.cover_img as cover_img,
                                 helps.is_range_price as help_is_range_price,
                                 helps.min_amount as help_min_amount,
                                 helps.max_amount as help_max_amount,
                                 helps.amount as help_amount,
-                                "help" as type,
-
-                                (6371 * acos (
-                                              cos ( radians('  . 100000 .  ') )
-                                              * cos( radians( locations.lat ) )
-                                              * cos( radians( locations.lng ) - radians('  . 10000 .  ') )
-                                              + sin ( radians(' . 100000 . ') )
-                                              * sin( radians( locations.lat ) )
-                                            )
-                                ) AS distance
+                                "help" as type
                     '))
-                    ->join('locations', 'locations.locationable_id', '=', 'helps.id')
                     ->join('users', 'users.id', '=', 'helps.user_id')
                     ->leftJoin('uploads as help_uploads', 'help_uploads.uploadable_id', '=', 'helps.id')
                     ->leftJoin('uploads as user_uploads', 'user_uploads.id', '=', 'users.avatar_id')

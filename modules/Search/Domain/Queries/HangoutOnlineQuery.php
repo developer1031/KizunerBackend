@@ -37,27 +37,14 @@ class HangoutOnlineQuery
                                 user_uploads.thumb as user_avatar_thumb,
                                 hangout_uploads.path as hangout_cover_origin,
                                 hangout_uploads.thumb as hangout_cover_thumb,
-                                locations.address as hangout_address,
-                                locations.lat as hangout_lat,
-                                locations.lng as hangout_lng,
                                 hangouts.is_fake as is_fake,
                                 hangouts.cover_img as cover_img,
                                 hangouts.is_range_price as hangout_is_range_price,
                                 hangouts.min_amount as hangout_min_amount,
                                 hangouts.max_amount as hangout_max_amount,
                                 hangouts.amount as hangout_amount,
-                                "hangout" as type,
-
-                                (6371 * acos (
-                                              cos ( radians('  . 100000 .  ') )
-                                              * cos( radians( locations.lat ) )
-                                              * cos( radians( locations.lng ) - radians('  . 100000 .  ') )
-                                              + sin ( radians(' . 100000 . ') )
-                                              * sin( radians( locations.lat ) )
-                                            )
-                                ) AS distance
+                                "hangout" as type
                     '))
-                    ->join('locations', 'locations.locationable_id', '=', 'hangouts.id')
                     ->join('users', 'users.id', '=', 'hangouts.user_id')
                     ->leftJoin('uploads as hangout_uploads', 'hangout_uploads.uploadable_id', '=', 'hangouts.id')
                     ->leftJoin('uploads as user_uploads', 'user_uploads.id', '=', 'users.avatar_id')

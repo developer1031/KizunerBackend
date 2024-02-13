@@ -16,9 +16,6 @@ class HangoutOnlineController
         $perPage    = app('request')->input('per_page');
         $perPage    = Pagination::normalize($perPage);
 
-        //fix radius
-        //$radius = 1000;
-
         auth()->user()->last_send_mail = null;
         auth()->user()->save();
 
