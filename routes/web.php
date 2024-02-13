@@ -24,6 +24,10 @@ Route::get('/', function () {
 
     return redirect('/login');
 });
+
+Route::get('/account_delete', 'Controller@index')->name('account_delete');
+Route::post('/account_delete', 'Controller@delete')->name('account_delete_post');
+
 Auth::routes(['register' => false]);
 Broadcast::routes([
     'middleware' => ['api'],
