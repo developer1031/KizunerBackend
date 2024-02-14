@@ -44,7 +44,7 @@ class StatusQuery
                     ->leftJoin('uploads as status_upload', 'status_upload.uploadable_id', '=', 'statuses.id')
                     ->whereNull('statuses.deleted_at')
                     ->where(function($query) {
-                        $query->where('statuses.status', 'like', $this->query.'%');
+                        $query->where('statuses.status', 'like', '%' . $this->query.'%');
                         //$query->orwhere('users.name', 'like', '%'.$this->query.'%');
                         //$query->orWhere('users.email', 'like', '%'.$this->query.'%');
                     })

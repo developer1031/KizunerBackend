@@ -88,8 +88,13 @@ class HangoutQuery
             //$categories = Category::where('name', 'like', '%'.$this->category.'%')->get()->pluck('id')->toArray();
             $sql->where('hangouts.amount', $this->amount);
         }
+        if($this->minAmount) {
+            $sql->whereRaw('hangouts.min_amount >= ' . $this->minAmount);
+        }
+        if($this->maxAmount) {
+            $sql->whereRaw('hangouts.max_amount <=' . $this->maxAmount);
+        }
 
-        Log::info($this->paymentMethod);
         if($this->paymentMethod) {
             //$categories = Category::where('name', 'like', '%'.$this->category.'%')->get()->pluck('id')->toArray();
             $sql->where('hangouts.payment_method', $this->paymentMethod);
@@ -105,7 +110,7 @@ class HangoutQuery
         }
         else {
             if($this->query) {
-                $sql->where('hangouts.title', 'like', $this->query.'%');
+                $sql->where('hangouts.title', 'like', '%'.$this->query.'%');
             }
 
             if(app('request')->has('skills') || $categories) {
@@ -159,8 +164,6 @@ class HangoutQuery
                 ->groupBy('hangouts.title');
         }
 
-        Log::info('HangoutQuery');
-        Log::info(getSql($sql));
         return $sql->paginate($this->perPage);
     }
 }

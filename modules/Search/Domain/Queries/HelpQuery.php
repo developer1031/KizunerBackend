@@ -83,6 +83,12 @@ class HelpQuery
             //$categories = Category::where('name', 'like', '%'.$this->category.'%')->get()->pluck('id')->toArray();
             $sql->where('helps.amount', $this->amount);
         }
+        if($this->minAmount) {
+            $sql->whereRaw('helps.min_amount >= ' . $this->minAmount);
+        }
+        if($this->maxAmount) {
+            $sql->whereRaw('helps.max_amount <=' . $this->maxAmount);
+        }
 
         if ($this->paymentMethod) {
             //$categories = Category::where('name', 'like', '%'.$this->category.'%')->get()->pluck('id')->toArray();
@@ -98,7 +104,7 @@ class HelpQuery
             $sql->whereRaw("1 <> 1");
         } else {
             if ($this->query) {
-                $sql->where('helps.title', 'like', $this->query . '%');
+                $sql->where('helps.title', 'like', '%' . $this->query . '%');
             }
 
             $sql->where(function ($query) use ($skills, $categories) {

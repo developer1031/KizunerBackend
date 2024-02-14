@@ -11,8 +11,10 @@ trait Searchable
     private $paymentMethod;
     private $location;
     private $amount;
+    private $minAmount;
+    private $maxAmount;
 
-    public function __construct($query, string $perPage, $category=null, $offerType=null, $paymentMethod=null, $location=null, $amount=null)
+    public function __construct($query, string $perPage, $category=null, $offerType=null, $paymentMethod=null, $location=null, $amount=null, $minAmount=null, $maxAmount=null)
     {
         $this->perPage = $perPage;
         $this->query   = $query;
@@ -21,5 +23,7 @@ trait Searchable
         $this->paymentMethod   = $paymentMethod;
         $this->location   = $location;
         $this->amount   = $amount;
+        $this->minAmount   = $minAmount;
+        $this->maxAmount   = $maxAmount;
     }
 }

@@ -16,7 +16,7 @@ use Modules\Search\Http\Transformers\UserTransform;
 
 class FullTextSearchAction
 {
-    public function execute($type, $query, string $perPage, $category=null, $offerType=null, $paymentMethod=null, $location=null, $amount=null)
+    public function execute($type, $query, string $perPage, $category=null, $offerType=null, $paymentMethod=null, $location=null, $amount=null, $minAmount=null, $maxAmount=null)
     {
         if ($type) {
             if ($type === 'user') {
@@ -42,11 +42,11 @@ class FullTextSearchAction
 
         return [
             'data' => [
-                'users'     => fractal((new UserQuery( $query, $perPage, $category, $offerType, $paymentMethod, $location, $amount))->execute(), new UserTransform()),
-                'hangouts'  => fractal((new HangoutQuery( $query, $perPage, $category, $offerType, $paymentMethod, $location, $amount))->execute(), new HangoutTransform()),
-                'statuses'  => fractal((new StatusQuery( $query, $perPage, $category, $offerType, $paymentMethod, $location, $amount))->execute(), new StatusTransform()),
-                'helps'     => fractal((new HelpQuery( $query, $perPage, $category, $offerType, $paymentMethod, $location, $amount))->execute(), new HelpTransform()),
-                'videos'    => fractal((new VideoQuery( $query, $perPage, $category, $offerType, $paymentMethod, $location, $amount))->execute(), new GuideTransformer()),
+                'users'     => fractal((new UserQuery( $query, $perPage, $category, $offerType, $paymentMethod, $location, $amount, $minAmount, $maxAmount))->execute(), new UserTransform()),
+                'hangouts'  => fractal((new HangoutQuery( $query, $perPage, $category, $offerType, $paymentMethod, $location, $amount, $minAmount, $maxAmount))->execute(), new HangoutTransform()),
+                'statuses'  => fractal((new StatusQuery( $query, $perPage, $category, $offerType, $paymentMethod, $location, $amount, $minAmount, $maxAmount))->execute(), new StatusTransform()),
+                'helps'     => fractal((new HelpQuery( $query, $perPage, $category, $offerType, $paymentMethod, $location, $amount, $minAmount, $maxAmount))->execute(), new HelpTransform()),
+                'videos'    => fractal((new VideoQuery( $query, $perPage, $category, $offerType, $paymentMethod, $location, $amount, $minAmount, $maxAmount))->execute(), new GuideTransformer()),
             ]
         ];
     }
