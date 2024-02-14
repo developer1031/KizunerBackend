@@ -105,9 +105,9 @@ class ReactRepository implements ReactRepositoryInterface
             $help->reacts()->save($react);
 
             //Send notification
-            if ($react->user_id != $react->reacted_user_id) {
+            // if ($react->user_id != $react->reacted_user_id) {
                 //HangoutLikeJob::dispatch($react);
-            }
+            // }
             return true;
         }
         return false;

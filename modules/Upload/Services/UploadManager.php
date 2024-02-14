@@ -113,8 +113,6 @@ class UploadManager
         $remove_extensions = ['.qt', '.mov'];
         $saveOriginal = str_replace($remove_extensions, '.mp4', $saveOriginal);
 
-        Log::debug("________________1");
-
         //Force rename to .mp4
         //$saveOriginal = $saveOriginal . '.mp4';
 
@@ -123,8 +121,6 @@ class UploadManager
             $saveOriginal,
             $originalRs
         );
-
-        Log::debug("________________2");
 
         //generate Thumbnail
         $ffmpeg = FFMpeg::create(array(
@@ -135,15 +131,9 @@ class UploadManager
         ));
         $video = $ffmpeg->open($file);
 
-        Log::debug("________________3");
 
         $out_path_thumb = storage_path('app/tmp-video-thumb') . '/' . str_replace('.' . $file->extension(), '', $name) . '.jpg';
-
-        Log::debug("_______" . $out_path_thumb);
         $video->frame(TimeCode::fromSeconds(1))->save($out_path_thumb);
-
-
-        Log::debug("________________4");
 
         $saveOriginal_thumb = UploadPath::resolve() . '/' . date('Y/m/d') . '/' . str_replace('.' . $file->extension(), '', $name) . '.jpg';
         $originalRs_thumb = file_get_contents($out_path_thumb);
@@ -151,9 +141,6 @@ class UploadManager
             $saveOriginal_thumb,
             $originalRs_thumb
         );
-
-        Log::debug("________________5");
-
 
         return [
             'original' => $saveOriginal,
