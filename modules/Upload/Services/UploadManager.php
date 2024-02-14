@@ -138,6 +138,8 @@ class UploadManager
         Log::debug("________________3");
 
         $out_path_thumb = storage_path('app/tmp-video-thumb') . '/' . str_replace('.' . $file->extension(), '', $name) . '.jpg';
+
+        Log::debug("_______" . $out_path_thumb);
         $video->frame(TimeCode::fromSeconds(1))->save($out_path_thumb);
 
 
