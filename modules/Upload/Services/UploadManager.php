@@ -37,6 +37,7 @@ class UploadManager
     public function uploadSingleFile($request)
     {
         $mediaPath = $this->uploadFile($request->file('file'));
+        \Log::debug($mediaPath);
         $type = $request->get('type');
         $upload = $this->uploadRepository->create([
                                     'path' => $mediaPath['original'],
