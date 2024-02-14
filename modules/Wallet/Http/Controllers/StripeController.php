@@ -155,7 +155,6 @@ class StripeController
             $res = $this->stripeManager->getStatus($request);
             return new JsonResponse($res, Response::HTTP_OK);
         } catch (\Exception $th) {
-            Log::error($th->getMessage());
             return response()->json([
                 'errors' => [
                     'message' => $th->getMessage()
