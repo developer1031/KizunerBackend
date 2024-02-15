@@ -30,51 +30,51 @@ class FriendAcceptedJob implements ShouldQueue
 
     public function handle()
     {
-        $request = $this->request;
+        // $request = $this->request;
 
-        $user = User::find($request->friend_id);
-        $userMedia = $user->medias()->where('type', 'user.avatar')->first();
-        $image = null;
-        if ($userMedia) {
-            $image = \Storage::disk('gcs')->url($userMedia->thumb);
-        }
+        // $user = User::find($request->friend_id);
+        // $userMedia = $user->medias()->where('type', 'user.avatar')->first();
+        // $image = null;
+        // if ($userMedia) {
+        //     $image = \Storage::disk('gcs')->url($userMedia->thumb);
+        // }
 
-        $message = $user->name . ' accepted your friend request';
+        // $message = $user->name . ' accepted your friend request';
 
-        $payload = [
-            'relation' => [
-                'id'        => $request->friend_id,
-                'type'      => 'user',
-                'friend_request_id' => $request->id
-            ],
-            'type'          => self::TYPE,
-            'created_at'    => $request->created_at,
-            'message'       => '<b>' . $user->name . '</b>' . ' accepted your friend request'
-        ];
+        // $payload = [
+        //     'relation' => [
+        //         'id'        => $request->friend_id,
+        //         'type'      => 'user',
+        //         'friend_request_id' => $request->id
+        //     ],
+        //     'type'          => self::TYPE,
+        //     'created_at'    => $request->created_at,
+        //     'message'       => '<b>' . $user->name . '</b>' . ' accepted your friend request'
+        // ];
 
-        $data = (new NotificationDto())
-            ->setUserId($request->user_id)
-            ->setTitle('Kizuner')
-            ->setBody($message)
-            ->setPayload($payload)
-            ->setType(self::TYPE)
-            ->setUploadableId($userMedia ? $userMedia->id : null);
-        $notification = Notification::create($data);
+        // $data = (new NotificationDto())
+        //     ->setUserId($request->user_id)
+        //     ->setTitle('Kizuner')
+        //     ->setBody($message)
+        //     ->setPayload($payload)
+        //     ->setType(self::TYPE)
+        //     ->setUploadableId($userMedia ? $userMedia->id : null);
+        // $notification = Notification::create($data);
 
-        $token = UserDeviceToken::getUserDevice($request->user_id, '');
+        // $token = UserDeviceToken::getUserDevice($request->user_id, '');
 
-        if ($token) {
-            $payload['image'] = $image;
-            $payload['id'] = $notification->id;
-            $payload['unread_count'] = getUnreadNotification($request->user_id);
-            PushNotificationJob::dispatch('sendBatchNotification', [
-                [$token], [
-                    'topicName'     => 'kizuner',
-                    'title'         => $notification->title,
-                    'body'          => $notification->body,
-                    'payload'       => $payload
-                ],
-            ]);
-        }
+        // if ($token) {
+        //     $payload['image'] = $image;
+        //     $payload['id'] = $notification->id;
+        //     $payload['unread_count'] = getUnreadNotification($request->user_id);
+        //     PushNotificationJob::dispatch('sendBatchNotification', [
+        //         [$token], [
+        //             'topicName'     => 'kizuner',
+        //             'title'         => $notification->title,
+        //             'body'          => $notification->body,
+        //             'payload'       => $payload
+        //         ],
+        //     ]);
+        // }
     }
 }
