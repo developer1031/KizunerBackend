@@ -1,6 +1,21 @@
 @extends('layouts::base')
 
 @section('content')
+    <div class="nk-block-head nk-block-head-sm">
+        <div class="nk-block-between g-3">
+            <!-- <div class="nk-block-head-content">
+                <h4 class="nk-block-title page-title"></h4>
+            </div> -->
+            <div class="nk-block-head-content">
+                <a
+                  href="javascript:void(0);"
+                  onclick="window.history.back()"
+                  class="btn btn-outline-light bg-white d-none d-sm-inline-flex">
+                  <em class="icon ni ni-arrow-left"></em><span>Back</span>
+                </a>
+            </div>
+        </div>
+    </div>
     <div class="card card-bordered card-preview">
         <div class="card-inner">
             <div class="row">

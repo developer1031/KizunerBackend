@@ -105,8 +105,20 @@ class AuthManager
         $request->user()->last_send_mail = null;
         $request->user()->save();
 
+        $needVerifyEmail = false;
+        if (!$request->user()->hasVerifiedEmail()) {
+          $verifyEmail = EmailVerify::updateOrCreate([
+            'email' => $request->user()->email
+          ], ['pin' => rand(100000, 999999)]);
+          $request->user()->notify(new VerifyEmail($verifyEmail->pin));
+
+          $needVerifyEmail = true;
+        }
+        
+
         return new JsonResponse([
             'data' => [
+                'need_verify' => $needVerifyEmail,
                 'access_token' => $token->accessToken,
                 'token_type' => 'Bearer',
                 'expires_at' => Carbon::parse(

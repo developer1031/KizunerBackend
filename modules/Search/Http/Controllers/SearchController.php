@@ -12,7 +12,6 @@ class SearchController
 {
     public function index(Request $request)
     {
-        Log::info('Search');
         Log::info($request->all());
 
         $query      = $request->input('query');
