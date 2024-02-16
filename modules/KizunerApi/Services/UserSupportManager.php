@@ -46,7 +46,6 @@ class UserSupportManager
      */
     public function addUserSupport(UserSupportRequest $request)
     {
-
         $userSupport = null;
         $user = auth()->user();
         

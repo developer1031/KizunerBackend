@@ -28,7 +28,6 @@ class UserSupportController
     {
         if ($request->validated()) {
             $response = $userSupportManager->addUserSupport($request);
-            Log::info(json_encode($response));
             return new JsonResponse($response, Response::HTTP_CREATED);
         }
     }

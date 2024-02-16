@@ -114,8 +114,14 @@
                 myArray.forEach( function(mediaItem){
                     var storagePath = '{{ \Storage::disk('gcs')->url('') }}';
                     storagePath = storagePath.slice(0, -1);
-                    src =  storagePath + mediaItem.thumb;
-                    media = '<img class="card-img-top" src="'+ src +'"/>\n';
+                    src =  storagePath + mediaItem.path;
+
+                    // check mp4 file and if it is mp4 file, then show video tag
+                    if (src.includes('.mp4')) {
+                      media = '<video class="card-img-top" controls><source src="'+ src +'" type="video/mp4"></video>\n';
+                    } else {
+                      media = '<img class="card-img-top" src="'+ src +'"/>\n';
+                    }
 
                     $('#mediaModal .modal-body').append(
                     '<div class="card card-bordered content">\n' +
