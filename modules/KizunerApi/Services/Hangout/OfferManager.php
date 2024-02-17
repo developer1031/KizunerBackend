@@ -493,10 +493,14 @@ class OfferManager
 
         if ($status !== 'queuing') {
             $offers = $hangout->offers()
-                ->whereIn('status', [
-                    Offer::$status[$status],
-                    Offer::$status['accept'],
-                    Offer::$status['completed']
+                // ->whereIn('status', [
+                //     Offer::$status[$status],
+                //     Offer::$status['accept'],
+                //     Offer::$status['completed']
+                // ])
+                ->whereNotIn('status', [
+                    Offer::$status['cancel'],
+                    Offer::$status['reject']
                 ])
                 ->paginate($perPage);
         } else {

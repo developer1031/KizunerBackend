@@ -557,11 +557,17 @@ class HelpManager
         //dd(HelpOffer::$status['queuing']);
 
         if ($status !== 'queuing') {
-            $offers = $help->offers()->whereIn('status', [
-                HelpOffer::$status[$status],
-                HelpOffer::$status['accept'],
-                HelpOffer::$status['completed']
-            ])->paginate($perPage);
+            $offers = $help->offers()
+              // ->whereIn('status', [
+              //     HelpOffer::$status[$status],
+              //     HelpOffer::$status['accept'],
+              //     HelpOffer::$status['completed']
+              // ])
+              ->whereNotIn('status', [
+                  HelpOffer::$status['cancel'],
+                  HelpOffer::$status['reject']
+              ])
+            ->paginate($perPage);
         } else {
             $offers = $help->offers()->where('status', HelpOffer::$status['queuing'])->paginate($perPage);
         }

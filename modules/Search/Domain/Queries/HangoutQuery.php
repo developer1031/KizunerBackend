@@ -89,10 +89,11 @@ class HangoutQuery
             $sql->where('hangouts.amount', $this->amount);
         }
         if($this->minAmount) {
-            $sql->whereRaw('hangouts.min_amount >= ' . $this->minAmount);
+            $sql->whereRaw('hangouts.min_amount >= ' . $this->minAmount . ' OR hangouts.amount >= ' . $this->minAmount);
         }
+
         if($this->maxAmount) {
-            $sql->whereRaw('hangouts.max_amount <=' . $this->maxAmount);
+            $sql->whereRaw('hangouts.max_amount <=' . $this->maxAmount . ' OR hangouts.amount <= ' . $this->maxAmount);
         }
 
         if($this->paymentMethod) {
