@@ -416,6 +416,16 @@
         $('#transaction-table').DataTable({
             processing: true,
             serverSide: true,
+            stateSave: true,
+            stateSaveCallback: function (settings, data) {
+                localStorage.setItem(
+                    'DataTables_' + settings.sInstance,
+                    JSON.stringify(data)
+                );
+            },
+            stateLoadCallback: function (settings) {
+                return JSON.parse(localStorage.getItem('DataTables_' + settings.sInstance));
+            },
             ajax: '{{ route('admin.user.transaction.data', ['id' => $user->id]) }}',
             columns: [
                 {

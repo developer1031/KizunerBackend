@@ -57,6 +57,7 @@ class HangoutTransform extends TransformerAbstract
                 'social_avatar' => $item->social_avatar,
             ],
             'payment_method'     => $item->payment_method,
+            'available_status'     => $item->available_status,
         ];
     }
 }

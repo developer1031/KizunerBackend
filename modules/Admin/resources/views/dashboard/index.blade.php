@@ -619,6 +619,16 @@
         $('#speciality-table').DataTable({
             processing: true,
             serverSide: true,
+            stateSave: true,
+            stateSaveCallback: function (settings, data) {
+                localStorage.setItem(
+                    'DataTables_Special' + settings.sInstance,
+                    JSON.stringify(data)
+                );
+            },
+            stateLoadCallback: function (settings) {
+                return JSON.parse(localStorage.getItem('DataTables_Special' + settings.sInstance));
+            },
             ajax: '{{ route('admin.skill.data-speciality-dashboard') }}',
             columns: [
                 { data: 'name' },
@@ -636,6 +646,16 @@
         $('#users-table').DataTable({
             processing: true,
             serverSide: true,
+            stateSave: true,
+            stateSaveCallback: function (settings, data) {
+                localStorage.setItem(
+                    'DataTables_Users' + settings.sInstance,
+                    JSON.stringify(data)
+                );
+            },
+            stateLoadCallback: function (settings) {
+                return JSON.parse(localStorage.getItem('DataTables_Users' + settings.sInstance));
+            },
             ajax: '{{ route('admin.dashboard.user.data') }}',
             columns: [
                 {

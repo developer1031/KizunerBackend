@@ -65,6 +65,7 @@ class HelpTransform extends TransformerAbstract {
             ],
             'payment_method'     => $item->payment_method,
             'user_id' => $item->user_id,
+            'available_status' => $item->available_status,
         ];
     }
 }

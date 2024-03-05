@@ -88,6 +88,26 @@
         $('#admin-table').DataTable({
             processing: true,
             serverSide: true,
+            stateSave: true,
+            stateSaveCallback: function (settings, data) {
+                localStorage.setItem(
+                    'DataTables_' + settings.sInstance,
+                    JSON.stringify(data)
+                );
+            },
+            stateLoadCallback: function (settings) {
+                return JSON.parse(localStorage.getItem('DataTables_' + settings.sInstance));
+            },
+            stateSave: true,
+            stateSaveCallback: function (settings, data) {
+                localStorage.setItem(
+                    'DataTables_' + settings.sInstance,
+                    JSON.stringify(data)
+                );
+            },
+            stateLoadCallback: function (settings) {
+                return JSON.parse(localStorage.getItem('DataTables_' + settings.sInstance));
+            },
             ajax: '{{ route('admin.admin.data') }}',
             columns: [
                 {data: "name", name: "name"},
