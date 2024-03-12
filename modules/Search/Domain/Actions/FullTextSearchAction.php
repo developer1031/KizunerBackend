@@ -16,7 +16,7 @@ use Modules\Search\Http\Transformers\UserTransform;
 
 class FullTextSearchAction
 {
-  public function execute($type, $query, string $perPage, $category = null, $offerType = null, $paymentMethod = null, $location = null, $amount = null, $minAmount = null, $maxAmount = null)
+  public function execute($type, $query, string $perPage, $category = null, $offerType = null, $paymentMethod = null, $location = null, $amount = null, $minAmount = null, $maxAmount = null, $language = null)
   {
     if ($type) {
       if ($type === 'user') {
@@ -49,7 +49,7 @@ class FullTextSearchAction
       $data['statuses'] = $statuses;
     }
 
-    if ($query || $age || $gender || $skills || $location) {
+    if ($query || $age || $gender || $skills || $location || $language) {
       $users = fractal((new UserQuery($query, $perPage, $category, $offerType, $paymentMethod, $location, $amount, $minAmount, $maxAmount))->execute(), new UserTransform());
       $data['users'] = $users;
     }

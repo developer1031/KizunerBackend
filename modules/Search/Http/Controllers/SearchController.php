@@ -26,7 +26,8 @@ class SearchController
         $amount   = $request->input('amount');
         $minAmount   = $request->input('min_amount');
         $maxAmount   = $request->input('max_amount');
+        $language   = $request->input('language');
 
-        return response()->json( (new FullTextSearchAction)->execute($type, $query, $perPage, $category, $offerType, $paymentMethod, $location, $amount, $minAmount, $maxAmount), Response::HTTP_OK) ;
+        return response()->json( (new FullTextSearchAction)->execute($type, $query, $perPage, $category, $offerType, $paymentMethod, $location, $amount, $minAmount, $maxAmount, $language), Response::HTTP_OK) ;
     }
 }

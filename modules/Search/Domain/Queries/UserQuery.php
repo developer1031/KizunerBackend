@@ -27,7 +27,8 @@ class UserQuery
                     'locations.lng as user_location_lng',
                     'uploads.thumb as user_thumb',
                     'uploads.path as user_path',
-                    'users.social_avatar as social_avatar'
+                    'users.social_avatar as social_avatar',
+                    'users.language as user_language'
                 )
                 ->leftJoin('uploads', 'uploads.id', '=', 'users.avatar_id')
                 ->leftJoin('locations', 'users.id', '=', 'locations.locationable_id')
@@ -41,6 +42,7 @@ class UserQuery
             // User specific search
             $age    =   app('request')->input('age');
             $gender =   app('request')->input('gender');
+            $language =   app('request')->input('language');
 
             $categories = [];
             $skills = [];
@@ -69,7 +71,8 @@ class UserQuery
                     'locations.lng as user_location_lng',
                     'uploads.thumb as user_thumb',
                     'uploads.path as user_path',
-                    'users.social_avatar as social_avatar'
+                    'users.social_avatar as social_avatar',
+                    'users.language as user_language'
                 )
                 ->leftJoin('uploads', 'uploads.id', '=', 'users.avatar_id')
                 ->leftJoin('locations', 'users.id', '=', 'locations.locationable_id')
@@ -115,11 +118,15 @@ class UserQuery
                 $sql->where('users.gender', $gender);
             }
 
+            if ($language) {
+                $sql = $sql->where(function($query) use ($language) {
+                    $query->where('users.language', 'like', '%'. $language .'%');
+                });
+            }
+
             //No query Fake user
             $sql->where('users.is_fake', '<>', 1);
             $sql->groupBy('users.id');
-
-
         }
 
 
