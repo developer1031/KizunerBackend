@@ -8,21 +8,23 @@ use Modules\Framework\Support\Facades\EntityManager;
 class WalletEntity extends UuidEntity
 {
 
-    const STRIPE_FEE = 0.1; // 10%
-    const NOW_PAYMENTS_FEE = 0.08; // 8%
+  const STRIPE_GUEST_FEE = 0.05; // 5%
+  const STRIPE_FEE = 0.1; // 10%
+  const STRIPE_PAYOUT_FEE = 300; // $3
+  const NOW_PAYMENTS_FEE = 0.05; // 5%
 
-    const PAYMENT = 'payment';
-    const TRANSFER = 'transfer';
-    const REFUND = 'refund';
+  const PAYMENT = 'payment';
+  const TRANSFER = 'transfer';
+  const REFUND = 'refund';
 
-    /**
-     * @desc Table Name
-     */
-    protected $table = 'wallet_wallets';
+  /**
+   * @desc Table Name
+   */
+  protected $table = 'wallet_wallets';
 
-    public function cards()
-    {
-        return EntityManager::getRepository(CardEntity::class)
-            ->getByWalletId($this->id);
-    }
+  public function cards()
+  {
+    return EntityManager::getRepository(CardEntity::class)
+      ->getByWalletId($this->id);
+  }
 }

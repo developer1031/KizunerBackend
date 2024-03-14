@@ -51,7 +51,8 @@ class OfferTransform extends TransformerAbstract
             'min_amount'       => $offer->min_amount,
             'max_amount'       => $offer->max_amount,
             'payment_status' => $offer->payment_status,
-            'invoice_url' => $offer->payment_status == Offer::PAYMENT_STATUS_UNPAID ? $offer->invoice_url : null,
+            // 'invoice_url' => $offer->payment_status == Offer::PAYMENT_STATUS_UNPAID ? $offer->invoice_url : null,
+            'invoice_url' => $offer->invoice_url,
             'available_payment_method' => $hangout ? $hangout->payment_method : null,
             'crypto_currency' => $wallet ? $wallet->currency : null,
         ];
