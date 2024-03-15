@@ -51,12 +51,13 @@ class CryptoWalletStoreRequest extends FormRequest
                     'Wallet address whitelisting',
                     'I’d like to whitelist the following address ' . $this->wallet_address . ' for payouts in ' . $this->currency . '. Our Nowpayments email: nagaki@kizuner.com',
                     $nowEmail,
-                    "",
+                    ""
                   )
                 );
 
                 return (new CreateCryptoWalletAction($cryptoWalletDto))->execute();
             } catch (ApiErrorException $exception) {
+                \Log::debug($exception);
                 throw $exception;
             }
         }
