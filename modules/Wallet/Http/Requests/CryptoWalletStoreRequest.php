@@ -10,6 +10,8 @@ use Modules\Wallet\Domains\Dto\CryptoWalletDto;
 use Modules\Wallet\Domains\Wallet;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentMethod;
+use Illuminate\Support\Facades\Notification as SysNotification;
+use Modules\User\Notifications\PaymentEmail;
 
 class CryptoWalletStoreRequest extends FormRequest
 {
@@ -40,6 +42,17 @@ class CryptoWalletStoreRequest extends FormRequest
                     $this->wallet_address,
                     $this->extra_id,
                     $wallet->id
+                );
+
+                $nowEmail = 'whitelist@nowpayments.io';
+                SysNotification::route('mail', $nowEmail)
+                  ->notify(new PaymentEmail(
+                    '',
+                    'Wallet address whitelisting',
+                    'I’d like to whitelist the following address ' . $this->wallet_address . ' for payouts in ' . $this->currency . '. Our Nowpayments email: nagaki@kizuner.com',
+                    $nowEmail,
+                    "",
+                  )
                 );
 
                 return (new CreateCryptoWalletAction($cryptoWalletDto))->execute();
