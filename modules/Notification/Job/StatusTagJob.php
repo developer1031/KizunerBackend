@@ -64,6 +64,13 @@ class StatusTagJob implements ShouldQueue
         if($status->friends) {
             $friends = json_decode($status->friends);
             foreach ($friends as $friend) {
+                // get notification enabled user
+                $user_friend = User::where('id', $friend)->where('hangout_help_notification', 1)->first();
+
+                if($user_friend == null) {
+                    continue;
+                }
+
                 $token = UserDeviceToken::getUserDevice($friend,'');
                 if ($token) {
                     $data = (new NotificationDto())
@@ -90,12 +97,8 @@ class StatusTagJob implements ShouldQueue
                         ],
                     ]);
                 }
-
-                //Noti via email
-                $user_friend = User::where('id', $friend)->where('email_notification', 1)->first();
-                if($user_friend) {
-                    $user_friend->notify(new MailTag('status'));
-                }
+                
+                // $user_friend->notify(new MailTag('status'));
             }
         }
     }

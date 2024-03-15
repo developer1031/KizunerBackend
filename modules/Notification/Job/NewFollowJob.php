@@ -34,53 +34,58 @@ class NewFollowJob implements ShouldQueue
 
     public function handle()
     {
-        // $follow = $this->follow;
+        $follow = $this->follow;
 
-        // $follower = User::find($follow->user_id);
-        // $followerMedia = $follower->medias()->where('type', 'user.avatar')->first();
-        // $image = null;
-        // if ($followerMedia) {
-        //     $image = \Storage::disk('gcs')->url($followerMedia->thumb);
-        // }
+        $emailReceiver = UserDeviceToken::getUserEmail($follow->follow_id, "follow_notification");
+        if ($emailReceiver == null) {
+            return;
+        }
 
-        // $message = $follower->name . ' followed you';
+        $follower = User::find($follow->user_id);
+        $followerMedia = $follower->medias()->where('type', 'user.avatar')->first();
+        $image = null;
+        if ($followerMedia) {
+            $image = \Storage::disk('gcs')->url($followerMedia->thumb);
+        }
 
-        // $payload = [
-        //     'relation' => [
-        //         'id'        => $follow->user_id,
-        //         'type'      => 'user',
-        //     ],
-        //     'type'          => self::TYPE,
-        //     'created_at'    => $follow->created_at,
-        //     'message'       => '<b>' . $follower->name . '</b>' . ' followed you'
-        // ];
+        $message = $follower->name . ' followed you';
 
-        // $data = (new NotificationDto())
-        //             ->setUserId($follow->follow_id)
-        //             ->setTitle('Kizuner')
-        //             ->setBody($message)
-        //             ->setPayload($payload)
-        //             ->setType(self::TYPE)
-        //             ->setUploadableId($followerMedia ? $followerMedia->uploadable_id : null);
-        // $notification = Notification::create($data);
+        $payload = [
+            'relation' => [
+                'id'        => $follow->user_id,
+                'type'      => 'user',
+            ],
+            'type'          => self::TYPE,
+            'created_at'    => $follow->created_at,
+            'message'       => '<b>' . $follower->name . '</b>' . ' followed you'
+        ];
 
-        // $token = UserDeviceToken::getUserDevice($follow->follow_id, "follow_notification");
+        $data = (new NotificationDto())
+                    ->setUserId($follow->follow_id)
+                    ->setTitle('Kizuner')
+                    ->setBody($message)
+                    ->setPayload($payload)
+                    ->setType(self::TYPE)
+                    ->setUploadableId($followerMedia ? $followerMedia->uploadable_id : null);
+        $notification = Notification::create($data);
 
-        // if ($token) {
-        //     $payload['image'] = $image;
-        //     $payload['id'] = $notification->id;
-        //     $payload['unread_count'] = getUnreadNotification($follow->follow_id);
-        //     PushNotificationJob::dispatch('sendBatchNotification', [
-        //         [$token], [
-        //             'topicName'     => 'kizuner',
-        //             'title'         => $notification->title,
-        //             'body'          => $notification->body,
-        //             'payload'       => $payload
-        //         ],
-        //     ]);
-        // }
+        $token = UserDeviceToken::getUserDevice($follow->follow_id, "follow_notification");
 
-        // $emailReceiver = UserDeviceToken::getUserEmail($follow->follow_id, "follow_notification");
+        if ($token) {
+            $payload['image'] = $image;
+            $payload['id'] = $notification->id;
+            $payload['unread_count'] = getUnreadNotification($follow->follow_id);
+            PushNotificationJob::dispatch('sendBatchNotification', [
+                [$token], [
+                    'topicName'     => 'kizuner',
+                    'title'         => $notification->title,
+                    'body'          => $notification->body,
+                    'payload'       => $payload
+                ],
+            ]);
+        }
+
+        
         // if ($emailReceiver) {
         //     SysNotification::route('mail', $emailReceiver)
         //         ->notify(new FollowEmail('', $notification->title, $notification->body, $emailReceiver, ""));

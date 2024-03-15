@@ -109,11 +109,11 @@ class OfferAutoCompleteCommand extends Command
                                 ]);
                             }
 
-                            $emailReceiver = UserDeviceToken::getUserEmail($offer->sender_id, "hangout_help_notification");
-                            if ($emailReceiver) {
-                                SysNotification::route('mail', $emailReceiver)
-                                    ->notify(new HangoutHelpEmail('kizuner', $notification->title, $notification->body, $emailReceiver, ""));
-                            }
+                            // $emailReceiver = UserDeviceToken::getUserEmail($offer->sender_id, "hangout_help_notification");
+                            // if ($emailReceiver) {
+                            //     SysNotification::route('mail', $emailReceiver)
+                            //         ->notify(new HangoutHelpEmail('kizuner', $notification->title, $notification->body, $emailReceiver, ""));
+                            // }
 
                             //Receiver
                             if (isset($casts_sent_notification[$hangout->id]) && $casts_sent_notification[$hangout->id] == $offer->receiver_id) {
@@ -140,11 +140,11 @@ class OfferAutoCompleteCommand extends Command
                                         ],
                                     ]);
                                 }
-                                $emailReceiver = UserDeviceToken::getUserEmail($offer->receiver_id, "hangout_help_notification");
-                                if ($emailReceiver) {
-                                    SysNotification::route('mail', $emailReceiver)
-                                        ->notify(new HangoutHelpEmail('kizuner', $notification->title, $notification->body, $emailReceiver, ""));
-                                }
+                                // $emailReceiver = UserDeviceToken::getUserEmail($offer->receiver_id, "hangout_help_notification");
+                                // if ($emailReceiver) {
+                                //     SysNotification::route('mail', $emailReceiver)
+                                //         ->notify(new HangoutHelpEmail('kizuner', $notification->title, $notification->body, $emailReceiver, ""));
+                                // }
                                 $casts_sent_notification[$hangout->id] = $offer->receiver_id;
                             }
 

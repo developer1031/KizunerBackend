@@ -949,78 +949,73 @@ if (! function_exists('addPoint')) {
         event(new AddedPointSocketEvent($is_up, $user));
 
         /* comment notify and mail function */
-        // if($is_up) {
-        //     //$user = User::where('id', app('request')->user()->id)->where('email_notification', 1)->first();
-        //     //$user = User::where('id', $user_id)->where('email_notification', 1)->first();
+        if($is_up) {
+            // $user = User::where('id', $user_id)->first();
+            // if($user) {
+            //     $user->notify(new MailTag('up_level'));
+            // }
 
-        //     $user = User::where('id', $user_id)->first();
-        //     if($user) {
-        //         $user->notify(new MailTag('up_level'));
-        //     }
+            //Send noti for all friends
+            // try {
+            //     $image = null;
+            //     $userMedia = $user->medias()->where('type', 'user.avatar')->first();
+            //     if ($userMedia) {
+            //         $image = \Storage::disk('gcs')->url($userMedia->thumb);
+            //     }
+            //     $message = $user->name . ' has just been level up.';
+            //     $type    = 'level_up';
+            //     $payload = [
+            //         'relation' => [
+            //             'id'        => $user->id,
+            //             'type'      => 'user'
+            //         ],
+            //         'type'          => $type,
+            //         'message'       => '<b>' . $user->name . '</b>' . ' has just been level up.'
+            //     ];
 
-        //     Log::info('Level-up...');
-
-        //     //Send noti for all friends
-        //     try {
-        //         $image = null;
-        //         $userMedia = $user->medias()->where('type', 'user.avatar')->first();
-        //         if ($userMedia) {
-        //             $image = \Storage::disk('gcs')->url($userMedia->thumb);
-        //         }
-        //         $message = $user->name . ' has just been level up.';
-        //         $type    = 'level_up';
-        //         $payload = [
-        //             'relation' => [
-        //                 'id'        => $user->id,
-        //                 'type'      => 'user'
-        //             ],
-        //             'type'          => $type,
-        //             'message'       => '<b>' . $user->name . '</b>' . ' has just been level up.'
-        //         ];
-
-        //         $friends = $user->friends;
-        //         foreach ($friends as $friend) {
+            //     $friends = $user->friends;
+            //     foreach ($friends as $friend) {
 
 
-        //             $data = (new NotificationDto())
-        //                 ->setUserId($friend)
-        //                 ->setTitle('Kizuner')
-        //                 ->setBody($message)
-        //                 ->setPayload($payload)
-        //                 ->setType($type)
-        //                 ->setUploadableId(null);
-        //             $notification = Notification::create($data);
+            //         $data = (new NotificationDto())
+            //             ->setUserId($friend)
+            //             ->setTitle('Kizuner')
+            //             ->setBody($message)
+            //             ->setPayload($payload)
+            //             ->setType($type)
+            //             ->setUploadableId(null);
+            //         $notification = Notification::create($data);
 
-        //             $token = UserDeviceToken::getUserDevice($friend->friend_id);
-        //             if ($token) {
-        //                 $data = (new NotificationDto())
-        //                     ->setUserId($friend)
-        //                     ->setTitle('Kizuner')
-        //                     ->setBody($message)
-        //                     ->setPayload($payload)
-        //                     ->setType($type)
-        //                     ->setUploadableId($userMedia ? $userMedia->uploadable_id : null);
-        //                 $notification = Notification::create($data);
+            //         $token = UserDeviceToken::getUserDevice($friend->friend_id);
+            //         if ($token) {
+            //             $data = (new NotificationDto())
+            //                 ->setUserId($friend)
+            //                 ->setTitle('Kizuner')
+            //                 ->setBody($message)
+            //                 ->setPayload($payload)
+            //                 ->setType($type)
+            //                 ->setUploadableId($userMedia ? $userMedia->uploadable_id : null);
+            //             $notification = Notification::create($data);
 
-        //                 $payload['image'] = $image;
-        //                 $payload['id'] = $notification->id;
-        //                 $payload['unread_count'] = getUnreadNotification($friend->friend_id);
-        //                 PushNotificationJob::dispatch('sendBatchNotification', [
-        //                     [$token], [
-        //                         'topicName'     => 'kizuner',
-        //                         'title'         => $notification->title,
-        //                         'body'          => $notification->body,
-        //                         'payload'       => $payload
-        //                     ],
-        //                 ]);
-        //             }
-        //         }
-        //     }
-        //     catch (Exception $e) {
-        //         Log::info('Level-up... Errror');
-        //         Log::info($e->getMessage());
-        //     }
-        // }
+            //             $payload['image'] = $image;
+            //             $payload['id'] = $notification->id;
+            //             $payload['unread_count'] = getUnreadNotification($friend->friend_id);
+            //             PushNotificationJob::dispatch('sendBatchNotification', [
+            //                 [$token], [
+            //                     'topicName'     => 'kizuner',
+            //                     'title'         => $notification->title,
+            //                     'body'          => $notification->body,
+            //                     'payload'       => $payload
+            //                 ],
+            //             ]);
+            //         }
+            //     }
+            // }
+            // catch (Exception $e) {
+            //     Log::info('Level-up... Errror');
+            //     Log::info($e->getMessage());
+            // }
+        }
     }
 }
 

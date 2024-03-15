@@ -40,6 +40,8 @@ use Modules\Wallet\Domains\Transaction;
 use Modules\Wallet\Domains\Wallet;
 use Modules\Wallet\Services\NowManager;
 use Modules\Wallet\Services\StripeManager;
+use Illuminate\Support\Facades\Notification as SysNotification;
+use Modules\User\Notifications\PaymentEmail;
 
 class HelpManager
 {
@@ -865,6 +867,16 @@ class HelpManager
                         break;
                 }
 
+                $helperEmail = UserDeviceToken::getUserEmail($helpOffer->sender_id, "email_notification");
+                $requesterEmail = UserDeviceToken::getUserEmail($helpOffer->receiver_id, "email_notification");
+                if ($helperEmail) {
+                  SysNotification::route('mail', $helperEmail)
+                  ->notify(new PaymentEmail('','Kizuner Payment Notification', 'Payment Action Success!', $helperEmail, ""));
+                }
+                if ($requesterEmail) {
+                  SysNotification::route('mail', $requesterEmail)
+                  ->notify(new PaymentEmail('','Kizuner Payment Notification', 'Payment Action Success!', $requesterEmail, ""));
+                }
 
                 History::create(
                     new HistoryDto(

@@ -29,59 +29,63 @@ class HangoutLikeJob implements ShouldQueue
 
     public function handle()
     {
-        // $react = React::find($this->react->id);
+        $react = React::find($this->react->id);
 
-        // $reacter = User::find($react->user_id);
-        // $reacterMedia = $reacter->medias()->where('type', 'user.avatar')->first();
-        // $image = null;
-        // if ($reacterMedia) {
-        //     $image = \Storage::disk('gcs')->url($reacterMedia->thumb);
-        // }
+        $emailReceiver = UserDeviceToken::getUserEmail($react->reacted_user_id, "like_notification");
 
-        // $action = ($react->react_type =='like') ? ' liked ' : ' shared ';
-        // $message = $reacter->name . $action .' your hangout';
-        // $type    = 'hangout-liked';
+        if ($emailReceiver == null) {
+            return;
+        }
 
-        // $payload = [
-        //     'relation' => [
-        //         'id'        => $react->reactable_id,
-        //         'type'      => 'hangout'
-        //     ],
-        //     'type'          => $type,
-        //     'created_at'    => $react->created_at,
-        //     'message'       => '<b>' . $reacter->name . '</b>' . ' liked on your hangout'
-        // ];
+        $reacter = User::find($react->user_id);
+        $reacterMedia = $reacter->medias()->where('type', 'user.avatar')->first();
+        $image = null;
+        if ($reacterMedia) {
+            $image = \Storage::disk('gcs')->url($reacterMedia->thumb);
+        }
 
-        // $data = (new NotificationDto())
-        //             ->setUserId($react->reacted_user_id)
-        //             ->setTitle('Kizuner')
-        //             ->setBody($message)
-        //             ->setPayload($payload)
-        //             ->setType($type)
-        //             ->setUploadableId($reacterMedia ? $reacterMedia->uploadable_id : null);
-        // $notification = Notification::create($data);
+        $action = ($react->react_type =='like') ? ' liked ' : ' shared ';
+        $message = $reacter->name . $action .' your hangout';
+        $type    = 'hangout-liked';
 
-        // $token = UserDeviceToken::getUserDevice($react->reacted_user_id, "like_notification");
+        $payload = [
+            'relation' => [
+                'id'        => $react->reactable_id,
+                'type'      => 'hangout'
+            ],
+            'type'          => $type,
+            'created_at'    => $react->created_at,
+            'message'       => '<b>' . $reacter->name . '</b>' . ' liked on your hangout'
+        ];
+
+        $data = (new NotificationDto())
+                    ->setUserId($react->reacted_user_id)
+                    ->setTitle('Kizuner')
+                    ->setBody($message)
+                    ->setPayload($payload)
+                    ->setType($type)
+                    ->setUploadableId($reacterMedia ? $reacterMedia->uploadable_id : null);
+        $notification = Notification::create($data);
+
+        $token = UserDeviceToken::getUserDevice($react->reacted_user_id, "like_notification");
        
 
-        // if ($token) {
-        //     $payload['image'] = $image;
-        //     $payload['id'] = $notification->id;
-        //     $payload['unread_count'] = getUnreadNotification($react->reacted_user_id);
-        //     PushNotificationJob::dispatch('sendBatchNotification', [
-        //         [$token], [
-        //             'topicName'     => 'kizuner',
-        //             'title'         => $notification->title,
-        //             'body'          => $notification->body,
-        //             'payload'       => $payload
-        //         ],
-        //     ]);
-        // }
+        if ($token) {
+            $payload['image'] = $image;
+            $payload['id'] = $notification->id;
+            $payload['unread_count'] = getUnreadNotification($react->reacted_user_id);
+            PushNotificationJob::dispatch('sendBatchNotification', [
+                [$token], [
+                    'topicName'     => 'kizuner',
+                    'title'         => $notification->title,
+                    'body'          => $notification->body,
+                    'payload'       => $payload
+                ],
+            ]);
+        }
 
-        // $emailReceiver = UserDeviceToken::getUserEmail($react->reacted_user_id, "like_email_notification");
-        // if($emailReceiver) {
-        //     SysNotification::route('mail', $emailReceiver)
-        //     ->notify(new LikeEmail('',$notification->title,$notification->body,$emailReceiver,""));
-        //     }
+        // SysNotification::route('mail', $emailReceiver)
+        // ->notify(new LikeEmail('',$notification->title,$notification->body,$emailReceiver,""));
+        // }
     }
 }

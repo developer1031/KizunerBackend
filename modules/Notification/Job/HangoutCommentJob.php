@@ -31,6 +31,11 @@ class HangoutCommentJob implements ShouldQueue
     {
         $comment = $this->comment;
 
+        $token = UserDeviceToken::getUserDevice($comment->commented_user_id, 'comment_notification');
+        if ($token == null) {
+            return;
+        }
+
         $commenter = User::find($comment->user_id);
         $commenterMedia = $commenter->medias()->where('type', 'user.avatar')->first();
         $image = null;
@@ -59,21 +64,16 @@ class HangoutCommentJob implements ShouldQueue
                     ->setUploadableId($commenterMedia ? $commenterMedia->id : null);
         $notification = Notification::create($data);
 
-        $token = UserDeviceToken::getUserDevice($comment->commented_user_id, '');
-
-        if ($token) {
-            $payload['image'] = $image;
-            $payload['id'] = $notification->id;
-            $payload['unread_count'] = getUnreadNotification($comment->commented_user_id);
-            PushNotificationJob::dispatch('sendBatchNotification', [
-                [$token], [
-                    'topicName'     => 'kizuner',
-                    'title'         => $notification->title,
-                    'body'          => $notification->body,
-                    'payload'       => $payload
-                ],
-            ]);
-        }
-
+        $payload['image'] = $image;
+        $payload['id'] = $notification->id;
+        $payload['unread_count'] = getUnreadNotification($comment->commented_user_id);
+        PushNotificationJob::dispatch('sendBatchNotification', [
+            [$token], [
+                'topicName'     => 'kizuner',
+                'title'         => $notification->title,
+                'body'          => $notification->body,
+                'payload'       => $payload
+            ],
+        ]);
     }
 }

@@ -31,6 +31,11 @@ class StatusCommentJob implements ShouldQueue
     {
         $comment = $this->comment;
 
+        $token = UserDeviceToken::getUserDevice($comment->commented_user_id, "comment_notification");
+        if ($token == null) {
+            return;
+        }
+
         $commenter = User::find($comment->user_id);
         $commenterMedia = $commenter->medias()->where('type', 'user.avatar')->first();
         $image = null;
@@ -60,26 +65,21 @@ class StatusCommentJob implements ShouldQueue
                     ->setUploadableId($commenterMedia ? $commenterMedia->uploadable_id : null );
         $notification = Notification::create($data);
 
-        $token = UserDeviceToken::getUserDevice($comment->commented_user_id, "comment_notification");
+        $payload['image'] = $image;
+        $payload['id'] = $notification->id;
+        $payload['unread_count'] = getUnreadNotification($comment->commented_user_id);
+        PushNotificationJob::dispatch('sendBatchNotification', [
+            [$token], [
+                'topicName'     => 'kizuner',
+                'title'         => $notification->title,
+                'body'          => $notification->body,
+                'payload'       => $payload
+            ],
+        ]);
 
-        if ($token) {
-            $payload['image'] = $image;
-            $payload['id'] = $notification->id;
-            $payload['unread_count'] = getUnreadNotification($comment->commented_user_id);
-            PushNotificationJob::dispatch('sendBatchNotification', [
-                [$token], [
-                    'topicName'     => 'kizuner',
-                    'title'         => $notification->title,
-                    'body'          => $notification->body,
-                    'payload'       => $payload
-                ],
-            ]);
-        }
-
-        $emailReceiver = UserDeviceToken::getUserEmail($comment->commented_user_id, "comment_notification");
-        if ($emailReceiver) {
-            SysNotification::route('mail', $emailReceiver)
-                ->notify(new CommentEmail('', $notification->title, $notification->body, $emailReceiver, ""));
-        }
+        // if ($emailReceiver) {
+        //     SysNotification::route('mail', $emailReceiver)
+        //         ->notify(new CommentEmail('', $notification->title, $notification->body, $emailReceiver, ""));
+        // }
     }
 }

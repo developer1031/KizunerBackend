@@ -25,7 +25,7 @@ class FollowManager
         $followObj = $this->relationRepository->follow($userId, $followId);
 
         event(new FollowerCreatedEvent($followObj));
-        // NewFollowJob::dispatch($followObj);
+        NewFollowJob::dispatch($followObj);
 
         return [
             'data' => [

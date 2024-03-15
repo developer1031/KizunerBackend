@@ -66,16 +66,58 @@ class HelpTagJob implements ShouldQueue
             $members = MemberEntity::where('room_id', $help->room_id)->get();
             foreach ($members as $member) {
                 if($member->user_id != auth()->user()->id) {
-                    $token = UserDeviceToken::getUserDevice($member->user_id, '');
+                    $user_member = \App\User::where('id', $member->user_id)->where('hangout_help_notification', 1)->first();
+
+                    if ($user_member) {
+                        $token = UserDeviceToken::getUserDevice($member->user_id, '');
+                        if ($token) {
+                            $data = (new NotificationDto())
+                                ->setUserId($member->user_id)
+                                ->setTitle('Kizuner')
+                                ->setBody($message)
+                                ->setPayload($payload)
+                                ->setType($type)
+                                ->setUploadableId($userMedia ? $userMedia->uploadable_id : null);
+                            $notification = Notification::create($data);
+
+                            $payload['image'] = $image;
+                            $payload['id'] = $notification->id;
+                            $payload['unread_count'] = 0;
+                            PushNotificationJob::dispatch('sendBatchNotification', [
+                                [$token], [
+                                    'topicName'     => 'kizuner',
+                                    'title'         => $notification->title,
+                                    'body'          => $notification->body,
+                                    'payload'       => $payload
+                                ],
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+
+        if($help->friends) {
+            $friends = $help->friends;
+            foreach ($friends as $friend) {
+                //Noti via email
+                $user_friend = \App\User::where('id', $friend)->where('hangout_help_notification', 1)->first();
+
+                if ($user_friend) {
+                    // $user_friend->notify(new MailTag('help'));
+
+                    $token = UserDeviceToken::getUserDevice($friend);
                     if ($token) {
+
                         $data = (new NotificationDto())
-                            ->setUserId($member->user_id)
+                            ->setUserId($friend)
                             ->setTitle('Kizuner')
                             ->setBody($message)
                             ->setPayload($payload)
                             ->setType($type)
                             ->setUploadableId($userMedia ? $userMedia->uploadable_id : null);
                         $notification = Notification::create($data);
+
 
                         $payload['image'] = $image;
                         $payload['id'] = $notification->id;
@@ -89,43 +131,6 @@ class HelpTagJob implements ShouldQueue
                             ],
                         ]);
                     }
-                }
-            }
-        }
-
-        if($help->friends) {
-            $friends = $help->friends;
-            foreach ($friends as $friend) {
-                $token = UserDeviceToken::getUserDevice($friend);
-                if ($token) {
-
-                    $data = (new NotificationDto())
-                        ->setUserId($friend)
-                        ->setTitle('Kizuner')
-                        ->setBody($message)
-                        ->setPayload($payload)
-                        ->setType($type)
-                        ->setUploadableId($userMedia ? $userMedia->uploadable_id : null);
-                    $notification = Notification::create($data);
-
-
-                    $payload['image'] = $image;
-                    $payload['id'] = $notification->id;
-                    $payload['unread_count'] = 0;
-                    PushNotificationJob::dispatch('sendBatchNotification', [
-                        [$token], [
-                            'topicName'     => 'kizuner',
-                            'title'         => $notification->title,
-                            'body'          => $notification->body,
-                            'payload'       => $payload
-                        ],
-                    ]);
-                }
-
-                //Noti via email
-                $user_friend = \App\User::where('id', $friend)->where('email_notification', 1)->first();
-                if($user_friend) {
-                    $user_friend->notify(new MailTag('help'));
                 }
             }
         }

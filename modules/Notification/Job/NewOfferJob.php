@@ -32,6 +32,11 @@ class NewOfferJob implements ShouldQueue
     {
         $offer = $this->offer;
 
+        $token = UserDeviceToken::getUserDevice($offer->receiver_id, "hangout_help_notification");
+        if ($token == null) {
+            return;
+        }
+
         $sender = User::find($offer->sender_id);
         $senderMedia = $sender->medias()->where('type', 'user.avatar')->first();
         $image = null;
@@ -62,27 +67,23 @@ class NewOfferJob implements ShouldQueue
 
         $notification = Notification::create($data);
 
-        $token = UserDeviceToken::getUserDevice($offer->receiver_id, "hangout_help_notification");
+        $payload['image'] = $image;
+        $payload['id'] = $notification->id;
+        $payload['unread_count'] = getUnreadNotification($offer->receiver_id);
+        PushNotificationJob::dispatch('sendBatchNotification', [
+            [$token], [
+                'topicName'     => 'kizuner',
+                'title'         => $notification->title,
+                'body'          => $notification->body,
+                'payload'       => $payload
+            ],
+        ]);
 
-        if ($token) {
-            $payload['image'] = $image;
-            $payload['id'] = $notification->id;
-            $payload['unread_count'] = getUnreadNotification($offer->receiver_id);
-            PushNotificationJob::dispatch('sendBatchNotification', [
-                [$token], [
-                    'topicName'     => 'kizuner',
-                    'title'         => $notification->title,
-                    'body'          => $notification->body,
-                    'payload'       => $payload
-                ],
-            ]);
-        }
-
-        $emailReceiver = UserDeviceToken::getUserEmail($offer->receiver_id, "hangout_help_notification");
-        if ($emailReceiver) {
-            SysNotification::route('mail', $emailReceiver)
-                ->notify(new HangoutHelpEmail('', $notification->title, $notification->body, $emailReceiver, ""));
-        }
+        // $emailReceiver = UserDeviceToken::getUserEmail($offer->receiver_id, "hangout_help_notification");
+        // if ($emailReceiver) {
+        //     SysNotification::route('mail', $emailReceiver)
+        //         ->notify(new HangoutHelpEmail('', $notification->title, $notification->body, $emailReceiver, ""));
+        // }
 
     }
 }

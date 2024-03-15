@@ -26,6 +26,8 @@ use Modules\Wallet\Domains\Transaction;
 use Modules\Wallet\Services\NowManager;
 use Modules\Wallet\Services\StripeManager;
 use Modules\Wallet\Domains\Wallet;
+use Illuminate\Support\Facades\Notification as SysNotification;
+use Modules\User\Notifications\PaymentEmail;
 
 class OfferManager
 {
@@ -405,6 +407,17 @@ class OfferManager
                         $offer->save();
 
                         break;
+                }
+
+                $castEmail = UserDeviceToken::getUserEmail($offer->sender_id, "email_notification");
+                $guestEmail = UserDeviceToken::getUserEmail($offer->receiver_id, "email_notification");
+                if ($castEmail) {
+                  SysNotification::route('mail', $castEmail)
+                  ->notify(new PaymentEmail('','Kizuner Payment Notification', 'Payment Action Success!', $castEmail, ""));
+                }
+                if ($guestEmail) {
+                  SysNotification::route('mail', $guestEmail)
+                  ->notify(new PaymentEmail('','Kizuner Payment Notification', 'Payment Action Success!', $guestEmail, ""));
                 }
 
                 Transaction::create(

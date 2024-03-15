@@ -68,6 +68,12 @@ class HangoutTagJob implements ShouldQueue
             $members = MemberEntity::where('room_id', $hangout->room_id)->get();
             foreach ($members as $member) {
                 if($member->user_id != auth()->user()->id) {
+                    $user_member = \App\User::where('id', $member->user_id)->where('hangout_help_notification', 1)->first();
+
+                    if ($user_member == null) {
+                        continue;
+                    }
+
                     $token = UserDeviceToken::getUserDevice($member->user_id, '');
                     if ($token) {
                         $data = (new NotificationDto())
@@ -98,6 +104,12 @@ class HangoutTagJob implements ShouldQueue
         if($hangout->friends) {
             $friends = $hangout->friends;
             foreach ($friends as $friend) {
+                $user_friend = \App\User::where('id', $friend)->where('hangout_help_notification', 1)->first();
+
+                if ($user_friend == null) {
+                    continue;
+                }
+
                 $token = UserDeviceToken::getUserDevice($friend);
                 if ($token) {
 
@@ -125,10 +137,7 @@ class HangoutTagJob implements ShouldQueue
                 }
 
                 //Noti via email
-                $user_friend = \App\User::where('id', $friend)->where('email_notification', 1)->first();
-                if($user_friend) {
-                    $user_friend->notify(new MailTag('hangout'));
-                }
+                // $user_friend->notify(new MailTag('hangout'));
             }
         }
     }
