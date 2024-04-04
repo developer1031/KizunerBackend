@@ -118,7 +118,7 @@ class StripeManager
     $wallet = Wallet::findByUserId($user->id);
 
     if (!$wallet->stripe_connect_id) {
-      throw new Exception("This user has no stripe connect account");
+      throw new Exception("This user has no PaymentHub account");
     }
 
     $account = Account::retrieve($wallet->stripe_connect_id);
@@ -550,8 +550,8 @@ class StripeManager
     $user = auth()->user();
     $wallet = Wallet::findByUserId($user->id);
 
-    if ($wallet->stripe_connect_id) {
-      throw new Exception("This user has no stripe connect account");
+    if (!$wallet->stripe_connect_id) {
+      throw new Exception("This user has no PaymentHub account");
     }
 
     return \Stripe\Account::update(
