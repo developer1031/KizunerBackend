@@ -148,11 +148,11 @@ class HelpQuery
       //                $sql->where('users.gender', $gender);
       //            }
 
-      // $sql->where('helps.is_completed', 0);
+      $sql->where('helps.is_completed', 0);
       $sql->whereNull('helps.deleted_at');
-      $sql->orderBy('helps.created_at', 'desc')
-        //->groupBy('helps.id')
-        ->groupBy('helps.title');
+      $sql->orderBy('helps.created_at', 'desc');
+      //->groupBy('helps.id')
+      // ->groupBy('helps.title');
     }
 
 
