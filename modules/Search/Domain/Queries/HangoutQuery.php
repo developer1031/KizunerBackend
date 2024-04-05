@@ -140,7 +140,7 @@ class HangoutQuery
       //     $query1->orWhereNull('hangouts.start');
       // });
 
-      $sql->whereNull('hangouts.deleted');
+      $sql->whereNull('users.deleted');
       $sql->whereNull('hangouts.room_id');
 
       /*
