@@ -140,8 +140,8 @@ class HangoutQuery
       //     $query1->orWhereNull('hangouts.start');
       // });
 
-      //$sql->whereNull('hangouts.deleted');
-      //$sql->whereNull('hangouts.room_id');
+      $sql->whereNull('hangouts.deleted');
+      $sql->whereNull('hangouts.room_id');
 
       /*
             if ($age) {
@@ -160,9 +160,9 @@ class HangoutQuery
       $sql->where('hangouts.is_completed', 0);
       $sql->whereNull('hangouts.deleted_at');
 
-      $sql->orderBy('hangouts.created_at', 'desc')
-        //->groupBy('hangouts.id')
-        ->groupBy('hangouts.title');
+      $sql->orderBy('hangouts.created_at', 'desc');
+      //->groupBy('hangouts.id')
+      // ->groupBy('hangouts.title');
     }
 
     return $sql->paginate($this->perPage);
