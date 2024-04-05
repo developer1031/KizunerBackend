@@ -150,8 +150,8 @@ class HelpQuery
 
       $sql->where('helps.is_completed', 0);
       $sql->whereNull('helps.deleted_at');
-      $sql->orderBy('helps.created_at', 'desc');
-      //->groupBy('helps.id')
+      $sql->orderBy('helps.created_at', 'desc')
+        ->groupBy('helps.id');
       // ->groupBy('helps.title');
     }
 
