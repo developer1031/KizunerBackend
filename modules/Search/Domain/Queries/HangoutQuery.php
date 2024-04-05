@@ -87,11 +87,17 @@ class HangoutQuery
       $sql->where('hangouts.amount', $this->amount);
     }
     if ($this->minAmount) {
-      $sql->where('hangouts.min_amount', '>=', $this->minAmount)->orWhere('hangouts.amount', '>=', $this->minAmount);
+      $minAmount = $this->minAmount;
+      $sql->where(function ($query) use ($minAmount) {
+        $query->where('hangouts.min_amount', '>=', $minAmount)->orWhere('hangouts.amount', '>=', $minAmount);
+      });
     }
 
     if ($this->maxAmount) {
-      $sql->where('hangouts.max_amount', '<=', $this->maxAmount)->orWhere('hangouts.amount', '<=', $this->maxAmount);
+      $maxAmount = $this->maxAmount;
+      $sql->where(function ($query) use ($maxAmount) {
+        $query->where('hangouts.max_amount', '<=', $maxAmount)->orWhere('hangouts.amount', '<=', $maxAmount);
+      });
     }
 
     if ($this->paymentMethod) {
