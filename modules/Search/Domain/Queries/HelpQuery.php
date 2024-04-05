@@ -84,10 +84,17 @@ class HelpQuery
       $sql->where('helps.amount', $this->amount);
     }
     if ($this->minAmount) {
-      $sql->whereRaw('helps.min_amount >= ' . $this->minAmount . ' OR helps.amount >= ' . $this->minAmount);
+      $minAmount = $this->minAmount;
+      $sql->where(function ($query) use ($minAmount) {
+        $query->where('helps.min_amount', '>=', $minAmount)->orWhere('helps.amount', '>=', $minAmount);
+      });
     }
+
     if ($this->maxAmount) {
-      $sql->whereRaw('helps.max_amount <=' . $this->maxAmount . ' OR helps.amount <=' . $this->maxAmount);
+      $maxAmount = $this->maxAmount;
+      $sql->where(function ($query) use ($maxAmount) {
+        $query->where('helps.max_amount', '<=', $maxAmount)->orWhere('helps.amount', '<=', $maxAmount);
+      });
     }
 
     if ($this->paymentMethod) {
