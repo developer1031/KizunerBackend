@@ -36,9 +36,7 @@ class HangoutQuery
 
     //$age    =   app('request')->input('age');
     //$gender =   app('request')->input('gender');
-    if ($this->location) {
-    } else {
-    }
+
     $sql    =   DB::table('hangout_hangouts as hangouts')
       ->select(
         'hangouts.id as hangout_id',
@@ -66,9 +64,11 @@ class HangoutQuery
         'hangouts.min_amount as hangout_min_amount',
         'hangouts.max_amount as hangout_max_amount',
         'hangouts.amount as hangout_amount',
-        'hangouts.payment_method as payment_method'
+        'hangouts.payment_method as payment_method',
+        'locations.address as address'
       )
       ->join('users', 'users.id', '=', 'hangouts.user_id')
+      ->leftJoin('locations', 'hangouts.id', '=', 'locations.locationable_id')
       ->leftJoin('uploads as user_uploads', 'user_uploads.id', '=', 'users.avatar_id')
       ->leftJoin('uploads as hangout_uploads', 'hangout_uploads.uploadable_id', '=', 'hangouts.id')
       ->leftJoin('skillables as sk', 'sk.skillable_id', '=', 'hangouts.id')
@@ -145,6 +145,16 @@ class HangoutQuery
       //     $query1->whereDate('hangouts.start', '>=', Carbon::now());
       //     $query1->orWhereNull('hangouts.start');
       // });
+
+      if ($this->location) {
+        $address = $this->location['short_address'];
+        $address = str_replace(',', '', $address);
+        $address = str_replace('-', '', $address);
+
+        $address = explode(" ", $address);
+
+        $sql->where('locations.address', 'like', '%' . $address[0] . '%');
+      }
 
       $sql->whereNull('users.deleted');
       $sql->whereNull('hangouts.room_id');

@@ -62,9 +62,11 @@ class HelpQuery
         'helps.min_amount as help_min_amount',
         'helps.max_amount as help_max_amount',
         'helps.amount as help_amount',
-        'helps.payment_method as payment_method'
+        'helps.payment_method as payment_method',
+        'locations.address as address'
       )
       ->join('users', 'users.id', '=', 'helps.user_id')
+      ->leftJoin('locations', 'helps.id', '=', 'locations.locationable_id')
       ->leftJoin('uploads as user_uploads', 'user_uploads.id', '=', 'users.avatar_id')
       ->leftJoin('uploads as help_uploads', 'help_uploads.uploadable_id', '=', 'helps.id')
       ->leftJoin('skillables as sk', 'sk.skillable_id', '=', 'helps.id')
@@ -155,6 +157,16 @@ class HelpQuery
       //                $sql->where('users.gender', $gender);
       //            }
 
+      if ($this->location) {
+        $address = $this->location['short_address'];
+        $address = str_replace(',', '', $address);
+        $address = str_replace('-', '', $address);
+
+        $address = explode(" ", $address);
+
+        $sql->where('locations.address', 'like', '%' . $address[0] . '%');
+      }
+
       $sql->where('helps.is_completed', 0);
       $sql->whereNull('helps.deleted_at');
       $sql->orderBy('helps.created_at', 'desc')
@@ -162,10 +174,6 @@ class HelpQuery
       // ->groupBy('helps.title');
     }
 
-
-
-    Log::info('helpQuery');
-    Log::info(getSql($sql));
     return $sql->paginate($this->perPage);
   }
 }

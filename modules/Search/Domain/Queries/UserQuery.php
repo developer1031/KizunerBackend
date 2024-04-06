@@ -126,6 +126,16 @@ class UserQuery
         });
       }
 
+      if ($this->location) {
+        $address = $this->location['short_address'];
+        $address = str_replace(',', '', $address);
+        $address = str_replace('-', '', $address);
+
+        $address = explode(" ", $address);
+
+        $sql->where('locations.address', 'like', '%' . $address[0] . '%');
+      }
+
       //No query Fake user
       $sql->where('users.is_fake', '<>', 1);
       $sql->groupBy('users.id');
