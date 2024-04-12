@@ -14,47 +14,62 @@ use Modules\Framework\Support\Requests\Pagination;
 class RoomController
 {
 
-    public function show(string $id)
-    {
-        return response()
-            ->json(fractal(
-                ((new RoomsQuery($id))->execute()),
-                new RoomTransformer()
-            ), Response::HTTP_OK);
-    }
+  public function show(string $id)
+  {
+    return response()
+      ->json(fractal(
+        ((new RoomsQuery($id))->execute()),
+        new RoomTransformer()
+      ), Response::HTTP_OK);
+  }
 
-    public function index()
-    {
-        $perPage = app('request')->input('per_page');
-        $type = app('request')->input('type');
-        $perPage = Pagination::normalize($perPage);
-        return response()
-                ->json(fractal(
-                    ((new UserRoomsQuery(auth()->user()->id, $perPage, $type))->execute()),
-                    new RoomTransformer()
-                ), Response::HTTP_OK);
-    }
+  public function index()
+  {
+    $perPage = app('request')->input('per_page');
+    $type = app('request')->input('type');
+    $perPage = Pagination::normalize($perPage);
+    return response()
+      ->json(fractal(
+        ((new UserRoomsQuery(auth()->user()->id, $perPage, $type))->execute()),
+        new RoomTransformer()
+      ), Response::HTTP_OK);
+  }
 
-    public function store(RoomStoreRequest $request)
-    {
-        return response()
-                ->json(fractal($request->save(), new RoomTransformer()), Response::HTTP_CREATED);
-    }
+  public function store(RoomStoreRequest $request)
+  {
+    $isSingle = app('request')->input('isSingle');
+    if ($isSingle) {
+      $members = app('request')->input('members');
 
-    public function update(string $id, RoomUpdateRequest $request)
-    {
-        return response()
-                ->json($request->save($id), Response::HTTP_OK);
-    }
+      $rooms = [];
+      foreach ($members as $member) {
+        $request->merge(['members' => $member]);
+        $room = $request->save();
+        $rooms[] = $room;
+      }
 
-    public function destroy(string $id)
-    {
-        (new DeleteRoomAction($id))->execute();
-        return response()
-                    ->json([
-                        'data' => [
-                            'status' => true
-                        ]
-                    ], Response::HTTP_OK);
+      return response()
+        ->json(fractal($rooms, new RoomTransformer()), Response::HTTP_CREATED);
+    } else {
+      return response()
+        ->json(fractal($request->save(), new RoomTransformer()), Response::HTTP_CREATED);
     }
+  }
+
+  public function update(string $id, RoomUpdateRequest $request)
+  {
+    return response()
+      ->json($request->save($id), Response::HTTP_OK);
+  }
+
+  public function destroy(string $id)
+  {
+    (new DeleteRoomAction($id))->execute();
+    return response()
+      ->json([
+        'data' => [
+          'status' => true
+        ]
+      ], Response::HTTP_OK);
+  }
 }

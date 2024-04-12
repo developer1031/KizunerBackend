@@ -9,35 +9,35 @@ use Modules\Chat\Domains\Actions\CreatePersonalChatAction;
 
 class RoomStoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
+  /**
+   * Determine if the user is authorized to make this request.
+   *
+   * @return bool
+   */
+  public function authorize()
+  {
+    return true;
+  }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
-            'members' => 'required'
-        ];
-    }
+  /**
+   * Get the validation rules that apply to the request.
+   *
+   * @return array
+   */
+  public function rules()
+  {
+    return [
+      'members' => 'required',
+      'isSingle' => 'boolean'
+    ];
+  }
 
-    public function save()
-    {
-        $owner      = auth()->user()->id;
-        $members    = $this->members;
+  public function save()
+  {
+    $owner      = auth()->user()->id;
+    $members    = $this->members;
 
-        $room = is_array($members) ? (new CreateGroupChatAction($owner, $members))->execute() :
-                                     (new CreatePersonalChatAction($owner, $members))->execute();
-        return (new RoomMemberQuery($room))->execute();
-    }
+    $room = is_array($members) && $this->isSingle != true ? (new CreateGroupChatAction($owner, $members))->execute() : (new CreatePersonalChatAction($owner, $members))->execute();
+    return (new RoomMemberQuery($room))->execute();
+  }
 }

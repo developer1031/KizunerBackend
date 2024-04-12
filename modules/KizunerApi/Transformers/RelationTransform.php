@@ -12,44 +12,45 @@ use Modules\Kizuner\Models\User\Friend;
 
 class RelationTransform extends TransformerAbstract
 {
-    public function transform(RelationInterface $relation)
-    {
-        if (Route::current()->parameters('id') != null) {
-            $currentUser = Route::current()->parameters('id')['id'];
-        } else {
-            $currentUser = app('request')->user()->id;
-        }
+  public function transform(RelationInterface $relation)
+  {
 
-        if (app('request')->exists('user_id')) {
-            $currentUser = app('request')->get('user_id');
-        }
+    // if (Route::current()->parameters('id') != null) {
+    //   $currentUser = Route::current()->parameters('id')['id'];
+    // } else {
+    //   $currentUser = app('request')->user()->id;
+    // }
 
-        $type = 'friend_id';
+    // if (app('request')->exists('user_id')) {
+    //   $currentUser = app('request')->get('user_id');
+    // }
 
-        if ($relation instanceof Follow) {
-            $type = 'follow_id';
-        }
+    // $type = 'friend_id';
 
-        if ($relation instanceof Block) {
-            $type = 'block_id';
-        }
+    // if ($relation instanceof Follow) {
+    //   $type = 'follow_id';
+    // }
 
-        $relationUserId = ($currentUser != $relation->user_id) ? $relation->user_id : $relation->$type;
-        $user = User::find($relationUserId);
+    // if ($relation instanceof Block) {
+    //   $type = 'block_id';
+    // }
 
-        if ($user) {
-            $media = $user->medias()->where('type', 'user.avatar')->first();
+    // $relationUserId = ($currentUser != $relation->user_id) ? $relation->user_id : $relation->$type;
+    $user = User::find($relation->user_id);
 
-            return [
-                'id'            => $relation->id,
-                'created_at'    => $relation->created_at,
-                'user'          => [
-                    'id'        => $user->id,
-                    'name'      => $user->name,
-                    'avatar'    => $media == null ? null : \Storage::disk('gcs')->url($media->thumb),
-                    'social_avatar' => $user->social_avatar,
-                ]
-            ];
-        }
+    if ($user) {
+      $media = $user->medias()->where('type', 'user.avatar')->first();
+
+      return [
+        'id'            => $relation->id,
+        'created_at'    => $relation->created_at,
+        'user'          => [
+          'id'        => $user->id,
+          'name'      => $user->name,
+          'avatar'    => $media == null ? null : \Storage::disk('gcs')->url($media->thumb),
+          'social_avatar' => $user->social_avatar,
+        ]
+      ];
     }
+  }
 }

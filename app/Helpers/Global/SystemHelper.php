@@ -558,7 +558,6 @@ if (!function_exists('generateFakeUserHelps')) {
 
       $sampleHelpIds = [];
       foreach ($skills as $skill) {
-        \Log::debug("___________SKILL____________");
 
         $sampleHelpId = DB::table('skillables')
           ->where('skill_id', $skill)
