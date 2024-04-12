@@ -107,7 +107,26 @@ class HelpQuery
     if ($this->offerType) {
       //$categories = Category::where('name', 'like', '%'.$this->category.'%')->get()->pluck('id')->toArray();
       if ($this->offerType != 'all') {
-        $sql->where('helps.type', $this->offerType);
+        if ($this->offerType == 1) {
+          $date_filter = app('request')->input('date_filter');
+
+          if ($date_filter) {
+            if (array_key_exists('date', $date_filter)) {
+              $date = $date_filter['date'];
+
+              $sql->whereDate('helps.start', '<=', $date);
+              $sql->whereDate('helps.end', '>=', $date);
+            } else {
+              $fromDate = $date_filter['fromDate'];
+              $endDate = $date_filter['endDate'];
+
+              $sql->whereDate('helps.start', '>=', $fromDate);
+              $sql->whereDate('helps.start', '<=', $endDate);
+            }
+          }
+        } else {
+          $sql->where('helps.type', $this->offerType);
+        }
       }
     }
 

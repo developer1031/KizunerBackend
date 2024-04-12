@@ -16,7 +16,7 @@ use Modules\Search\Http\Transformers\UserTransform;
 
 class FullTextSearchAction
 {
-  public function execute($type, $query, string $perPage, $category = null, $offerType = null, $paymentMethod = null, $location = null, $amount = null, $minAmount = null, $maxAmount = null, $language = null)
+  public function execute($type, $query, string $perPage, $category = null, $offerType = null, $paymentMethod = null, $location = null, $amount = null, $minAmount = null, $maxAmount = null, $language = null, $date_filter = null)
   {
     if ($type) {
       if ($type === 'user') {
@@ -41,7 +41,6 @@ class FullTextSearchAction
     $age    =   app('request')->input('age');
     $gender =   app('request')->input('gender');
     $skills    =   app('request')->input('skills');
-    $skills    =   app('request')->input('skills');
     $available_status    =   app('request')->input('available_status');
 
     if ($query) {
@@ -59,9 +58,9 @@ class FullTextSearchAction
       $data['videos'] = $videos;
     }
 
-    if ($query || $category || $skills || $location || $minAmount || $maxAmount || $amount || $paymentMethod || $offerType || $available_status) {
-      $hangouts = fractal((new HangoutQuery($query, $perPage, $category, $offerType, $paymentMethod, $location, $amount, $minAmount, $maxAmount))->execute(), new HangoutTransform());
-      $helps = fractal((new HelpQuery($query, $perPage, $category, $offerType, $paymentMethod, $location, $amount, $minAmount, $maxAmount))->execute(), new HelpTransform());
+    if ($query || $category || $skills || $location || $minAmount || $maxAmount || $amount || $paymentMethod || $offerType || $available_status || $date_filter) {
+      $hangouts = fractal((new HangoutQuery($query, $perPage, $category, $offerType, $paymentMethod, $location, $amount, $minAmount, $maxAmount, $date_filter))->execute(), new HangoutTransform());
+      $helps = fractal((new HelpQuery($query, $perPage, $category, $offerType, $paymentMethod, $location, $amount, $minAmount, $maxAmount, $date_filter))->execute(), new HelpTransform());
 
       $data['hangouts'] = $hangouts;
       $data['helps'] = $helps;

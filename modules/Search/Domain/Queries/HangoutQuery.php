@@ -106,10 +106,27 @@ class HangoutQuery
     }
 
     if ($this->offerType) {
-      //$categories = Category::where('name', 'like', '%'.$this->category.'%')->get()->pluck('id')->toArray();
       if ($this->offerType != 'all') {
+        if ($this->offerType == 1) {
+          $date_filter = app('request')->input('date_filter');
 
-        $sql->where('hangouts.type', $this->offerType);
+          if ($date_filter) {
+            if (array_key_exists('date', $date_filter)) {
+              $date = $date_filter['date'];
+
+              $sql->whereDate('hangouts.start', '<=', $date);
+              $sql->whereDate('hangouts.end', '>=', $date);
+            } else {
+              $fromDate = $date_filter['fromDate'];
+              $endDate = $date_filter['endDate'];
+
+              $sql->whereDate('hangouts.start', '>=', $fromDate);
+              $sql->whereDate('hangouts.start', '<=', $endDate);
+            }
+          }
+        } else {
+          $sql->where('hangouts.type', $this->offerType);
+        }
       }
     }
 

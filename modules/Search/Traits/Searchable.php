@@ -14,8 +14,9 @@ trait Searchable
   private $minAmount;
   private $maxAmount;
   private $language;
+  private $date_filter;
 
-  public function __construct($query, string $perPage, $category = null, $offerType = null, $paymentMethod = null, $location = null, $amount = null, $minAmount = null, $maxAmount = null, $language = null)
+  public function __construct($query, string $perPage, $category = null, $offerType = null, $paymentMethod = null, $location = null, $amount = null, $minAmount = null, $maxAmount = null, $language = null, $date_filter = null)
   {
     $this->perPage = $perPage;
     $this->query   = $query;
@@ -27,5 +28,6 @@ trait Searchable
     $this->minAmount   = $minAmount;
     $this->maxAmount   = $maxAmount;
     $this->language   = $language;
+    $this->date_filter   = $date_filter;
   }
 }
