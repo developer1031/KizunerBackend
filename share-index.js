@@ -62,9 +62,7 @@ const buildShareContent = function(data) {
         '<meta name="twitter:description" content="' +
         data.description +
         '" />' +
-        '<meta name="twitter:image" content="' +
-        data.image_url +
-        '" />' +
+        '<meta name="twitter:image" content="http://graphics8.nytimes.com/images/2012/02/19/us/19whitney-span/19whitney-span-articleLarge.jpg" />' +
         "</head>" +
         "<body>" +
         "<script>" +
