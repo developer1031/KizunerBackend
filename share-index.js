@@ -44,15 +44,7 @@ const buildShareContent = function(data) {
         '<meta property="og:description" content="' +
         data.description +
         '" />' +
-        '<meta property="og:image" content="' +
-        data.image_url +
-        '" />' +
-        '<meta property="og:image:width" content="' +
-        (data.width || 600) +
-        '" />' + // this is for the preview image to load on first share
-        '<meta property="og:image:height" content="' +
-        (data.height || 315) +
-        '" />' + // this is for the preview image to load on first share
+        '<meta property="og:image" content="http://graphics8.nytimes.com/images/2012/02/19/us/19whitney-span/19whitney-span-articleLarge.jpg" />' +
         '<meta name="twitter:card" content="summary_large_image" />' +
         '<meta name="twitter:site" content="@kizuner" />' +
         '<meta name="twitter:creator" content="@kizuner" />' +
