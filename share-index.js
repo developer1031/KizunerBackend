@@ -47,7 +47,7 @@ const buildShareContent = function(data) {
         '<meta property="og:image" content="' +
         data.image_url +
         '" />' +
-        '<meta name="twitter:card" content="summary_large_image" />' +
+        '<meta name="twitter:card" content="summary" />' +
         '<meta name="twitter:site" content="@kizuner" />' +
         '<meta name="twitter:creator" content="@kizuner" />' +
         '<meta name="twitter:title" content="' +
