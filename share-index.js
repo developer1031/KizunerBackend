@@ -53,7 +53,7 @@ const buildShareContent = function(data) {
         '<meta property="og:image:height" content="' +
         (data.height || 315) +
         '" />' + // this is for the preview image to load on first share
-        '<meta name="twitter:card" content="summary" />' +
+        '<meta name="twitter:card" content="summary_large_image" />' +
         '<meta name="twitter:site" content="@kizuner" />' +
         '<meta name="twitter:creator" content="@kizuner" />' +
         '<meta name="twitter:title" content="' +
