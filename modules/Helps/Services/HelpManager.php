@@ -491,7 +491,8 @@ class HelpManager
 
     $wallet = Wallet::findByUserId(auth()->user()->id);
     if (
-      $help->payment_method == Help::PAYMENT_METHOD_CREDIT &&
+      ($help->payment_method == Help::PAYMENT_METHOD_CREDIT || $help->payment_method == Help::PAYMENT_METHOD_BOTH)
+      &&
       !$wallet->payouts_enabled
     ) {
       throw new PermissionDeniedException('You need to be connected to PaymentHub to offer help.');
