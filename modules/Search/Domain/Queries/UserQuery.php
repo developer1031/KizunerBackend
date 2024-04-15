@@ -122,9 +122,7 @@ class UserQuery
       }
 
       if ($language) {
-        $sql = $sql->where(function ($query) use ($language) {
-          $query->where('users.language', 'like', '%' . $language . '%')->whereNot('users.language', 'en');
-        });
+        $sql->where('users.language', 'like', '%' . $language . '%')->where('users.language', 'not like', 'en');
       }
 
       if ($this->location) {
