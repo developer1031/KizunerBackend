@@ -22,6 +22,7 @@ class UserQuery
           'users.about as user_about',
           'users.birth_date as user_birth_date',
           'users.gender as user_gender',
+          'users.address as user_address',
           'locations.address as user_location_address',
           'locations.lat as user_location_lat',
           'locations.lng as user_location_lng',
@@ -133,7 +134,7 @@ class UserQuery
 
         $address = explode(" ", $address);
 
-        $sql->where('locations.address', 'like', '%' . $address[0] . '%');
+        $sql->where('users.address', 'like', '%' . $address[0] . '%');
       }
 
       //No query Fake user
