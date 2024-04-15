@@ -123,7 +123,7 @@ class UserQuery
 
       if ($language) {
         $sql = $sql->where(function ($query) use ($language) {
-          $query->where('users.language', 'like', '%' . $language . '%');
+          $query->where('users.language', 'like', '%' . $language . '%')->whereNot('users.language', 'en');
         });
       }
 
