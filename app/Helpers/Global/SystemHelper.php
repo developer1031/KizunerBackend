@@ -212,7 +212,7 @@ if (!function_exists('generateFakeCast')) {
 }
 
 if (!function_exists('generateFakeHangouts')) {
-  function generateFakeHangouts($typeObj, $fake_number = 3, $request_help = null)
+  function generateFakeHangouts($typeObj, $fake_number = 3, $request_help = null, $timelineRepo)
   {
 
     try {
@@ -353,144 +353,149 @@ if (!function_exists('generateFakeHangouts')) {
       Log::info($e->getMessage());
     }
 
-    //        for($i = 0; $i < $fake_number; $i++) {
-    //            try {
-    //                //Sync Skills
-    //                $skills = [];
-    //                $firstSkill = null;
-    //                foreach ($typeObj->skills as $skill) {
-    //                    $firstSkill = $skill->id;
-    //                    array_push($skills, $skill->id);
-    //                }
-    //
-    //                //Append user's skills
-    //                /*
-    //                $current_user = auth()->user();
-    //                $user_skills = $current_user->skills;
-    //                if($user_skills) {
-    //                    $user_skills = $user_skills->pluck('id');
-    //                    foreach ($user_skills as $user_skill) {
-    //                        array_push($skills, $user_skill);
-    //                    }
-    //                }
-    //                */
-    //
-    //                $allSkills = \Modules\Kizuner\Models\Skill::take(20)->get();
-    //                $limit_skill = count($allSkills) > 5 ? 5 : count($allSkills);
-    //                //array_push($skills, ($allSkills[rand(0,$limit_skill )])->id);
-    //                //array_push($skills, ($allSkills[rand(0, $limit_skill)])->id);
-    //
-    //                /*
-    //                 * generate fake Hangout for this user
-    //                 * - Get sample Hangout (random by Skill)
-    //                 * - create Hangout with this sample
-    //                 */
-    //                $sampleHelp = null;
-    //                for($sampleCount = 0; $sampleCount < 3; $sampleCount++) {
-    //                    if($firstSkill) {
-    //                        //$firstSkill = '699f66cf-e4a8-40ec-bb92-bc6cc53ce6fc';
-    //                        $sampleHelpId = DB::table('skillables')
-    //                            //->where('skill_id', $firstSkill)
-    //                            ->whereIn('skill_id', $skills)
-    //                            ->where('skillable_type', SampleHelp::class)
-    //                            ->orderByRaw('RAND()')
-    //                            ->first();
-    //                        if(!$sampleHelpId) {
-    //                            $sampleHelp = SampleHelp::where('type', 'hangout')->orderByRaw('RAND()')->first();
-    //                        }
-    //                        else {
-    //                            //$sampleHelp = SampleHelp::find($sampleHelpId->skillable_id);
-    //                            $sampleHelp = SampleHelp::where('id', $sampleHelpId->skillable_id)->where('type', 'hangout')->orderByRaw('RAND()')->first();
-    //                        }
-    //                    }
-    //                    else {
-    //                        $sampleHelpId = DB::table('skillables')
-    //                            ->where('skillable_type', SampleHelp::class)
-    //                            ->orderByRaw('RAND()')
-    //                            ->first();
-    //                        if(!$sampleHelpId) {
-    //                            $sampleHelp = SampleHelp::where('type', 'hangout')->orderByRaw('RAND()')->first();
-    //                        }
-    //                        else {
-    //                            //$sampleHelp = SampleHelp::find($sampleHelpId->skillable_id);
-    //                            $sampleHelp = SampleHelp::where('id', $sampleHelpId->skillable_id)->where('type', 'hangout')->orderByRaw('RAND()')->first();
-    //                        }
-    //                    }
-    //                    if(!$sampleHelp) {
-    //                        $sampleHelp = SampleHelp::where('type', 'hangout')->orderByRaw('RAND()')->first();
-    //                    }
-    //                    if( !in_array($sampleHelp->id, $fake_sample_ids) )
-    //                        break;
-    //                }
-    //                if($sampleHelp && !in_array($sampleHelp->id, $fake_sample_ids)) {
-    //
-    //                    //Create Fake User
-    //                    $user = App\User::create([
-    //                        'name' => $faker->name($gender),
-    //                        //'name' => (new Faker\Provider\vi_VN\Person())->name($gender==1 ? 'male' : 'female'),
-    //                        'email' => $faker->email,
-    //                        'phone' => $faker->phoneNumber,
-    //                        'password' => bcrypt('secret'),
-    //                        'gender' => $gender,
-    //                        'birth_date' => $faker->dateTimeBetween('1980-01-01', '2010-12-31')->format('Y-m-d'),
-    //                        'is_fake' => 1,
-    //                        'fake_avatar' => 'https://picsum.photos/id/'. rand(1, 1000) .'/200/300'
-    //                    ]);
-    //                    $user->skills()->sync($skills);
-    //
-    //                    //Update Location
-    //                    $new_location = generateLocation([
-    //                        'lat' => $obj_location->lat,
-    //                        'lon' => $obj_location->lng
-    //                    ]);
-    //                    $location_data = [
-    //                        'address'   => $format_address,
-    //                        'lat'       => $new_location['lat'],
-    //                        'lng'       => $new_location['lng']
-    //                    ];
-    //                    $location = new Location($location_data);
-    //                    $location->save();
-    //                    $user->location()->save($location);
-    //
-    //                    //Create Fake Hangout
-    //                    $capacity = rand(1, 10);
-    //                    $hangoutData = [
-    //                        "is_fake" => 1,
-    //                        "title" => $sampleHelp->title,
-    //                        "description" => $sampleHelp->description,
-    //                        //"cover_img" => 'https://picsum.photos/id/'. rand(1, 600) .'/200/300',
-    //                        "cover_img" => $sampleHelp->media ? $sampleHelp->media->path : 'https://picsum.photos/id/'. rand(1, 600) .'/200/300',
-    //                        "address" => $format_address,
-    //                        "kizuna" => rand(10, 30),
-    //                        "lat" => $new_location['lat'],
-    //                        "lng" => $new_location['lng'],
-    //                        "start" => Carbon::now()->addMinutes(45),
-    //                        "end" => Carbon::now()->addDays(4),
-    //                        "skills" => $skills,
-    //                        "capacity"=> $capacity
-    //                    ];
-    //
-    //                    $hangout = new \Modules\Kizuner\Models\Hangout($hangoutData);
-    //                    $hangout->user_id = $user->id;
-    //                    $hangout->available = $capacity;
-    //                    $hangout->save();
-    //
-    //                    $locationData = [
-    //                        'address' => $format_address,
-    //                        'lat' => $new_location['lat'],
-    //                        'lng' => $new_location['lng']
-    //                    ];
-    //                    $location = new Location($locationData);
-    //                    $location->save();
-    //                    $hangout->location()->save($location);
-    //                    $hangout->skills()->sync($skills);
-    //                }
-    //
-    //                //Save Sample_id
-    //                array_push($fake_sample_ids, $sampleHelp->id);
-    //            }
-    //            catch (Exception $e) {}
-    //        }
+    for ($i = 0; $i < $fake_number; $i++) {
+      try {
+        //Sync Skills
+        $skills = [];
+        $firstSkill = null;
+        foreach ($typeObj->skills as $skill) {
+          $firstSkill = $skill->id;
+          array_push($skills, $skill->id);
+        }
+
+        //Append user's skills
+        /*
+                   $current_user = auth()->user();
+                   $user_skills = $current_user->skills;
+                   if($user_skills) {
+                       $user_skills = $user_skills->pluck('id');
+                       foreach ($user_skills as $user_skill) {
+                           array_push($skills, $user_skill);
+                       }
+                   }
+                   */
+
+        $allSkills = \Modules\Kizuner\Models\Skill::take(20)->get();
+        $limit_skill = count($allSkills) > 5 ? 5 : count($allSkills);
+        //array_push($skills, ($allSkills[rand(0,$limit_skill )])->id);
+        //array_push($skills, ($allSkills[rand(0, $limit_skill)])->id);
+
+        /*
+                    * generate fake Hangout for this user
+                    * - Get sample Hangout (random by Skill)
+                    * - create Hangout with this sample
+                    */
+        $sampleHelp = null;
+        for ($sampleCount = 0; $sampleCount < 3; $sampleCount++) {
+          if ($firstSkill) {
+            //$firstSkill = '699f66cf-e4a8-40ec-bb92-bc6cc53ce6fc';
+            $sampleHelpId = DB::table('skillables')
+              //->where('skill_id', $firstSkill)
+              ->whereIn('skill_id', $skills)
+              ->where('skillable_type', SampleHelp::class)
+              ->orderByRaw('RAND()')
+              ->first();
+            if (!$sampleHelpId) {
+              $sampleHelp = SampleHelp::where('type', 'hangout')->orderByRaw('RAND()')->first();
+            } else {
+              //$sampleHelp = SampleHelp::find($sampleHelpId->skillable_id);
+              $sampleHelp = SampleHelp::where('id', $sampleHelpId->skillable_id)->where('type', 'hangout')->orderByRaw('RAND()')->first();
+            }
+          } else {
+            $sampleHelpId = DB::table('skillables')
+              ->where('skillable_type', SampleHelp::class)
+              ->orderByRaw('RAND()')
+              ->first();
+            if (!$sampleHelpId) {
+              $sampleHelp = SampleHelp::where('type', 'hangout')->orderByRaw('RAND()')->first();
+            } else {
+              //$sampleHelp = SampleHelp::find($sampleHelpId->skillable_id);
+              $sampleHelp = SampleHelp::where('id', $sampleHelpId->skillable_id)->where('type', 'hangout')->orderByRaw('RAND()')->first();
+            }
+          }
+          if (!$sampleHelp) {
+            $sampleHelp = SampleHelp::where('type', 'hangout')->orderByRaw('RAND()')->first();
+          }
+          if (!in_array($sampleHelp->id, $fake_sample_ids))
+            break;
+        }
+        if ($sampleHelp && !in_array($sampleHelp->id, $fake_sample_ids)) {
+
+          //Create Fake User
+          $user = App\User::create([
+            'name' => $faker->name($gender),
+            //'name' => (new Faker\Provider\vi_VN\Person())->name($gender==1 ? 'male' : 'female'),
+            'email' => $faker->email,
+            'phone' => $faker->phoneNumber,
+            'password' => bcrypt('secret'),
+            'gender' => $gender,
+            'birth_date' => $faker->dateTimeBetween('1980-01-01', '2010-12-31')->format('Y-m-d'),
+            'is_fake' => 1,
+            'fake_avatar' => 'https://picsum.photos/id/' . rand(1, 1000) . '/200/300'
+          ]);
+          $user->skills()->sync($skills);
+
+          //Update Location
+          $new_location = generateLocation([
+            'lat' => $obj_location->lat,
+            'lon' => $obj_location->lng
+          ]);
+          $location_data = [
+            'address'   => $format_address,
+            'lat'       => $new_location['lat'],
+            'lng'       => $new_location['lng']
+          ];
+          $location = new Location($location_data);
+          $location->save();
+          $user->location()->save($location);
+
+          //Create Fake Hangout
+          $capacity = rand(1, 10);
+          $hangoutData = [
+            "is_fake" => 1,
+            "title" => $sampleHelp->title,
+            "description" => $sampleHelp->description,
+            //"cover_img" => 'https://picsum.photos/id/'. rand(1, 600) .'/200/300',
+            "cover_img" => $sampleHelp->media ? $sampleHelp->media->path : 'https://picsum.photos/id/' . rand(1, 600) . '/200/300',
+            "address" => $format_address,
+            "kizuna" => rand(10, 30),
+            "lat" => $new_location['lat'],
+            "lng" => $new_location['lng'],
+            "start" => Carbon::now()->addMinutes(45),
+            "end" => Carbon::now()->addDays(4),
+            "skills" => $skills,
+            "capacity" => $capacity
+          ];
+
+          $hangout = new \Modules\Kizuner\Models\Hangout($hangoutData);
+          $hangout->user_id = $user->id;
+          $hangout->available = $capacity;
+          $hangout->save();
+
+          $timelineRepo->create(
+            $user->id,
+            $hangout->id,
+            'hangout',
+            'new',
+            $hangout->user_id
+          );
+
+          $locationData = [
+            'address' => $format_address,
+            'lat' => $new_location['lat'],
+            'lng' => $new_location['lng']
+          ];
+          $location = new Location($locationData);
+          $location->save();
+          $hangout->location()->save($location);
+          $hangout->skills()->sync($skills);
+        }
+
+        //Save Sample_id
+        array_push($fake_sample_ids, $sampleHelp->id);
+      } catch (Exception $e) {
+      }
+    }
   }
 }
 
@@ -499,7 +504,7 @@ if (!function_exists('generateFakeHangouts')) {
  * Generate Fake Casts
  */
 if (!function_exists('generateFakeUserHelps')) {
-  function generateFakeUserHelps($typeObj, $fake_number = 5, $request = null)
+  function generateFakeUserHelps($typeObj, $fake_number = 5, $request = null, $timelineRepo)
   {
     try {
       //\Illuminate\Support\Facades\Log::info($typeObj->location);
@@ -756,6 +761,14 @@ if (!function_exists('generateFakeUserHelps')) {
           $help->user_id = $user->id;
           $help->available = $capacity;
           $help->save();
+
+          $timelineRepo->create(
+            $user->id,
+            $help->id,
+            'help',
+            'new',
+            $help->user_id
+          );
 
           $locationData = [
             'address' => $helpData['address'],

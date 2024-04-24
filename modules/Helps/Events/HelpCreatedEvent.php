@@ -7,23 +7,24 @@ use Modules\Helps\Models\Help;
 
 class HelpCreatedEvent
 {
-    use SerializesModels;
+  use SerializesModels;
 
-    private $object;
-    private $request;
+  private $object;
+  private $request;
 
-    public function __construct(Help $help, $request=null)
-    {
-        $this->object = $help;
-        $this->request = $request;
-    }
+  public function __construct(Help $help, $request = null)
+  {
+    $this->object = $help;
+    $this->request = $request;
+  }
 
-    public function getObject()
-    {
-        return $this->object;
-    }
+  public function getObject()
+  {
+    return $this->object;
+  }
 
-    public function getRequest() {
-        return $this->request;
-    }
+  public function getRequest()
+  {
+    return $this->request;
+  }
 }

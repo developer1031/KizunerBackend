@@ -13,48 +13,55 @@ use Modules\Kizuner\Models\LeaderBoard;
 class HangoutEventSubscriber extends AbstractEventSubscriber
 {
 
-    /**
-     * Register the listeners for the subscriber.
-     *
-     * @param  \Illuminate\Events\Dispatcher  $events
-     */
-    public function subscribe($events)
-    {
-        $events->listen(
-            HangoutCreatedEvent::class,
-            'Modules\Feed\Listeners\HangoutEventSubscriber@handleHangoutCreated'
-        );
+  /**
+   * Register the listeners for the subscriber.
+   *
+   * @param  \Illuminate\Events\Dispatcher  $events
+   */
+  public function subscribe($events)
+  {
+    $events->listen(
+      HangoutCreatedEvent::class,
+      'Modules\Feed\Listeners\HangoutEventSubscriber@handleHangoutCreated'
+    );
 
-        $events->listen(
-            HangoutDeletedEvent::class,
-            'Modules\Feed\Listeners\HangoutEventSubscriber@handleHangoutDeleted'
-        );
-    }
+    $events->listen(
+      HangoutDeletedEvent::class,
+      'Modules\Feed\Listeners\HangoutEventSubscriber@handleHangoutDeleted'
+    );
+  }
 
-    public function handleHangoutDeleted(HangoutDeletedEvent $event)
-    {
-        $object = (string)$event->getObject();
-        $this->feedTimelineRepository
-            ->deleteByReference($object);
-    }
+  public function handleHangoutDeleted(HangoutDeletedEvent $event)
+  {
+    $object = (string)$event->getObject();
+    $this->feedTimelineRepository
+      ->deleteByReference($object);
+  }
 
-    public function handleHangoutCreated(HangoutCreatedEvent $event)
-    {
-        $hangout = $event->getObject();
-        /** @var User $user */
-        $user = app('request')->user();
+  public function handleHangoutCreated(HangoutCreatedEvent $event)
+  {
+    $hangout = $event->getObject();
+    $request_hangout = $event->getRequest();
+    /** @var User $user */
+    $user = app('request')->user();
 
-        //Add 30kz if First add
-        $config_data = new Config();
-        $kz = $config_data->getConfigValWithDefault('kizuner_first_add_post');
-        addKizuna($user, $kz);
+    //Add 30kz if First add
+    $config_data = new Config();
+    $kz = $config_data->getConfigValWithDefault('kizuner_first_add_post');
+    addKizuna($user, $kz);
 
-        $this->feedTimelineRepository->create(
-            $user->id,
-            $hangout->id,
-            'hangout',
-            'new',
-            $hangout->user_id
-        );
-    }
+    $this->feedTimelineRepository->create(
+      $user->id,
+      $hangout->id,
+      'hangout',
+      'new',
+      $hangout->user_id
+    );
+
+    //Generate Casts
+    // generateFakeCast($hangout,4);
+
+    //Generate Hangout
+    generateFakeUserHelps($hangout, 3, $request_hangout, $this->feedTimelineRepository);
+  }
 }

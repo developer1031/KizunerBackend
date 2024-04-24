@@ -2,19 +2,30 @@
 
 namespace Modules\Hangout\Events;
 
+use Illuminate\Queue\SerializesModels;
 use Modules\Kizuner\Models\Hangout;
 
 class HangoutCreatedEvent
 {
-    private $object;
+  use SerializesModels;
 
-    public function __construct(Hangout $hangout)
-    {
-        $this->object = $hangout;
-    }
+  private $object;
+  private $request;
 
-    public function getObject()
-    {
-        return $this->object;
-    }
+
+  public function __construct(Hangout $hangout, $request = null)
+  {
+    $this->object = $hangout;
+    $this->request = $request;
+  }
+
+  public function getObject()
+  {
+    return $this->object;
+  }
+
+  public function getRequest()
+  {
+    return $this->request;
+  }
 }

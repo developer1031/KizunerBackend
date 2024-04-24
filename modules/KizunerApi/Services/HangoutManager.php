@@ -162,25 +162,14 @@ class HangoutManager
         }
         */
 
-    //Generate Fake user & Help
-    /*
-        if($request->available_status!='no_time') {
-            try {
-                generateFakeUserHelps($hangout, 3);
-            }
-            catch (\Exception $e) {}
-        }
-        */
-
-    generateFakeUserHelps($hangout, 3, $request);
-    event(new HangoutCreatedEvent($hangout));
-
     //friends
     $friends = $request->get('friends');
     if ($friends) {
       $hangout->friends = $friends;
       $hangout->save();
     }
+
+    event(new HangoutCreatedEvent($hangout, $request));
 
     //Send notification
     HangoutTagJob::dispatch($hangout);
