@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
     );
 });
 
-const buildShareContent = function(data) {
+const buildShareContent = function (data) {
     console.log(data);
     return (
         "<!DOCTYPE html>" +
@@ -47,12 +47,6 @@ const buildShareContent = function(data) {
         '<meta property="og:image" content="' +
         data.image_url +
         '" />' +
-        // '<meta property="og:image:width" content="' +
-        // (data.width || 600) +
-        // '" />' + // this is for the preview image to load on first share
-        // '<meta property="og:image:height" content="' +
-        // (data.height || 315) +
-        // '" />' + // this is for the preview image to load on first share
         '<meta name="twitter:card" content="summary_large_image" />' +
         '<meta name="twitter:site" content="@kizuner" />' +
         '<meta name="twitter:creator" content="@kizuner" />' +
@@ -78,9 +72,9 @@ const buildShareContent = function(data) {
 };
 
 app.get("/k", (req, res) => {
-    const { dl, t, d, i, k, id } = req.query;
+    const { t, d, i, k, id } = req.query;
 
-    const dynamicLink = `https://kizuner.page.link/${dl}?type=${k}&id=${id}`;
+    const dynamicLink = `https://com.kizuner/${k}/id=${id}`;
     const title = decodeURIComponent(t) || "Do What You Love - Kizuner";
     const description = decodeURIComponent(d);
     const image_id = decodeURIComponent(i);
@@ -93,7 +87,7 @@ app.get("/k", (req, res) => {
         buildShareContent({
             dynamicLink,
             title,
-            description: description,
+            description,
             image_url
         })
     );
