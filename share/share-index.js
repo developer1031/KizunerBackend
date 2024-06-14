@@ -1,3 +1,5 @@
+// *** not for deploy *** //
+
 const express = require("express");
 const cors = require("cors");
 
@@ -11,7 +13,7 @@ app.get("/", (req, res) => {
     return res.json("I think, therefore I am.");
 });
 
-const buildShareContent = function(data) {
+const buildShareContent = function (data) {
     return (
         "<!DOCTYPE html>" +
         "<html>" +
