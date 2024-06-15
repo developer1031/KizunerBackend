@@ -8,6 +8,7 @@ use Modules\Kizuner\Models\Hangout;
 use Modules\Kizuner\Models\React;
 use Modules\Kizuner\Models\Status;
 use Modules\Notification\Job\HangoutLikeJob;
+use Modules\Notification\Job\HelpLikeJob;
 use Modules\Notification\Job\StatusLikeJob;
 
 class ReactRepository implements ReactRepositoryInterface
@@ -106,7 +107,7 @@ class ReactRepository implements ReactRepositoryInterface
 
             // Send notification
             if ($react->user_id != $react->reacted_user_id) {
-                HangoutLikeJob::dispatch($react);
+                HelpLikeJob::dispatch($react);
             }
             return true;
         }
