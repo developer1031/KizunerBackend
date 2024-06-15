@@ -31,6 +31,12 @@ class HangoutLikeJob implements ShouldQueue
     {
         $react = React::find($this->react->id);
 
+        $token = UserDeviceToken::getUserDevice($react->reacted_user_id, "like_notification");
+
+        if ($token == null) {
+            return;
+        }
+
         $emailReceiver = UserDeviceToken::getUserEmail($react->reacted_user_id, "like_notification");
 
         if ($emailReceiver == null) {
@@ -44,8 +50,8 @@ class HangoutLikeJob implements ShouldQueue
             $image = \Storage::disk('gcs')->url($reacterMedia->thumb);
         }
 
-        $action = ($react->react_type =='like') ? ' liked ' : ' shared ';
-        $message = $reacter->name . $action .' your hangout';
+        $action = ($react->react_type == 'like') ? ' liked ' : ' shared ';
+        $message = $reacter->name . $action . ' your hangout';
         $type    = 'hangout-liked';
 
         $payload = [
@@ -59,30 +65,25 @@ class HangoutLikeJob implements ShouldQueue
         ];
 
         $data = (new NotificationDto())
-                    ->setUserId($react->reacted_user_id)
-                    ->setTitle('Kizuner')
-                    ->setBody($message)
-                    ->setPayload($payload)
-                    ->setType($type)
-                    ->setUploadableId($reacterMedia ? $reacterMedia->uploadable_id : null);
+            ->setUserId($react->reacted_user_id)
+            ->setTitle('Kizuner')
+            ->setBody($message)
+            ->setPayload($payload)
+            ->setType($type)
+            ->setUploadableId($reacterMedia ? $reacterMedia->uploadable_id : null);
         $notification = Notification::create($data);
 
-        $token = UserDeviceToken::getUserDevice($react->reacted_user_id, "like_notification");
-       
-
-        if ($token) {
-            $payload['image'] = $image;
-            $payload['id'] = $notification->id;
-            $payload['unread_count'] = getUnreadNotification($react->reacted_user_id);
-            PushNotificationJob::dispatch('sendBatchNotification', [
-                [$token], [
-                    'topicName'     => 'kizuner',
-                    'title'         => $notification->title,
-                    'body'          => $notification->body,
-                    'payload'       => $payload
-                ],
-            ]);
-        }
+        $payload['image'] = $image;
+        $payload['id'] = $notification->id;
+        $payload['unread_count'] = getUnreadNotification($react->reacted_user_id);
+        PushNotificationJob::dispatch('sendBatchNotification', [
+            [$token], [
+                'topicName'     => 'kizuner',
+                'title'         => $notification->title,
+                'body'          => $notification->body,
+                'payload'       => $payload
+            ],
+        ]);
 
         // SysNotification::route('mail', $emailReceiver)
         // ->notify(new LikeEmail('',$notification->title,$notification->body,$emailReceiver,""));

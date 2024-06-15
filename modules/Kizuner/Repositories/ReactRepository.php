@@ -12,7 +12,7 @@ use Modules\Notification\Job\StatusLikeJob;
 
 class ReactRepository implements ReactRepositoryInterface
 {
-    public function hangoutReact(string $userId, string $hangoutId, $react_type=null)
+    public function hangoutReact(string $userId, string $hangoutId, $react_type = null)
     {
         $reacted = React::where([
             'user_id'           => $userId,
@@ -35,15 +35,15 @@ class ReactRepository implements ReactRepositoryInterface
             $hangout->reacts()->save($react);
 
             // Send notification
-            // if ($react->user_id != $react->reacted_user_id) {
-            //     HangoutLikeJob::dispatch($react);
-            // }
+            if ($react->user_id != $react->reacted_user_id) {
+                HangoutLikeJob::dispatch($react);
+            }
             return true;
         }
         return false;
     }
 
-    public function statusReact(string $userId, string $statusId, $react_type=null)
+    public function statusReact(string $userId, string $statusId, $react_type = null)
     {
         $reacted = React::where([
             'user_id'           => $userId,
@@ -74,7 +74,7 @@ class ReactRepository implements ReactRepositoryInterface
         return false;
     }
 
-    public function helpReact(string $userId, string $helpId, $react_type=null)
+    public function helpReact(string $userId, string $helpId, $react_type = null)
     {
         $reacted = React::where([
             'user_id'           => $userId,

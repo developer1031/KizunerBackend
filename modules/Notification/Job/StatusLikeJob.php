@@ -29,51 +29,54 @@ class StatusLikeJob implements ShouldQueue
 
     public function handle()
     {
-        // $react = React::find($this->react->id);
-        // $reacter = User::find($react->user_id);
-        // $reacterMedia = $reacter->medias()->where('type', 'user.avatar')->first();
-        // $image = null;
-        // if ($reacterMedia) {
-        //     $image = \Storage::disk('gcs')->url($reacterMedia->thumb);
-        // }
+        $react = React::find($this->react->id);
 
-        // $message = $reacter->name . ' liked your status';
-        // $type    = 'status-liked';
+        $token = UserDeviceToken::getUserDevice($react->reacted_user_id, "like_notification");
 
-        // $payload = [
-        //     'relation' => [
-        //         'id'        => $react->reactable_id,
-        //         'type'      => 'status'
-        //     ],
-        //     'type'          => $type,
-        //     'created_at'    => $react->created_at,
-        //     'message'       => '<b>' . $reacter->name . '</b>' . ' liked your status'
-        // ];
+        if ($token == null) {
+            return;
+        }
 
-        // $data = (new NotificationDto())
-        //             ->setUserId($react->reacted_user_id)
-        //             ->setTitle('Kizuner')
-        //             ->setBody($message)
-        //             ->setPayload($payload)
-        //             ->setType($type)
-        //             ->setUploadableId($reacterMedia ? $reacterMedia->uploadable_id : null);
-        // $notification = Notification::create($data);
+        $reacter = User::find($react->user_id);
+        $reacterMedia = $reacter->medias()->where('type', 'user.avatar')->first();
+        $image = null;
+        if ($reacterMedia) {
+            $image = \Storage::disk('gcs')->url($reacterMedia->thumb);
+        }
 
-        // $token = UserDeviceToken::getUserDevice($react->reacted_user_id, "like_notification");
+        $message = $reacter->name . ' liked your status';
+        $type    = 'status-liked';
 
-        // if ($token) {
-        //     $payload['image'] = $image;
-        //     $payload['id'] = $notification->id;
-        //     $payload['unread_count'] = getUnreadNotification($react->reacted_user_id);
-        //     PushNotificationJob::dispatch('sendBatchNotification', [
-        //         [$token], [
-        //             'topicName'     => 'kizuner',
-        //             'title'         => $notification->title,
-        //             'body'          => $notification->body,
-        //             'payload'       => $payload
-        //         ],
-        //     ]);
-        // }
+        $payload = [
+            'relation' => [
+                'id'        => $react->reactable_id,
+                'type'      => 'status'
+            ],
+            'type'          => $type,
+            'created_at'    => $react->created_at,
+            'message'       => '<b>' . $reacter->name . '</b>' . ' liked your status'
+        ];
+
+        $data = (new NotificationDto())
+            ->setUserId($react->reacted_user_id)
+            ->setTitle('Kizuner')
+            ->setBody($message)
+            ->setPayload($payload)
+            ->setType($type)
+            ->setUploadableId($reacterMedia ? $reacterMedia->uploadable_id : null);
+        $notification = Notification::create($data);
+
+        $payload['image'] = $image;
+        $payload['id'] = $notification->id;
+        $payload['unread_count'] = getUnreadNotification($react->reacted_user_id);
+        PushNotificationJob::dispatch('sendBatchNotification', [
+            [$token], [
+                'topicName'     => 'kizuner',
+                'title'         => $notification->title,
+                'body'          => $notification->body,
+                'payload'       => $payload
+            ],
+        ]);
 
         // $emailReceiver = UserDeviceToken::getUserEmail($react->reacted_user_id, "like_notification");
         // if ($emailReceiver) {
