@@ -19,6 +19,7 @@ use Modules\Kizuner\Contracts\StatusRepositoryInterface;
 use Modules\Kizuner\Models\Hangout;
 use Modules\Kizuner\Models\Status;
 use Modules\Notification\Job\HangoutCommentJob;
+use Modules\Notification\Job\HelpCommentJob;
 use Modules\Notification\Job\StatusCommentJob;
 
 class CommentManager implements CommentManagerInterface
@@ -78,7 +79,7 @@ class CommentManager implements CommentManagerInterface
                 } else if ($type === 'status') {
                     StatusCommentJob::dispatch($comment);
                 } else if ($type == 'help') {
-                    HangoutCommentJob::dispatch($comment);
+                    HelpCommentJob::dispatch($comment);
                 }
             }
 
