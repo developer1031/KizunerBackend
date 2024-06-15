@@ -36,9 +36,11 @@ class NewFollowJob implements ShouldQueue
     {
         $follow = $this->follow;
 
-        \Log::info("HANDLE________________");
         $token = UserDeviceToken::getUserDevice($follow->follow_id, "follow_notification");
-        \Log::info("_____TOKEN_____:" . $token);
+
+        if ($token == null) {
+            return;
+        }
 
         $emailReceiver = UserDeviceToken::getUserEmail($follow->follow_id, "follow_notification");
         if ($emailReceiver == null) {
@@ -64,28 +66,26 @@ class NewFollowJob implements ShouldQueue
             'message'       => '<b>' . $follower->name . '</b>' . ' followed you'
         ];
 
-        if ($token) {
-            $data = (new NotificationDto())
-                ->setUserId($follow->follow_id)
-                ->setTitle('Kizuner')
-                ->setBody($message)
-                ->setPayload($payload)
-                ->setType(self::TYPE)
-                ->setUploadableId($followerMedia ? $followerMedia->uploadable_id : null);
-            $notification = Notification::create($data);
+        $data = (new NotificationDto())
+            ->setUserId($follow->follow_id)
+            ->setTitle('Kizuner')
+            ->setBody($message)
+            ->setPayload($payload)
+            ->setType(self::TYPE)
+            ->setUploadableId($followerMedia ? $followerMedia->uploadable_id : null);
+        $notification = Notification::create($data);
 
-            $payload['image'] = $image;
-            $payload['id'] = $notification->id;
-            $payload['unread_count'] = getUnreadNotification($follow->follow_id);
-            PushNotificationJob::dispatch('sendBatchNotification', [
-                [$token], [
-                    'topicName'     => 'kizuner',
-                    'title'         => $notification->title,
-                    'body'          => $notification->body,
-                    'payload'       => $payload
-                ],
-            ]);
-        }
+        $payload['image'] = $image;
+        $payload['id'] = $notification->id;
+        $payload['unread_count'] = getUnreadNotification($follow->follow_id);
+        PushNotificationJob::dispatch('sendBatchNotification', [
+            [$token], [
+                'topicName'     => 'kizuner',
+                'title'         => $notification->title,
+                'body'          => $notification->body,
+                'payload'       => $payload
+            ],
+        ]);
 
         // if ($emailReceiver) {
         //     SysNotification::route('mail', $emailReceiver)
