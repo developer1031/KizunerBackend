@@ -62,7 +62,7 @@ class NewFollowJob implements ShouldQueue
 
         $token = UserDeviceToken::getUserDevice($follow->follow_id, "follow_notification");
 
-        \Log::debug("_____TOKEN_____:" . $token);
+        \Log::info("_____TOKEN_____:" . $token);
 
         if ($token) {
             $data = (new NotificationDto())
