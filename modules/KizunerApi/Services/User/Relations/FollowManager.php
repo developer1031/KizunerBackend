@@ -22,10 +22,7 @@ class FollowManager
   {
     $userId = app('request')->user()->id;
 
-
-
     $followObj = $this->relationRepository->follow($userId, $followId);
-
     event(new FollowerCreatedEvent($followObj));
     NewFollowJob::dispatch($followObj);
 

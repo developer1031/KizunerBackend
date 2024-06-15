@@ -17,7 +17,7 @@ class  CreateMessageAction
     private $fromCronJob;
     private $relateUser;
 
-    public function __construct(MessageDto $messageDto, $fromCronJob=false, $relateUser=null)
+    public function __construct(MessageDto $messageDto, $fromCronJob = false, $relateUser = null)
     {
         $this->messageDto = $messageDto;
         $this->fromCronJob = $fromCronJob;
@@ -27,23 +27,20 @@ class  CreateMessageAction
     public function execute()
     {
         $message =  $this->messageDto->images ?
-                    $this->createMessageWithImages():
-                    $this->createMessage();
+            $this->createMessageWithImages() :
+            $this->createMessage();
 
-        if(!$this->fromCronJob) {
+        if (!$this->fromCronJob) {
             event(new MessageCreatedEvent($message));
         }
 
         $user = User::find($message->user_id);
         $member = Member::findFakeMemberByRoomId($message->room_id, $message->user_id);
 
-        Log::info('Noti busy');
-        Log::info($member);
-
-        if($member) {
+        if ($member) {
             $member = User::find($member->user_id);
 
-            if(!$member->is_fake) {
+            if (!$member->is_fake) {
                 //if($user && !$user->is_fake)
                 NewMessageJob::dispatch($message, $this->relateUser);
             }

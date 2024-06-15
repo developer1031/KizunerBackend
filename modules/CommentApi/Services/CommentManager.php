@@ -77,6 +77,8 @@ class CommentManager implements CommentManagerInterface
                     HangoutCommentJob::dispatch($comment);
                 } else if ($type === 'status') {
                     StatusCommentJob::dispatch($comment);
+                } else if ($type == 'help') {
+                    HangoutCommentJob::dispatch($comment);
                 }
             }
 
@@ -103,7 +105,7 @@ class CommentManager implements CommentManagerInterface
         }
 
         $comments = $this->commentRepository
-                        ->getCommentsList($typeObject, $referenceId, $perPage);
+            ->getCommentsList($typeObject, $referenceId, $perPage);
         return fractal($comments, new CommentTransform());
     }
 
@@ -112,8 +114,8 @@ class CommentManager implements CommentManagerInterface
      */
     public function updateComment(string $id, UpdateCommentRequest $request)
     {
-       $comment = $this->commentRepository->update($id, $request->get('body'));
-       return fractal($comment, new CommentTransform());
+        $comment = $this->commentRepository->update($id, $request->get('body'));
+        return fractal($comment, new CommentTransform());
     }
 
     /**
@@ -144,12 +146,12 @@ class CommentManager implements CommentManagerInterface
         switch ($type) {
             case 'status':
                 $object = $this->statusRepository
-                            ->get($objectId);
+                    ->get($objectId);
                 break;
 
             case 'hangout':
                 $object = $this->hangoutRepository
-                            ->get($objectId);
+                    ->get($objectId);
                 break;
 
             case 'help':
