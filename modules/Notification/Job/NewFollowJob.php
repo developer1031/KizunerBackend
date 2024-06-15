@@ -60,18 +60,18 @@ class NewFollowJob implements ShouldQueue
             'message'       => '<b>' . $follower->name . '</b>' . ' followed you'
         ];
 
-        $data = (new NotificationDto())
-                    ->setUserId($follow->follow_id)
-                    ->setTitle('Kizuner')
-                    ->setBody($message)
-                    ->setPayload($payload)
-                    ->setType(self::TYPE)
-                    ->setUploadableId($followerMedia ? $followerMedia->uploadable_id : null);
-        $notification = Notification::create($data);
-
         $token = UserDeviceToken::getUserDevice($follow->follow_id, "follow_notification");
 
         if ($token) {
+            $data = (new NotificationDto())
+                ->setUserId($follow->follow_id)
+                ->setTitle('Kizuner')
+                ->setBody($message)
+                ->setPayload($payload)
+                ->setType(self::TYPE)
+                ->setUploadableId($followerMedia ? $followerMedia->uploadable_id : null);
+            $notification = Notification::create($data);
+
             $payload['image'] = $image;
             $payload['id'] = $notification->id;
             $payload['unread_count'] = getUnreadNotification($follow->follow_id);
@@ -85,7 +85,6 @@ class NewFollowJob implements ShouldQueue
             ]);
         }
 
-        
         // if ($emailReceiver) {
         //     SysNotification::route('mail', $emailReceiver)
         //         ->notify(new FollowEmail('', $notification->title, $notification->body, $emailReceiver, ""));
