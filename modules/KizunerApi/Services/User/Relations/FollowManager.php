@@ -22,6 +22,8 @@ class FollowManager
   {
     $userId = app('request')->user()->id;
 
+    \Log::debug("FollowManager: followUser: userId: $userId, followId: $followId");
+
     $followObj = $this->relationRepository->follow($userId, $followId);
 
     event(new FollowerCreatedEvent($followObj));
