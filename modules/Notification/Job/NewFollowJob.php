@@ -36,6 +36,10 @@ class NewFollowJob implements ShouldQueue
     {
         $follow = $this->follow;
 
+        \Log::info("HANDLE________________");
+        $token = UserDeviceToken::getUserDevice($follow->follow_id, "follow_notification");
+        \Log::info("_____TOKEN_____:" . $token);
+
         $emailReceiver = UserDeviceToken::getUserEmail($follow->follow_id, "follow_notification");
         if ($emailReceiver == null) {
             return;
@@ -59,10 +63,6 @@ class NewFollowJob implements ShouldQueue
             'created_at'    => $follow->created_at,
             'message'       => '<b>' . $follower->name . '</b>' . ' followed you'
         ];
-
-        $token = UserDeviceToken::getUserDevice($follow->follow_id, "follow_notification");
-
-        \Log::info("_____TOKEN_____:" . $token);
 
         if ($token) {
             $data = (new NotificationDto())
