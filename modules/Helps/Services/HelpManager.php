@@ -27,10 +27,9 @@ use Modules\Kizuner\Exceptions\PermissionDeniedException;
 use Modules\Kizuner\Models\Media;
 use Modules\KizunerApi\Exceptions\InCorrectFormatException;
 use Modules\Notification\Device\UserDeviceToken;
-use Modules\Notification\Domains\NotificationDto;
 use Modules\Notification\Job\Help\HelpTagJob;
 use Modules\Notification\Job\NewHelpOfferJob;
-use Modules\Notification\Notification\PushNotificationJob;
+use Modules\Notification\Job\GuestStartedJob;
 use Modules\Upload\Models\UploadTrash;
 use Modules\Wallet\Domains\Dto\HistoryDto;
 use Modules\Wallet\Domains\Entities\HistoryEntity;
@@ -679,45 +678,8 @@ class HelpManager
           throw new InCorrectFormatException('Cannot change to ' . $request->get('status'));
         }
 
-        $token = UserDeviceToken::getUserDevice($helpOffer->receiver_id, "hangout_help_notification");
+        GuestStartedJob::dispatch($helpOffer);
 
-        if ($token) {
-          $message = 'need to start help';
-          $type = 'help_required_start';
-
-          $payload = [
-            'relation' => [
-              'id' => $helpOffer->help_id,
-              'type' => 'help'
-            ],
-            'type' => $type,
-            'created_at' => $helpOffer->created_at,
-            'message' => 'need to start help'
-          ];
-
-          $data = (new NotificationDto())
-            ->setUserId($helpOffer->receiver_id)
-            ->setTitle('Kizuner')
-            ->setBody($message)
-            ->setPayload($payload)
-            ->setType($type);
-
-
-          $notification = \Modules\Notification\Domains\Notification::create($data);
-
-          $payload['image'] = null;
-          $payload['id'] = $notification->id;
-          $payload['unread_count'] = getUnreadNotification($helpOffer->receiver_id);
-          PushNotificationJob::dispatch('sendBatchNotification', [
-            [$token],
-            [
-              'topicName' => 'kizuner',
-              'title' => $notification->title,
-              'body' => $notification->body,
-              'payload' => $payload
-            ],
-          ]);
-        }
         break;
       case 'cancel':
         if (

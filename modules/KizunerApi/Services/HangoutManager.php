@@ -84,7 +84,6 @@ class HangoutManager
         'type', 'title', 'description', 'kizuna', 'schedule', 'end', 'available_status', 'short_address', 'payment_method', 'amount'
       ]);
     }
-    Log::debug($hangoutData);
 
     if (!$request->available_status) {
       //$hangoutData['available_status'] = 'online';

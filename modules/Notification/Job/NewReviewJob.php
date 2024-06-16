@@ -22,7 +22,7 @@ class NewReviewJob implements ShouldQueue
 
     public function __construct(RatingEntity $review)
     {
-       $this->review = $review;
+        $this->review = $review;
     }
 
     public function handle()
@@ -55,16 +55,16 @@ class NewReviewJob implements ShouldQueue
 
         //save message
         $data = (new NotificationDto())
-                    ->setUserId($review->ratted_user_id)
-                    ->setTitle('Kizuner')
-                    ->setBody($message)
-                    ->setPayload($payload)
-                    ->setType($type)
-                    ->setUploadableId(!isset($reviewerMedia) ? null : $reviewerMedia->uploadable_id);
+            ->setUserId($review->ratted_user_id)
+            ->setTitle('Kizuner')
+            ->setBody($message)
+            ->setPayload($payload)
+            ->setType($type)
+            ->setUploadableId(!isset($reviewerMedia) ? null : $reviewerMedia->uploadable_id);
         $notification = Notification::create($data);
 
         //Push notification
-        $token = UserDeviceToken::getUserDevice($review->ratted_user_id, '');
+        $token = UserDeviceToken::getUserDevice($review->ratted_user_id, 'hangout_help_notification');
 
         if ($token) {
             $payload['image'] = $image;
@@ -79,6 +79,5 @@ class NewReviewJob implements ShouldQueue
                 ],
             ]);
         }
-
     }
 }

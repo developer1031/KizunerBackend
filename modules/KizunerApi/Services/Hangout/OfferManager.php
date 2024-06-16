@@ -212,7 +212,7 @@ class OfferManager
                 break;
             case 'paid':
                 if ($offer->status != Offer::$status['accept']) {
-                // if ($offer->status != Offer::$status['accept'] || $offer->payment_status != null) {
+                    // if ($offer->status != Offer::$status['accept'] || $offer->payment_status != null) {
                     throw new InCorrectFormatException('Cannot change to ' . $request->get('status'));
                 }
 
@@ -255,8 +255,8 @@ class OfferManager
                         $offer->refund_crypto_wallet_id = $request->get('refund_crypto_wallet_id');
 
                         if ($this->nowManager->getIsSandbox()) {
-                          $offer->payment_status = Offer::PAYMENT_STATUS_PAID;
-                          $offer->status = Offer::$status[$request->get('status')];
+                            $offer->payment_status = Offer::PAYMENT_STATUS_PAID;
+                            $offer->status = Offer::$status[$request->get('status')];
                         }
 
                         $offer->save();
@@ -291,54 +291,16 @@ class OfferManager
                     throw new InCorrectFormatException('Cannot change to ' . $request->get('status'));
                 }
 
-                $token = UserDeviceToken::getUserDevice($offer->receiver_id, "hangout_help_notification");
 
-                if ($token) {
-                    $message = 'need to start hangout';
-                    $type = 'hangout_required_start';
-
-                    $payload = [
-                        'relation' => [
-                            'id' => $offer->help_id,
-                            'type' => 'hangout'
-                        ],
-                        'type' => $type,
-                        'created_at' => $offer->created_at,
-                        'message' => 'need to start hangout'
-                    ];
-
-                    $data = (new NotificationDto())
-                        ->setUserId($offer->receiver_id)
-                        ->setTitle('Kizuner')
-                        ->setBody($message)
-                        ->setPayload($payload)
-                        ->setType($type);
-
-
-                    $notification = \Modules\Notification\Domains\Notification::create($data);
-
-                    $payload['image'] = null;
-                    $payload['id'] = $notification->id;
-                    $payload['unread_count'] = getUnreadNotification($offer->receiver_id);
-                    PushNotificationJob::dispatch('sendBatchNotification', [
-                        [$token],
-                        [
-                            'topicName' => 'kizuner',
-                            'title' => $notification->title,
-                            'body' => $notification->body,
-                            'payload' => $payload
-                        ],
-                    ]);
-                }
                 break;
             case 'cancel':
             case 'cast_cancelled':
                 if (
-                    $offer->status != Offer::$status['accept'] && 
-                    $offer->status != Offer::$status['paid'] && 
-                    $offer->status != Offer::$status['started'] && 
+                    $offer->status != Offer::$status['accept'] &&
+                    $offer->status != Offer::$status['paid'] &&
+                    $offer->status != Offer::$status['started'] &&
                     $offer->status != Offer::$status['guest_started']
-                    ) {
+                ) {
                     throw new InCorrectFormatException('Cannot change to ' . $request->get('status'));
                 }
 
@@ -412,12 +374,12 @@ class OfferManager
                 $castEmail = UserDeviceToken::getUserEmail($offer->sender_id, "email_notification");
                 $guestEmail = UserDeviceToken::getUserEmail($offer->receiver_id, "email_notification");
                 if ($castEmail) {
-                  SysNotification::route('mail', $castEmail)
-                  ->notify(new PaymentEmail('','Kizuner Payment Notification', 'Payment Action Success!', $castEmail, ""));
+                    SysNotification::route('mail', $castEmail)
+                        ->notify(new PaymentEmail('', 'Kizuner Payment Notification', 'Payment Action Success!', $castEmail, ""));
                 }
                 if ($guestEmail) {
-                  SysNotification::route('mail', $guestEmail)
-                  ->notify(new PaymentEmail('','Kizuner Payment Notification', 'Payment Action Success!', $guestEmail, ""));
+                    SysNotification::route('mail', $guestEmail)
+                        ->notify(new PaymentEmail('', 'Kizuner Payment Notification', 'Payment Action Success!', $guestEmail, ""));
                 }
 
                 Transaction::create(

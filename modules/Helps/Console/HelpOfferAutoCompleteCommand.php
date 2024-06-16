@@ -100,7 +100,7 @@ class HelpOfferAutoCompleteCommand extends Command
                                 ->setUploadableId(null);
 
                             $notification = Notification::create($data);
-                            $token = UserDeviceToken::getUserDevice($offer->sender_id, '');
+                            $token = UserDeviceToken::getUserDevice($offer->sender_id, 'hangout_help_notification');
 
 
                             if ($token) {
@@ -126,7 +126,7 @@ class HelpOfferAutoCompleteCommand extends Command
                                 ->setType($type)
                                 ->setUploadableId(null);
                             $notification = Notification::create($data);
-                            $token = UserDeviceToken::getUserDevice($offer->receiver_id, '');
+                            $token = UserDeviceToken::getUserDevice($offer->receiver_id, 'hangout_help_notification');
                             if ($token) {
                                 $payload['image'] = null;
                                 $payload['id'] = $notification->id;

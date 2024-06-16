@@ -62,7 +62,7 @@ class TransferJob implements ShouldQueue
             ->setUploadableId($senderMedia ? $senderMedia->uploadable_id : null);
         $notification = Notification::create($data);
 
-        $token = UserDeviceToken::getUserDevice($wallet->user_id, '');
+        $token = UserDeviceToken::getUserDevice($wallet->user_id, 'hangout_help_notification');
 
         if ($token) {
             $payload['image'] = $image;
