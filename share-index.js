@@ -73,7 +73,7 @@ const buildShareContent = function (data) {
 app.get("/k", (req, res) => {
     const { t, d, i, k, id } = req.query;
 
-    const dynamicLink = `kizuner://${k}/id=${id}`;
+    const dynamicLink = `https://kizuner.com/${k}/id=${id}`;
     const title = decodeURIComponent(t) || "Do What You Love - Kizuner";
     const description = decodeURIComponent(d);
     const image_id = decodeURIComponent(i);
