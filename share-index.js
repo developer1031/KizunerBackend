@@ -7,7 +7,7 @@ const port = process.env.PORT || 9876;
 
 app.use(cors());
 
-app.get("/hangout", (req, res) => {
+app.get("/", (req, res) => {
     return res.send(
         buildShareContent({
             dynamicLink: "https://kizuner.com",
@@ -73,7 +73,7 @@ const buildShareContent = function (data) {
 app.get("/k", (req, res) => {
     const { t, d, i, k, id } = req.query;
 
-    const dynamicLink = `https://kizuner.com/${k}/${id}`;
+    const dynamicLink = `https://kizuner.com?type=${k}&id=${id}`;
     const title = decodeURIComponent(t) || "Do What You Love - Kizuner";
     const description = decodeURIComponent(d);
     const image_id = decodeURIComponent(i);
