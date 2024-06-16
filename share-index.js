@@ -7,7 +7,7 @@ const port = process.env.PORT || 9876;
 
 app.use(cors());
 
-app.get("/", (req, res) => {
+app.get("/hangout", (req, res) => {
     return res.send(
         buildShareContent({
             dynamicLink: "https://kizuner.com",
