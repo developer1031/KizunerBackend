@@ -70,15 +70,13 @@ const buildShareContent = function (data) {
                 window.onload = function() {
                     const os = getMobileOperatingSystem();
 
-                    setTimeout(() => {
-                        if (os == "iOS") {
-                            window.location = ${LinkIPhone};
-                        } else {
-                            window.location = ${LinkAndroid};
-                        }
-                    }, 25);
-
-                    window.location = ${data.dynamicLink};
+                    if (os == "iOS") {
+                        window.location = ${LinkIPhone};
+                    } else if (os == 'Android') {
+                        window.location = ${LinkAndroid};
+                    } else {
+                        window.location = "https://kizuner.com";
+                    }
                 };
             </script>
         </body>
@@ -89,7 +87,6 @@ const buildShareContent = function (data) {
 app.get("/k", (req, res) => {
     const { t, d, i, k, id } = req.query;
 
-    var dynamicLink = `${BASEURL}/${k}/${id}`
     const title = decodeURIComponent(t) || "Do What You Love - Kizuner";
     const description = decodeURIComponent(d);
     const image_id = decodeURIComponent(i);
@@ -100,7 +97,6 @@ app.get("/k", (req, res) => {
 
     return res.send(
         buildShareContent({
-            dynamicLink,
             title,
             description,
             image_url
