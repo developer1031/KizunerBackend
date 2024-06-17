@@ -7,26 +7,6 @@ const port = process.env.PORT || 9876;
 
 app.use(cors());
 
-function isiPhone() {
-    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-    if (/iPhone/.test(userAgent) && !window.MSStream) {
-        return true
-    }
-
-    return false
-}
-
-function isAndroid() {
-    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-    if (/android/i.test(userAgent)) {
-        return true
-    }
-
-    return false
-}
-
 const LinkAndroid = "https://play.google.com/store/apps/details?id=com.kizuner"
 const LinkIPhone = "https://apps.apple.com/us/app/kizuner/id1524617131"
 
@@ -87,8 +67,9 @@ const buildShareContent = function (data) {
         "</head>" +
         "<body>" +
         "<script>" +
+        'var userAgent = navigator.userAgent || navigator.vendor || window.opera;' +
         'window.location = "' +
-        data.dynamicLink +
+        '(/iPhone/.test(userAgent) && !window.MSStream) ?' + LinkIPhone + ' : ' + LinkAndroid +
         '"' +
         "</script>" +
         "</body>" +
