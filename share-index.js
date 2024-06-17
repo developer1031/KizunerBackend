@@ -69,14 +69,12 @@ const buildShareContent = function (data) {
                 
                 window.onload = function() {
                     const os = getMobileOperatingSystem();
-                    const storeUrl = {
-                        Android: 'https://play.google.com/store/apps/details?id=com.kizuner',
-                        iOS: 'https://apps.apple.com/app/id1524617131'
-                    };
 
                     setTimeout(() => {
-                        if (os === 'Android' || os === 'iOS') {
-                            window.location = storeUrl[os];
+                        if (os == "iOS") {
+                            window.location = ${LinkIPhone};
+                        } else {
+                            window.location = ${LinkAndroid};
                         }
                     }, 25);
 
