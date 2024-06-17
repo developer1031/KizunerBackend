@@ -71,9 +71,9 @@ const buildShareContent = function (data) {
                     const os = getMobileOperatingSystem();
 
                     if (os == "iOS") {
-                        window.location = ${LinkIPhone};
+                        window.location = "${LinkIPhone}";
                     } else if (os == 'Android') {
-                        window.location = ${LinkAndroid};
+                        window.location = "${LinkAndroid}";
                     } else {
                         window.location = "https://kizuner.com";
                     }
