@@ -647,7 +647,6 @@ if (!function_exists('generateFakeUserHelps')) {
 
     $fake_sample_ids = [];
     for ($i = 0; $i < $fake_number; $i++) {
-      \Log::debug("___________FAKE____________");
       try {
         //Sync Skills
         $skills = [];

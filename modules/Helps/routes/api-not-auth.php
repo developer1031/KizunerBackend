@@ -2,4 +2,4 @@
 /*
  * Settings
  */
-Route::get('share/{code}', 'HelpsController@shortenLink');
+Route::get('share/{type}/{id}', 'HelpsController@shortenLink');

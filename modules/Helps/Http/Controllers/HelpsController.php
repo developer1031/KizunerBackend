@@ -288,16 +288,18 @@ class HelpsController
         ]);
 
         $input['link'] = $request->link;
-        $input['code'] = Str::random(10);
+        // $input['id'] = $request->id;
+        // $input['type'] = $request->type;
+        $input['code'] = $request->id;
 
         $shortLink = ShortLink::create($input);
 
         return new JsonResponse(['success' => true, 'code' => $shortLink->code], Response::HTTP_OK);
     }
 
-    public function shortenLink($code)
+    public function shortenLink($type, $id)
     {
-        $find = ShortLink::where('code', $code)->first();
+        $find = ShortLink::where('code', $id)->first();
         return redirect($find->link);
     }
 }
