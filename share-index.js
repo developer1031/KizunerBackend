@@ -7,6 +7,29 @@ const port = process.env.PORT || 9876;
 
 app.use(cors());
 
+function isiPhone() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    if (/iPhone/.test(userAgent) && !window.MSStream) {
+        return true
+    }
+
+    return false
+}
+
+function isAndroid() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    if (/android/i.test(userAgent)) {
+        return true
+    }
+
+    return false
+}
+
+const LinkAndroid = "https://play.google.com/store/apps/details?id=com.kizuner"
+const LinkIPhone = "https://apps.apple.com/us/app/kizuner/id1524617131"
+
 app.get("/", (req, res) => {
     return res.send(
         buildShareContent({
@@ -28,10 +51,10 @@ const buildShareContent = function (data) {
         '<meta property="al:android:package" content="com.kizuner" />' +
         '<meta property="al:android:app_name" content="Kizuner" />' +
         '<meta property="al:android:url" content="' +
-        data.dynamicLink +
+        LinkAndroid +
         '" />' +
         '<meta property="al:ios:url" content="' +
-        data.dynamicLink +
+        LinkIPhone +
         '" />' +
         '<meta property="al:ios:app_store_id" content="1524617131" />' +
         '<meta property="al:ios:app_name" content="Kizuner" />' +
@@ -76,7 +99,11 @@ const buildShareContent = function (data) {
 app.get("/k", (req, res) => {
     const { t, d, i, k, id } = req.query;
 
-    const dynamicLink = `https://kizuner.com?type=${k}&id=${id}`;
+    var dynamicLink = LinkIPhone
+    if (isAndroid()) {
+        dynamicLink = LinkAndroid
+    }
+
     const title = decodeURIComponent(t) || "Do What You Love - Kizuner";
     const description = decodeURIComponent(d);
     const image_id = decodeURIComponent(i);
