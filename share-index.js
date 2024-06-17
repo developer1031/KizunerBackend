@@ -81,9 +81,6 @@ app.get("/k", (req, res) => {
     const { t, d, i, k, id } = req.query;
 
     var dynamicLink = LinkIPhone
-    if (isAndroid()) {
-        dynamicLink = LinkAndroid
-    }
 
     const title = decodeURIComponent(t) || "Do What You Love - Kizuner";
     const description = decodeURIComponent(d);
