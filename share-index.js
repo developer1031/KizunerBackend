@@ -80,7 +80,7 @@ const buildShareContent = function (data) {
                         }
                     }, 25);
 
-                    window.location = ${dynamicLink};
+                    window.location = ${data.dynamicLink};
                 };
             </script>
         </body>
