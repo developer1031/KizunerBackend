@@ -7,7 +7,6 @@ const port = process.env.PORT || 9876;
 
 app.use(cors());
 
-const BASEURL = "https://kizuner-st.inapps.technology/api/share/"
 const LinkAndroid = "https://play.google.com/store/apps/details?id=com.kizuner"
 const LinkIPhone = "https://apps.apple.com/us/app/kizuner/id1524617131"
 
@@ -42,8 +41,10 @@ const buildShareContent = function (data) {
             <meta property="og:title" content="${data.title}" />
             <meta property="og:description" content="${data.description}" />
             <meta property="og:image" content="${data.image_url}" />
+            <meta property="og:image:secure_url" content="${data.image_url}" />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
+            <meta property="og:image:type" content="image/jpeg" /> 
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:creator" content="@kizuner" />
             <meta name="twitter:title" content="${data.title}" />
