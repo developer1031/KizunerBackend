@@ -7,9 +7,6 @@ const port = process.env.PORT || 9876;
 
 app.use(cors());
 
-const LinkAndroid = "https://play.google.com/store/apps/details?id=com.kizuner"
-const LinkIPhone = "https://apps.apple.com/us/app/kizuner/id1524617131"
-
 const buildShareContent = function (data) {
     const imageUrl = data.image_url.replace("https", "http");
 
@@ -22,8 +19,8 @@ const buildShareContent = function (data) {
             <meta property="fb:app_id" content="1239520603104986" />
             <meta property="al:android:package" content="com.kizuner" />
             <meta property="al:android:app_name" content="Kizuner" />
-            <meta property="al:android:url" content="${data.dynamicLink}" />
-            <meta property="al:ios:url" content="${data.dynamicLink}" />
+            <meta property="al:android:url" content="kizunerapp://${data.kind}/${data.id}" />
+            <meta property="al:ios:url" content="kizunerapp://${data.kind}/${data.id}" />
             <meta property="al:ios:app_store_id" content="1524617131" />
             <meta property="al:ios:app_name" content="Kizuner" />
             <meta property="al:web:should_fallback" content="true" />
@@ -43,6 +40,7 @@ const buildShareContent = function (data) {
             <title>${data.title}</title>
         </head>
         <body>
+        window.location = "${data.dynamicLink}"
         </body>
         </html>
     `;
@@ -61,7 +59,9 @@ app.get("/k", (req, res) => {
 
     return res.send(
         buildShareContent({
-            dynamicLink: `https://kizuner.com/${k}/${id}`,
+            dynamicLink: `https://kizuner.com?kind=${k}&id=${id}`,
+            kind: k,
+            id: id,
             title,
             description,
             image_url
