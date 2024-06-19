@@ -4,7 +4,7 @@
     "details": [
       {
         "appID": "DH59R2ABR9.com.kizuner",
-        "paths": [ "/api/share/*", "/k/*" ]
+        "paths": [ "/api/share/*", "/k/*", "/hangout/*", "/help/*", "/status/*" ]
       }
     ]
   }

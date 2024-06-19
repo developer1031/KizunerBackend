@@ -10,18 +10,6 @@ app.use(cors());
 const LinkAndroid = "https://play.google.com/store/apps/details?id=com.kizuner"
 const LinkIPhone = "https://apps.apple.com/us/app/kizuner/id1524617131"
 
-// app.get("/", (req, res) => {
-//     return res.send(
-//         buildShareContent({
-//             dynamicLink: "https://kizuner.com",
-//             title: "Do What You Love - Kizuner",
-//             description: "",
-//             image_url:
-//                 "https://kizuner.com/wp-content/uploads/2020/07/Untitled-1.jpg"
-//         })
-//     );
-// });
-
 const buildShareContent = function (data) {
     const imageUrl = data.image_url.replace("https", "http");
 
@@ -39,7 +27,7 @@ const buildShareContent = function (data) {
             <meta property="al:ios:app_store_id" content="1524617131" />
             <meta property="al:ios:app_name" content="Kizuner" />
             <meta property="al:web:should_fallback" content="true" />
-            <meta property="al:web:url" content="https://kizuner.com" />
+            <meta property="al:web:url" content="${data.dynamicLink}" />
             <meta property="og:title" content="${data.title}" />
             <meta property="og:description" content="${data.description}" />
             <meta property="og:type" content="website" />
@@ -73,6 +61,7 @@ app.get("/k", (req, res) => {
 
     return res.send(
         buildShareContent({
+            dynamicLink: `https://kizuner.com/${k}/${id}`,
             title,
             description,
             image_url
@@ -80,24 +69,36 @@ app.get("/k", (req, res) => {
     );
 });
 
+// app.get("/", (req, res) => {
+//     return res.send(
+//         buildShareContent({
+//             dynamicLink: "https://kizuner.com",
+//             title: "Do What You Love - Kizuner",
+//             description: "",
+//             image_url:
+//                 "https://kizuner.com/wp-content/uploads/2020/07/Untitled-1.jpg"
+//         })
+//     );
+// });
+
 /**
  * DEPRECATED
  */
-app.get("/dynamic-link", (req, res) => {
-    const { deeplink, title, description, image_url } = req.query;
+// app.get("/dynamic-link", (req, res) => {
+//     const { deeplink, title, description, image_url } = req.query;
 
-    return res.send(
-        buildShareContent({
-            dynamicLink: decodeURIComponent(deeplink),
-            title: title || "Do What You Love - Kizuner",
-            description: description || "",
-            image_url:
-                image_url && image_url !== "undefined"
-                    ? image_url
-                    : "https://kizuner.com/wp-content/uploads/2020/07/Untitled-1.jpg"
-        })
-    );
-});
+//     return res.send(
+//         buildShareContent({
+//             dynamicLink: decodeURIComponent(deeplink),
+//             title: title || "Do What You Love - Kizuner",
+//             description: description || "",
+//             image_url:
+//                 image_url && image_url !== "undefined"
+//                     ? image_url
+//                     : "https://kizuner.com/wp-content/uploads/2020/07/Untitled-1.jpg"
+//         })
+//     );
+// });
 
 app.listen(port, () => {
     console.log(`Started at ${port}`);
