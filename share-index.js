@@ -40,7 +40,9 @@ const buildShareContent = function (data) {
             <title>${data.title}</title>
         </head>
         <body>
+        <script>
         window.location = "${data.dynamicLink}"
+        </script>
         </body>
         </html>
     `;
