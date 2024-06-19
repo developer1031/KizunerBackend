@@ -55,33 +55,6 @@ const buildShareContent = function (data) {
             <title>${data.title}</title>
         </head>
         <body>
-            <script>
-                function getMobileOperatingSystem() {
-                    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-                    if (/windows phone/i.test(userAgent)) {
-                        return "Windows Phone";
-                    }
-                    if (/android/i.test(userAgent)) {
-                        return "Android";
-                    }
-                    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                        return "iOS";
-                    }
-                    return "unknown";
-                }
-                
-                window.onload = function() {
-                    const os = getMobileOperatingSystem();
-
-                    if (os == "iOS") {
-                        window.location = "${LinkIPhone}";
-                    } else if (os == 'Android') {
-                        window.location = "${LinkAndroid}";
-                    } else {
-                        window.location = "https://kizuner.com";
-                    }
-                };
-            </script>
         </body>
         </html>
     `;
