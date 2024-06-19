@@ -10,17 +10,17 @@ app.use(cors());
 const LinkAndroid = "https://play.google.com/store/apps/details?id=com.kizuner"
 const LinkIPhone = "https://apps.apple.com/us/app/kizuner/id1524617131"
 
-app.get("/", (req, res) => {
-    return res.send(
-        buildShareContent({
-            dynamicLink: "https://kizuner.com",
-            title: "Do What You Love - Kizuner",
-            description: "",
-            image_url:
-                "https://kizuner.com/wp-content/uploads/2020/07/Untitled-1.jpg"
-        })
-    );
-});
+// app.get("/", (req, res) => {
+//     return res.send(
+//         buildShareContent({
+//             dynamicLink: "https://kizuner.com",
+//             title: "Do What You Love - Kizuner",
+//             description: "",
+//             image_url:
+//                 "https://kizuner.com/wp-content/uploads/2020/07/Untitled-1.jpg"
+//         })
+//     );
+// });
 
 const buildShareContent = function (data) {
     const imageUrl = data.image_url.replace("https", "http");
