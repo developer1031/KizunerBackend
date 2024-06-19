@@ -23,6 +23,8 @@ app.get("/", (req, res) => {
 });
 
 const buildShareContent = function (data) {
+    const imageUrl = data.image_url.replace("https", "http");
+
     return `
         <!DOCTYPE html>
         <html lang="en">
@@ -40,8 +42,8 @@ const buildShareContent = function (data) {
             <meta property="al:web:url" content="https://kizuner.com" />
             <meta property="og:title" content="${data.title}" />
             <meta property="og:description" content="${data.description}" />
-            <meta property="og:image" content="${data.image_url}" />
-            <meta property="og:image:url" content="${data.image_url}" />
+            <meta property="og:image" content="${imageUrl}" />
+            <meta property="og:image:url" content="${imageUrl}" />
             <meta property="og:image:secure_url" content="${data.image_url}" />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
