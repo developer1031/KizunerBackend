@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "DH59R2ABR9.com.kizuner",
+        "paths": [ "/api/share/*", "/k/*" ]
+      }
+    ]
+  }
+}
