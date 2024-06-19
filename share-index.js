@@ -22,8 +22,8 @@ const buildShareContent = function (data) {
             <meta property="fb:app_id" content="1239520603104986" />
             <meta property="al:android:package" content="com.kizuner" />
             <meta property="al:android:app_name" content="Kizuner" />
-            <meta property="al:android:url" content="${LinkAndroid}" />
-            <meta property="al:ios:url" content="${LinkIPhone}" />
+            <meta property="al:android:url" content="${data.dynamicLink}" />
+            <meta property="al:ios:url" content="${data.dynamicLink}" />
             <meta property="al:ios:app_store_id" content="1524617131" />
             <meta property="al:ios:app_name" content="Kizuner" />
             <meta property="al:web:should_fallback" content="true" />
