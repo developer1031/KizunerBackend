@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require('path');
 
 const app = express();
 
@@ -70,6 +71,8 @@ app.get("/k", (req, res) => {
         })
     );
 });
+
+app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
 
 // app.get("/", (req, res) => {
 //     return res.send(
