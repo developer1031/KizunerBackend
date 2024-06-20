@@ -32,9 +32,6 @@ class HangoutCommentJob implements ShouldQueue
         $comment = $this->comment;
 
         $token = UserDeviceToken::getUserDevice($comment->commented_user_id, 'comment_notification');
-        if ($token == null) {
-            return;
-        }
 
         $commenter = User::find($comment->user_id);
         $commenterMedia = $commenter->medias()->where('type', 'user.avatar')->first();
@@ -56,13 +53,17 @@ class HangoutCommentJob implements ShouldQueue
         ];
 
         $data = (new NotificationDto())
-                    ->setUserId($comment->commented_user_id)
-                    ->setTitle('Kizuner')
-                    ->setBody($message)
-                    ->setPayload($payload)
-                    ->setType(self::TYPE)
-                    ->setUploadableId($commenterMedia ? $commenterMedia->id : null);
+            ->setUserId($comment->commented_user_id)
+            ->setTitle('Kizuner')
+            ->setBody($message)
+            ->setPayload($payload)
+            ->setType(self::TYPE)
+            ->setUploadableId($commenterMedia ? $commenterMedia->id : null);
         $notification = Notification::create($data);
+
+        if ($token == null) {
+            return;
+        }
 
         $payload['image'] = $image;
         $payload['id'] = $notification->id;

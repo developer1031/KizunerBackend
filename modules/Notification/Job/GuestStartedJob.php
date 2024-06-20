@@ -30,29 +30,30 @@ class GuestStartedJob implements ShouldQueue
 
         $token = UserDeviceToken::getUserDevice($offer->receiver_id, "hangout_help_notification");
 
+
+        $message = 'need to start hangout';
+        $type = 'hangout_required_start';
+
+        $payload = [
+            'relation' => [
+                'id' => $offer->help_id,
+                'type' => 'hangout'
+            ],
+            'type' => $type,
+            'created_at' => $offer->created_at,
+            'message' => 'need to start hangout'
+        ];
+
+        $data = (new NotificationDto())
+            ->setUserId($offer->receiver_id)
+            ->setTitle('Kizuner')
+            ->setBody($message)
+            ->setPayload($payload)
+            ->setType($type);
+
+        $notification = Notification::create($data);
+
         if ($token) {
-            $message = 'need to start hangout';
-            $type = 'hangout_required_start';
-
-            $payload = [
-                'relation' => [
-                    'id' => $offer->help_id,
-                    'type' => 'hangout'
-                ],
-                'type' => $type,
-                'created_at' => $offer->created_at,
-                'message' => 'need to start hangout'
-            ];
-
-            $data = (new NotificationDto())
-                ->setUserId($offer->receiver_id)
-                ->setTitle('Kizuner')
-                ->setBody($message)
-                ->setPayload($payload)
-                ->setType($type);
-
-            $notification = Notification::create($data);
-
             $payload['image'] = null;
             $payload['id'] = $notification->id;
             $payload['unread_count'] = getUnreadNotification($offer->receiver_id);

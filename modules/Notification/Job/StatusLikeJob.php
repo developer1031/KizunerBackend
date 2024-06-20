@@ -33,10 +33,6 @@ class StatusLikeJob implements ShouldQueue
 
         $token = UserDeviceToken::getUserDevice($react->reacted_user_id, "like_notification");
 
-        if ($token == null) {
-            return;
-        }
-
         $reacter = User::find($react->user_id);
         $reacterMedia = $reacter->medias()->where('type', 'user.avatar')->first();
         $image = null;
@@ -65,6 +61,10 @@ class StatusLikeJob implements ShouldQueue
             ->setType($type)
             ->setUploadableId($reacterMedia ? $reacterMedia->uploadable_id : null);
         $notification = Notification::create($data);
+
+        if ($token == null) {
+            return;
+        }
 
         $payload['image'] = $image;
         $payload['id'] = $notification->id;

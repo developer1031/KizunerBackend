@@ -33,10 +33,6 @@ class HelpLikeJob implements ShouldQueue
 
         $token = UserDeviceToken::getUserDevice($react->reacted_user_id, "like_notification");
 
-        if ($token == null) {
-            return;
-        }
-
         $emailReceiver = UserDeviceToken::getUserEmail($react->reacted_user_id, "like_notification");
 
         if ($emailReceiver == null) {
@@ -72,6 +68,10 @@ class HelpLikeJob implements ShouldQueue
             ->setType($type)
             ->setUploadableId($reacterMedia ? $reacterMedia->uploadable_id : null);
         $notification = Notification::create($data);
+
+        if ($token == null) {
+            return;
+        }
 
         $payload['image'] = $image;
         $payload['id'] = $notification->id;

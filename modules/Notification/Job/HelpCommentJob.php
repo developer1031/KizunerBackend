@@ -32,9 +32,6 @@ class HelpCommentJob implements ShouldQueue
         $comment = $this->comment;
 
         $token = UserDeviceToken::getUserDevice($comment->commented_user_id, 'comment_notification');
-        if ($token == null) {
-            return;
-        }
 
         $commenter = User::find($comment->user_id);
         $commenterMedia = $commenter->medias()->where('type', 'user.avatar')->first();
@@ -63,6 +60,10 @@ class HelpCommentJob implements ShouldQueue
             ->setType(self::TYPE)
             ->setUploadableId($commenterMedia ? $commenterMedia->id : null);
         $notification = Notification::create($data);
+
+        if ($token == null) {
+            return;
+        }
 
         $payload['image'] = $image;
         $payload['id'] = $notification->id;

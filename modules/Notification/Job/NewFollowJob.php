@@ -38,10 +38,6 @@ class NewFollowJob implements ShouldQueue
 
         $token = UserDeviceToken::getUserDevice($follow->follow_id, "follow_notification");
 
-        if ($token == null) {
-            return;
-        }
-
         $emailReceiver = UserDeviceToken::getUserEmail($follow->follow_id, "follow_notification");
         if ($emailReceiver == null) {
             return;
@@ -74,6 +70,10 @@ class NewFollowJob implements ShouldQueue
             ->setType(self::TYPE)
             ->setUploadableId($followerMedia ? $followerMedia->uploadable_id : null);
         $notification = Notification::create($data);
+
+        if ($token == null) {
+            return;
+        }
 
         $payload['image'] = $image;
         $payload['id'] = $notification->id;

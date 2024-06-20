@@ -32,9 +32,6 @@ class OfferAcceptedJob implements ShouldQueue
         $offer = $this->offer;
 
         $token = UserDeviceToken::getUserDevice($offer->sender_id, "hangout_help_notification");
-        if ($token == null) {
-            return;
-        }
 
         //Get receiver information
         $reveicer = User::find($offer->receiver_id);
@@ -58,13 +55,17 @@ class OfferAcceptedJob implements ShouldQueue
         ];
 
         $data = (new NotificationDto())
-                    ->setUserId($offer->sender_id)
-                    ->setTitle('Kizuner')
-                    ->setBody($message)
-                    ->setPayload($payload)
-                    ->setType($type)
-                    ->setUploadableId($receiverMedia ? $receiverMedia->uploadable_id : null);
+            ->setUserId($offer->sender_id)
+            ->setTitle('Kizuner')
+            ->setBody($message)
+            ->setPayload($payload)
+            ->setType($type)
+            ->setUploadableId($receiverMedia ? $receiverMedia->uploadable_id : null);
         $notification = Notification::create($data);
+
+        if ($token == null) {
+            return;
+        }
 
         $payload['image'] = $image;
         $payload['id'] = $notification->id;

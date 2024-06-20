@@ -4,8 +4,14 @@
     "details": [
       {
         "appID": "DH59R2ABR9.com.kizuner",
-        "paths": [ "/api/share/*", "/k/*", "/hangout/*", "/help/*", "/status/*" ]
+        "paths": [ "/" ],
+        "kind": "customKind",
+        "id": "customId"
       }
     ]
   }
 }
+
+// location ~ /\.(?!well-known).* {
+//     deny all;
+// }
