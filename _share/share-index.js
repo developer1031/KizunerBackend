@@ -115,3 +115,34 @@ app.get("/dynamic-link", (req, res) => {
 app.listen(port, () => {
     console.log(`Started at ${port}`);
 });
+
+// app.get("/", (req, res) => {
+//     return res.send(
+//         buildShareContent({
+//             dynamicLink: "https://kizuner.com",
+//             title: "Do What You Love - Kizuner",
+//             description: "",
+//             image_url:
+//                 "https://kizuner.com/wp-content/uploads/2020/07/Untitled-1.jpg"
+//         })
+//     );
+// });
+
+/**
+ * DEPRECATED
+ */
+// app.get("/dynamic-link", (req, res) => {
+//     const { deeplink, title, description, image_url } = req.query;
+
+//     return res.send(
+//         buildShareContent({
+//             dynamicLink: decodeURIComponent(deeplink),
+//             title: title || "Do What You Love - Kizuner",
+//             description: description || "",
+//             image_url:
+//                 image_url && image_url !== "undefined"
+//                     ? image_url
+//                     : "https://kizuner.com/wp-content/uploads/2020/07/Untitled-1.jpg"
+//         })
+//     );
+// });
