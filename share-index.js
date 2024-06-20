@@ -49,7 +49,7 @@ const buildShareContent = function (data) {
     `;
 };
 
-app.get("/", (req, res) => {
+app.get("/k", (req, res) => {
     const { t, d, i, k, id } = req.query;
 
     const title = decodeURIComponent(t) || "Do What You Love - Kizuner";
