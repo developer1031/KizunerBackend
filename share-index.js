@@ -52,8 +52,6 @@ const buildShareContent = function (data) {
 app.get("/k", (req, res) => {
     const { t, d, i, k, id } = req.query;
 
-    console.log(path.join(__dirname, '.well-known'))
-
     const title = decodeURIComponent(t) || "Do What You Love - Kizuner";
     const description = decodeURIComponent(d);
     const image_id = decodeURIComponent(i);
@@ -75,6 +73,11 @@ app.get("/k", (req, res) => {
 });
 
 app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
+
+app.get('/.well-known/apple-app-site-association', (req, res) => {
+    res.set('Content-Type', 'application/json');
+    res.sendFile(path.join(__dirname, '.well-known', 'apple-app-site-association'));
+});
 
 // app.get("/", (req, res) => {
 //     return res.send(
