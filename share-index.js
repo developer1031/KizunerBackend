@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const path = require('path');
 
 const app = express();
 
@@ -25,7 +24,7 @@ const buildShareContent = function (data) {
             <meta property="al:ios:app_store_id" content="1524617131" />
             <meta property="al:ios:app_name" content="Kizuner" />
             <meta property="al:web:should_fallback" content="true" />
-            <meta property="al:web:url" content="${data.dynamicLink}" />
+            <meta property="al:web:url" content="https://kizuner.com" />
             <meta property="og:title" content="${data.title}" />
             <meta property="og:description" content="${data.description}" />
             <meta property="og:type" content="website" />
@@ -33,6 +32,8 @@ const buildShareContent = function (data) {
             <meta property="og:image" content="${imageUrl}" />
             <meta property="og:image:url" content="${imageUrl}" />
             <meta property="og:image:secure_url" content="${data.image_url}" />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:creator" content="@kizuner" />
             <meta name="twitter:title" content="${data.title}" />
@@ -42,14 +43,13 @@ const buildShareContent = function (data) {
         </head>
         <body>
         <script>
-        window.location = "${data.dynamicLink}"
         </script>
         </body>
         </html>
     `;
 };
 
-app.get("/k", (req, res) => {
+app.get("/", (req, res) => {
     const { t, d, i, k, id } = req.query;
 
     const title = decodeURIComponent(t) || "Do What You Love - Kizuner";
@@ -62,7 +62,6 @@ app.get("/k", (req, res) => {
 
     return res.send(
         buildShareContent({
-            dynamicLink: `https://kizuner.com?kind=${k}&id=${id}`,
             kind: k,
             id: id,
             title,
