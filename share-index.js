@@ -72,13 +72,6 @@ app.get("/k", (req, res) => {
     );
 });
 
-app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
-
-app.get('/.well-known/apple-app-site-association', (req, res) => {
-    res.set('Content-Type', 'application/json');
-    res.sendFile(path.join(__dirname, '.well-known', 'apple-app-site-association'));
-});
-
 app.listen(port, () => {
     console.log(`Started at ${port}`);
 });
