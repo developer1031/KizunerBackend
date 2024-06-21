@@ -4,10 +4,7 @@
     "details": [
       {
         "appID": "DH59R2ABR9.com.kizuner",
-        "paths": [ "api/share/*", "k/*" ],
-        "appLinks": {
-          "fallback": "https://apps.apple.com/us/app/id1524617131"
-        }
+        "paths": [ "api/share/*", "k/*" ]
       }
     ]
   }
