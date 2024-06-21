@@ -34,15 +34,16 @@ const buildShareContent = function (data) {
             <meta property="og:image:secure_url" content="${data.image_url}" />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
-            <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:creator" content="@kizuner" />
+            <meta name="twitter:card" content="app" />
+            <meta name="twitter:site" content="@kizuner" />
             <meta name="twitter:title" content="${data.title}" />
             <meta name="twitter:description" content="${data.description}" />
             <meta name="twitter:image" content="${data.image_url}" />
-            <meta name="twitter:app:country" content="US">
             <meta name="twitter:app:name:iphone" content="Kizuner">
             <meta name="twitter:app:id:iphone" content="1524617131">
             <meta name="twitter:app:url:iphone" content="kizunerapp://${data.kind}/${data.id}" />
+            <meta name="twitter:app:id:ipad" content="1524617131">
+            <meta name="twitter:app:url:ipad" content="kizunerapp://${data.kind}/${data.id}" />
             <meta name="twitter:app:name:googleplay" content="Kizuner">
             <meta name="twitter:app:id:googleplay" content="com.kizuner">
             <meta name="twitter:app:url:googleplay" content="kizunerapp://${data.kind}/${data.id}" />
