@@ -42,10 +42,10 @@ const buildShareContent = function (data) {
             <meta name="twitter:app:country" content="US">
             <meta name="twitter:app:name:iphone" content="Kizuner">
             <meta name="twitter:app:id:iphone" content="1524617131">
-            <meta name="twitter:app:url:iphone" content="https://apps.apple.com/us/app/id1524617131">
+            <meta name="twitter:app:url:iphone" content="kizunerapp://${data.kind}/${data.id}" />
             <meta name="twitter:app:name:googleplay" content="Kizuner">
             <meta name="twitter:app:id:googleplay" content="com.kizuner">
-            <meta name="twitter:app:url:googleplay" content="https://play.google.com/store/apps/details?id=com.kizuner">
+            <meta name="twitter:app:url:googleplay" content="kizunerapp://${data.kind}/${data.id}" />
             <title>${data.title}</title>
         </head>
         <body>
