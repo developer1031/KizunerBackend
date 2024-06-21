@@ -65,7 +65,7 @@ class RelationRepository implements RelationshipRepositoryInterface
     }
 
     $searchTerm = app('request')->input('query');
-    $sql = Follow::where('user_id', $userId);
+    $sql = Follow::query();
     if ($searchTerm) {
       $users = DB::table('users')
         ->whereNot('id', $userId)
