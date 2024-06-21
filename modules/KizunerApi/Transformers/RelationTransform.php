@@ -36,7 +36,7 @@ class RelationTransform extends TransformerAbstract
     // }
 
     // $relationUserId = ($currentUser != $relation->user_id) ? $relation->user_id : $relation->$type;
-    $user = User::find($relation->user_id);
+    $user = User::find($relation->follow_id);
 
     if ($user) {
       $media = $user->medias()->where('type', 'user.avatar')->first();
