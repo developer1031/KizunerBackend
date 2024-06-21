@@ -75,9 +75,8 @@ class RelationRepository implements RelationshipRepositoryInterface
         ->pluck('id')
         ->toArray();
 
-      $sql = Follow::whereIn('follow_id', $users);
+      return Follow::whereIn('follow_id', $users)->paginate($perPage);
     }
-    return $sql->paginate($perPage);
   }
 
   /**
