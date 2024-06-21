@@ -5,6 +5,7 @@ namespace Modules\KizunerApi\Services\User\Relations;
 use Modules\Friend\Events\FollowerCreatedEvent;
 use Modules\Kizuner\Contracts\RelationshipRepositoryInterface;
 use Modules\KizunerApi\Transformers\RelationTransform;
+use Modules\KizunerApi\Transformers\FollowerTransform;
 use Modules\Notification\Job\NewFollowJob;
 use Modules\User\Exceptions\MissingInfoException;
 
@@ -62,15 +63,16 @@ class FollowManager
 
     if ($type == 'follower') {
       $data = $this->relationRepository->getFollowers($userId, $perPage);
+      if ($data) {
+        return fractal($data, new RelationTransform());
+      }
     } elseif ($type == 'following') {
       $data = $this->relationRepository->getFollowed($userId, $perPage);
+      if ($data) {
+        return fractal($data, new FollowerTransform());
+      }
     } else {
       throw new MissingInfoException('Type must be: "following" OR "follower"');
-    }
-
-    if ($data) {
-
-      return fractal($data, new RelationTransform());
     }
   }
 }
