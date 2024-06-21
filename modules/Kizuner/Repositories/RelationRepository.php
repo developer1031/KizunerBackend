@@ -65,7 +65,7 @@ class RelationRepository implements RelationshipRepositoryInterface
     }
 
     $searchTerm = app('request')->input('query');
-    // $sql = Follow::where('user_id', $userId);
+    $sql = Follow::all();
     if ($searchTerm) {
       $users = DB::table('users')
         ->whereNot('id', $userId)
@@ -75,8 +75,9 @@ class RelationRepository implements RelationshipRepositoryInterface
         ->pluck('id')
         ->toArray();
 
-      return Follow::whereIn('follow_id', $users)->paginate($perPage);
+      $sql->Follow::whereIn('follow_id', $users);
     }
+    return $sql->paginate($perPage);
   }
 
   /**
