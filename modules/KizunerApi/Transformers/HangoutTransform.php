@@ -226,7 +226,7 @@ class HangoutTransform extends TransformerAbstract
                 'is_range_price'       => $hangout->is_range_price,
                 'min_amount'       => $hangout->min_amount,
                 'max_amount'       => $hangout->max_amount,
-    
+
             ];
         }
         return [
@@ -294,9 +294,6 @@ class HangoutTransform extends TransformerAbstract
     public function includeMedia(Hangout $hangout)
     {
         $media = $hangout->media;
-        if ($media) {
-            return $this->collection($media, new MediaTransform());
-        }
         if ($hangout->is_fake) {
             $upload = new Upload();
             $upload->id = null;
@@ -304,6 +301,9 @@ class HangoutTransform extends TransformerAbstract
             $upload->thumb = $hangout->cover_img;
             $upload->type = 'image';
             return $this->collection($upload, new MediaTransform());
+        }
+        if ($media) {
+            return $this->collection($media, new MediaTransform());
         }
     }
 }

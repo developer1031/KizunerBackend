@@ -48,7 +48,6 @@ class HangoutController
      */
     public function updateHangout(HangoutManager $hangoutManager, HangoutUpdateRequest $request, string $id)
     {
-        Log::info('_-------------Create hangout -----');
         Log::info($request->all());
         if ($request->validated()) {
             try {
