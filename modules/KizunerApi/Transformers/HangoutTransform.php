@@ -294,6 +294,8 @@ class HangoutTransform extends TransformerAbstract
     public function includeMedia(Hangout $hangout)
     {
         $media = $hangout->media;
+        \Log::info($media);
+
         if ($media) {
             return $this->collection($media, new MediaTransform());
         }
@@ -305,5 +307,6 @@ class HangoutTransform extends TransformerAbstract
             $upload->type = 'image';
             return $this->collection($upload, new MediaTransform());
         }
+        \Log::error('here');
     }
 }
