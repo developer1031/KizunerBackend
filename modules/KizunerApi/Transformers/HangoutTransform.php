@@ -294,6 +294,9 @@ class HangoutTransform extends TransformerAbstract
     public function includeMedia(Hangout $hangout)
     {
         $media = $hangout->media;
+        if ($media) {
+            return $this->collection($media, new MediaTransform());
+        }
         if ($hangout->is_fake) {
             $upload = new Upload();
             $upload->id = null;
@@ -301,9 +304,6 @@ class HangoutTransform extends TransformerAbstract
             $upload->thumb = $hangout->cover_img;
             $upload->type = 'image';
             return $this->collection($upload, new MediaTransform());
-        }
-        if ($media) {
-            return $this->collection($media, new MediaTransform());
         }
     }
 }
