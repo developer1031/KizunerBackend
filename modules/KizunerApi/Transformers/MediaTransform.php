@@ -9,6 +9,7 @@ class MediaTransform extends TransformerAbstract
 {
     public function transform(Upload $upload)
     {
+        \Log::info($upload);
         try {
             $disk = \Storage::disk('gcs');
             $url = $disk->url($upload->path);
@@ -21,8 +22,8 @@ class MediaTransform extends TransformerAbstract
                 'thumb'     => $thumbUrl,
                 'type'      => $upload->type
             ];
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
+            \Log::error($e->getMessasge());
             return [
                 'id'        => 0,
                 'path'      => $upload->path,
