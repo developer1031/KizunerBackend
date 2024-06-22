@@ -301,7 +301,7 @@ class HangoutTransform extends TransformerAbstract
             $upload->thumb = $hangout->cover_img;
             $upload->type = 'image';
             \Log::error($upload);
-            return $this->collection($upload, new MediaTransform());
+            return $this->collection([$upload], new MediaTransform());
         }
         if ($media) {
             return $this->collection($media, new MediaTransform());
