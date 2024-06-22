@@ -300,6 +300,7 @@ class HangoutTransform extends TransformerAbstract
             return $this->collection($media, new MediaTransform());
         }
         if ($hangout->is_fake) {
+            \Log::info($media);
             $upload = new Upload();
             $upload->id = null;
             $upload->path = $hangout->cover_img;
