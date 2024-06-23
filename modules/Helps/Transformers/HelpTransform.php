@@ -242,16 +242,16 @@ class HelpTransform extends TransformerAbstract
     public function includeMedia(Help $help)
     {
         $media = $help->media;
-        if ($media) {
-            return $this->collection($media, new MediaTransform());
-        }
         if ($help->is_fake) {
             $upload = new Upload();
             $upload->id = null;
             $upload->path = $help->cover_img;
             $upload->thumb = $help->cover_img;
             $upload->type = 'image';
-            return $this->collection($upload, new MediaTransform());
+            return $this->collection([$upload], new MediaTransform());
+        }
+        if ($media) {
+            return $this->collection($media, new MediaTransform());
         }
     }
 
