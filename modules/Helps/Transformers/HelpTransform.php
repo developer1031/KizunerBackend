@@ -191,7 +191,7 @@ class HelpTransform extends TransformerAbstract
         $help_start = $help->start ? Carbon::create($help->start) : null;
         $help_end = $help->end ? Carbon::create($help->end) : null;
 
-        if (in_array($help->available_status, ['no_time', 'combine'])) {
+        if (in_array($help->available_status, ['no_time', 'combine']) || $help->is_fake) {
             $show_help = ($help->user_id != app('request')->user()->id);
             $help_start = null;
             $help_end = null;
