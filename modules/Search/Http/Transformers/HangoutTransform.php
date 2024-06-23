@@ -9,22 +9,20 @@ class HangoutTransform extends TransformerAbstract
 {
     public function transform($item)
     {
-        if( in_array($item->available_status, ['no_time', 'combine']) ) {
+        if (in_array($item->available_status, ['no_time', 'combine']) || $item->is_fake) {
             $hangout_start = null;
             $hangout_end = null;
-        }
-        else {
+        } else {
             $hangout_start = Carbon::create($item->hangout_start);
             $hangout_end = Carbon::create($item->hangout_end);
         }
 
         $thumb = null;
         $path = null;
-        if($item->is_fake) {
+        if ($item->is_fake) {
             $thumb = $item->cover_img ? \Storage::disk('gcs')->url($item->cover_img) : null;
             $path = $thumb;
-        }
-        else {
+        } else {
             $thumb = $item->hangout_cover_thumb ? \Storage::disk('gcs')->url($item->hangout_cover_thumb) : null;
             $path = $item->hangout_cover_path  ? \Storage::disk('gcs')->url($item->hangout_cover_path) : null;
         }
@@ -61,4 +59,3 @@ class HangoutTransform extends TransformerAbstract
         ];
     }
 }
-
