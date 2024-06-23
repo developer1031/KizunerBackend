@@ -14,26 +14,25 @@ use Modules\KizunerApi\Transformers\MediaTransform;
 use Modules\KizunerApi\Transformers\SkillTransform;
 use Modules\KizunerApi\Transformers\UserTransform;
 
-class HelpTransform extends TransformerAbstract {
+class HelpTransform extends TransformerAbstract
+{
 
     public function transform($item)
     {
-        if( in_array($item->available_status, ['no_time', 'combine']) ) {
+        if (in_array($item->available_status, ['no_time', 'combine']) || $item->is_fake) {
             $help_start = null;
             $help_end = null;
-        }
-        else {
+        } else {
             $help_start = Carbon::create($item->help_start);
             $help_end = Carbon::create($item->help_end);
         }
 
         $thumb = null;
         $path = null;
-        if($item->is_fake) {
+        if ($item->is_fake) {
             $thumb = $item->cover_img ? \Storage::disk('gcs')->url($item->cover_img) : null;
             $path = $thumb;
-        }
-        else {
+        } else {
             $thumb = $item->help_cover_thumb ? \Storage::disk('gcs')->url($item->help_cover_thumb) : null;
             $path = $item->help_cover_path  ? \Storage::disk('gcs')->url($item->help_cover_path) : null;
         }

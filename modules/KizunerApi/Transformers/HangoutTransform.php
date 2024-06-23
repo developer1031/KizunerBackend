@@ -165,7 +165,7 @@ class HangoutTransform extends TransformerAbstract
 
         $hangout_start = $hangout->start ? Carbon::create($hangout->start) : null;
         $hangout_end = $hangout->end ? Carbon::create($hangout->end) : null;
-        if (in_array($hangout->available_status, ['no_time', 'combine'])) {
+        if (in_array($hangout->available_status, ['no_time', 'combine']) || $hangout->is_fake) {
             $show_hangout = ($hangout->user_id != app('request')->user()->id);
             $hangout_start = null;
             $hangout_end = null;
