@@ -63,6 +63,7 @@ app.get("/k", (req, res) => {
         // res.redirect('https://play.google.com/store/apps/details?id=com.yourapp');
     } else if (/iphone|ipad|ipod/i.test(userAgent)) {
         storeLink = appStoreLink
+        storeLink = `kizunerapp://${k}/${id}`
         // res.redirect('https://apps.apple.com/us/app/yourapp/idYOUR_APP_ID');
     }
 
