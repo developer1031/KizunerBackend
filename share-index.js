@@ -9,6 +9,7 @@ app.use(cors());
 
 const appStoreLink = "https://apps.apple.com/us/app/kizuner/id1524617131";
 const playStoreLink = "https://play.google.com/store/apps/details?id=com.kizuner";
+const apiLink = "https://kizuner-st.inapps.technology/api/share/";
 
 const buildShareContent = function (data) {
     const imageUrl = data.image_url.replace("https", "http");
@@ -20,14 +21,6 @@ const buildShareContent = function (data) {
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <meta property="fb:app_id" content="1239520603104986" />
-            <meta property="al:android:package" content="com.kizuner" />
-            <meta property="al:android:app_name" content="Kizuner" />
-            <meta property="al:android:url" content="kizunerapp://${data.kind}/${data.id}" />
-            <meta property="al:ios:url" content="kizunerapp://${data.kind}/${data.id}" />
-            <meta property="al:ios:app_store_id" content="1524617131" />
-            <meta property="al:ios:app_name" content="Kizuner" />
-            <meta property="al:web:should_fallback" content="true" />
-            <meta property="al:web:url" content="https://kizuner.com" />
             <meta property="og:title" content="${data.title}" />
             <meta property="og:description" content="${data.description}" />
             <meta property="og:type" content="website" />
@@ -37,24 +30,15 @@ const buildShareContent = function (data) {
             <meta property="og:image:secure_url" content="${data.image_url}" />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
-            <meta name="twitter:card" content="app" />
-            <meta name="twitter:site" content="@kizuner" />
+            <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:title" content="${data.title}" />
             <meta name="twitter:description" content="${data.description}" />
             <meta name="twitter:image" content="${data.image_url}" />
-            <meta name="twitter:app:name:iphone" content="Kizuner">
-            <meta name="twitter:app:id:iphone" content="1524617131">
-            <meta name="twitter:app:url:iphone" content="kizunerapp://${data.kind}/${data.id}" />
-            <meta name="twitter:app:id:ipad" content="1524617131">
-            <meta name="twitter:app:url:ipad" content="kizunerapp://${data.kind}/${data.id}" />
-            <meta name="twitter:app:name:googleplay" content="Kizuner">
-            <meta name="twitter:app:id:googleplay" content="com.kizuner">
-            <meta name="twitter:app:url:googleplay" content="kizunerapp://${data.kind}/${data.id}" />
             <title>${data.title}</title>
         </head>
         <body>
         <script>
-            window.location.href = "${data.storeLink}";
+            window.location.href = "${data.dynamicLink}";
         </script>
         </body>
         </html>
@@ -72,6 +56,7 @@ app.get("/k", (req, res) => {
         image_id && image_id !== "undefined"
             ? `https://storage.googleapis.com/kizuner-storage-live/${image_id}`
             : "https://kizuner.com/wp-content/uploads/2020/07/Untitled-1.jpg";
+    const dynamicLink = `${apiLink}${k}/${id}`;
 
     let storeLink = playStoreLink
     if (/android/i.test(userAgent)) {
@@ -88,7 +73,8 @@ app.get("/k", (req, res) => {
             title,
             description,
             image_url,
-            storeLink
+            storeLink,
+            dynamicLink
         })
     );
 });
