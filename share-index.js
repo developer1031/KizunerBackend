@@ -30,6 +30,7 @@ const buildShareContent = function (data) {
             <meta property="og:image:secure_url" content="${data.image_url}" />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
+            <meta name="twitter:site" content="@kizuner" />
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:title" content="${data.title}" />
             <meta name="twitter:description" content="${data.description}" />
@@ -38,7 +39,11 @@ const buildShareContent = function (data) {
         </head>
         <body>
         <script>
-            window.location.href = "${data.storeLink}";
+            window.location.href = "kizunerapp://${k}/${id}";
+
+            setTimeout(function() {
+                window.location.href = "${data.storeLink}";
+            }, 2000);
         </script>
         </body>
         </html>
@@ -63,7 +68,6 @@ app.get("/k", (req, res) => {
         // res.redirect('https://play.google.com/store/apps/details?id=com.yourapp');
     } else if (/iphone|ipad|ipod/i.test(userAgent)) {
         storeLink = appStoreLink
-        storeLink = `kizunerapp://${k}/${id}`
         // res.redirect('https://apps.apple.com/us/app/yourapp/idYOUR_APP_ID');
     }
 
