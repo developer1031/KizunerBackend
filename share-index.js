@@ -39,9 +39,13 @@ const buildShareContent = function (data) {
         </head>
         <body>
         <script>
-            window.location.href = "kizunerapp://${data.kind}/${data.id}";
+            var iframe = document.createElement("iframe");
+            iframe.style.display = "none";
+            iframe.src = "kizunerapp://${data.kind}/${data.id}";
+            // window.location.href = "kizunerapp://${data.kind}/${data.id}";
 
             setTimeout(function() {
+                document.body.removeChild(iframe);
                 window.location.href = "${data.storeLink}";
             }, 3000);
         </script>
