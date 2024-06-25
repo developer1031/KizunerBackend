@@ -101,7 +101,8 @@ class HelpQuery
 
     if ($this->paymentMethod) {
       //$categories = Category::where('name', 'like', '%'.$this->category.'%')->get()->pluck('id')->toArray();
-      $sql->where('helps.payment_method', $this->paymentMethod);
+      // $sql->where('helps.payment_method', $this->paymentMethod);
+      $sql->whereIn('helps.payment_method', [$this->paymentMethod, 'both']);
     }
 
     if ($this->offerType) {

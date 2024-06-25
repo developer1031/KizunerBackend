@@ -46,10 +46,13 @@ class HelpEventSubscriber extends AbstractEventSubscriber
       $help->user_id
     );
 
-    //Generate Casts
-    generateFakeCast($help, 4);
+    // generate fake data if not online
+    if (!in_array($request_help->available_status, ['online'])) {
+      //Generate Casts
+      generateFakeCast($help, 4);
 
-    //Generate Hangout
-    generateFakeHangouts($help, 4, $request_help, $this->feedTimelineRepository);
+      //Generate Hangout
+      generateFakeHangouts($help, 4, $request_help, $this->feedTimelineRepository);
+    }
   }
 }

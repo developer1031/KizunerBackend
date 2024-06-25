@@ -61,7 +61,9 @@ class HangoutEventSubscriber extends AbstractEventSubscriber
     //Generate Casts
     // generateFakeCast($hangout,4);
 
-    //Generate Hangout
-    generateFakeUserHelps($hangout, 3, $request_hangout, $this->feedTimelineRepository);
+    //Generate Hangout if not online
+    if (!in_array($request_hangout->available_status, ['online'])) {
+      generateFakeUserHelps($hangout, 3, $request_hangout, $this->feedTimelineRepository);
+    }
   }
 }

@@ -32,9 +32,6 @@ class HelpsController
      */
     public function createNewHelp(HelpManager $helpManager, HelpCreateRequest $request)
     {
-        Log::info("createNewHelp");
-        Log::info($request->all());
-
         if ($request->validated()) {
             try {
                 $response = $helpManager->createNewHelp($request);

@@ -107,7 +107,6 @@ class HangoutManager
 
     $hangout = $this->hangoutRepository->create($hangoutData);
 
-    Log::debug($request->available_status);
     /** Save Location */
     if (!in_array($request->available_status, ['online', 'combine'])) {
       $locationData = $request->all([
@@ -120,16 +119,7 @@ class HangoutManager
       $hangout->location()->save($location);
     }
 
-    //        if ($request->get('cover')) {
-    //            /** Save Media */
-    //            $media = $this->mediaRepository->update($request->get('cover'), [
-    //                'type' => Media::$type['hangout']['cover']
-    //            ]);
-    //            $hangout->media()->save($media);
-    //        }
-
     /** Save Media */
-    Log::debug($request->cover);
     if ($request->get('cover')) {
       $cover = $request->get('cover');
       if (str_contains($cover, ';')) {

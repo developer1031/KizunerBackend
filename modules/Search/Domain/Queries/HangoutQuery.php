@@ -102,7 +102,8 @@ class HangoutQuery
 
     if ($this->paymentMethod) {
       //$categories = Category::where('name', 'like', '%'.$this->category.'%')->get()->pluck('id')->toArray();
-      $sql->where('hangouts.payment_method', $this->paymentMethod);
+      // $sql->where('hangouts.payment_method', $this->paymentMethod);
+      $sql->whereIn('hangouts.payment_method', [$this->paymentMethod, 'both']);
     }
 
     if ($this->offerType) {
