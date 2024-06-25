@@ -62,6 +62,7 @@ const buildShareContent = function (data) {
 };
 
 app.get("/k", (req, res) => {
+    const userAgent = req.headers['user-agent'];
     const { t, d, i, k, id } = req.query;
 
     const title = decodeURIComponent(t) || "Do What You Love - Kizuner";
