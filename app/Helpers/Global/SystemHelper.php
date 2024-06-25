@@ -322,12 +322,14 @@ if (!function_exists('generateFakeHangouts')) {
               "cover_img" => $sampleHelp->media ? $sampleHelp->media->path : 'https://picsum.photos/id/' . rand(1, 600) . '/200/300',
               "address" => $format_address,
               "kizuna" => rand(10, 30),
+              "amount" => rand(10, 30),
               "lat" => $new_location['lat'],
               "lng" => $new_location['lng'],
               "start" => Carbon::now()->addDays(15),
               "end" => Carbon::now()->addDays(20),
               "skills" => $skills,
-              "capacity" => $capacity
+              "capacity" => $capacity,
+              "payment_method" => "both"
             ];
 
             $hangout = new \Modules\Kizuner\Models\Hangout($hangoutData);
@@ -459,7 +461,8 @@ if (!function_exists('generateFakeHangouts')) {
             "cover_img" => $sampleHelp->media ? $sampleHelp->media->path : 'https://picsum.photos/id/' . rand(1, 600) . '/200/300',
             "address" => $format_address,
             "kizuna" => rand(10, 30),
-            "amount" => rand(10, 100),
+            "amount" => rand(10, 30),
+            "payment_method" => "both",
             "lat" => $new_location['lat'],
             "lng" => $new_location['lng'],
             "start" => Carbon::now()->addMinutes(45),
@@ -615,13 +618,14 @@ if (!function_exists('generateFakeUserHelps')) {
               "cover_img" => $sampleHelp->media ? $sampleHelp->media->path : 'https://picsum.photos/id/' . rand(1, 600) . '/200/300',
               "address" => $format_address,
               "budget" => rand(10, 30),
-              "amount" => rand(10, 100),
+              "amount" => rand(10, 30),
               "lat" => $new_location['lat'],
               "lng" => $new_location['lng'],
               "start" => Carbon::now()->addDays(15),
               "end" => Carbon::now()->addDays(25),
               "skills" => $skills,
-              "capacity" => $capacity
+              "capacity" => $capacity,
+              "payment_method" => "both"
             ];
 
             $help = new Help($helpData);
@@ -755,7 +759,9 @@ if (!function_exists('generateFakeUserHelps')) {
             "start" => Carbon::now()->addMinutes(45),
             "end" => Carbon::now()->addDays(4),
             "skills" => $skills,
-            "capacity" => $capacity
+            "capacity" => $capacity,
+            "amount" => rand(10, 30),
+            "payment_method" => "both"
           ];
 
           $help = new Help($helpData);
