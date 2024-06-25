@@ -7,6 +7,9 @@ const port = process.env.PORT || 9876;
 
 app.use(cors());
 
+const appStoreLink = "https://apps.apple.com/us/app/kizuner/id1524617131";
+const playStoreLink = "https://play.google.com/store/apps/details?id=com.kizuner";
+
 const buildShareContent = function (data) {
     const imageUrl = data.image_url.replace("https", "http");
 
@@ -51,6 +54,7 @@ const buildShareContent = function (data) {
         </head>
         <body>
         <script>
+            window.location.href = "${data.storeLink}";
         </script>
         </body>
         </html>
@@ -68,13 +72,22 @@ app.get("/k", (req, res) => {
             ? `https://storage.googleapis.com/kizuner-storage-live/${image_id}`
             : "https://kizuner.com/wp-content/uploads/2020/07/Untitled-1.jpg";
 
+    let storeLink = playStoreLink
+    if (/android/i.test(userAgent)) {
+        // res.redirect('https://play.google.com/store/apps/details?id=com.yourapp');
+    } else if (/iphone|ipad|ipod/i.test(userAgent)) {
+        storeLink = appStoreLink
+        // res.redirect('https://apps.apple.com/us/app/yourapp/idYOUR_APP_ID');
+    }
+
     return res.send(
         buildShareContent({
             kind: k,
             id: id,
             title,
             description,
-            image_url
+            image_url,
+            storeLink
         })
     );
 });
