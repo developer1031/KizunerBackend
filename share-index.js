@@ -38,7 +38,7 @@ const buildShareContent = function (data) {
         </head>
         <body>
         <script>
-            window.location.href = "${data.dynamicLink}";
+            window.location.href = "${data.storeLink}";
         </script>
         </body>
         </html>
