@@ -39,11 +39,11 @@ const buildShareContent = function (data) {
         </head>
         <body>
         <script>
-            window.location.href = "kizunerapp://${data.k}/${data.id}";
+            window.location.href = "kizunerapp://${data.kind}/${data.id}";
 
             setTimeout(function() {
                 window.location.href = "${data.storeLink}";
-            }, 2000);
+            }, 3000);
         </script>
         </body>
         </html>
