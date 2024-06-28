@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.kizuner",
+      "sha256_cert_fingerprints": ["68:0B:80:50:E8:76:96:7A:C9:0F:29:91:D3:13:25:42:C9:76:DC:97:88:7D:0D:27:89:CF:B9:9C:70:4F:6E:A9"]
+    }
+  }
+]
