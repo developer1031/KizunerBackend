@@ -31,9 +31,6 @@ class OfferTransform extends TransformerAbstract
             $crypto_currency = $wallet ? $wallet->currency : null;
         }
 
-
-        $wallet = CryptoWalletEntity::where('id', $hangout->crypto_wallet_id)->first();
-
         $transform = [
             'id'                => $offer->id,
             'hangout_id'        => $offer->hangout_id,
