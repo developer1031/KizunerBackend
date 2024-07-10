@@ -769,9 +769,9 @@ class HelpManager
 
         break;
       case 'reject':
-        if ($helpOffer->status != HelpOffer::$status['completed']) {
-          throw new InCorrectFormatException('Cannot change to ' . $request->get('status'));
-        }
+        // if ($helpOffer->status != HelpOffer::$status['completed']) {
+        //   throw new InCorrectFormatException('Cannot change to ' . $request->get('status'));
+        // }
 
         $helpOffer->status = HelpOffer::$status[$request->get('status')];
         $helpOffer->save();

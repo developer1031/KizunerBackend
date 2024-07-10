@@ -27,8 +27,6 @@ class Offer extends Model
         'started'    => 7,
         'bought'    => 8, // unused
         'approved'  => 9,
-
-
         'declined'  => 10,
         'cast_cancelled'  => 11,
         'paid'  => 12,
@@ -96,5 +94,4 @@ class Offer extends Model
     {
         return $this->morphMany(Upload::class, 'uploadable');
     }
-
 }

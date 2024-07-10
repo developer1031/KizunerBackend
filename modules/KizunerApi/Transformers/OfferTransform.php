@@ -25,7 +25,13 @@ class OfferTransform extends TransformerAbstract
         $hangout = $offer->hangout;
         $short_address = $hangout ? ($hangout->location ? $hangout->location->short_address : '') : '';
 
-        
+        $crypto_currency = null;
+        if ($hangout->crypto_wallet_id) {
+            $wallet = CryptoWalletEntity::where('id', $hangout->crypto_wallet_id)->first();
+            $crypto_currency = $wallet ? $wallet->currency : null;
+        }
+
+
         $wallet = CryptoWalletEntity::where('id', $hangout->crypto_wallet_id)->first();
 
         $transform = [
@@ -54,7 +60,7 @@ class OfferTransform extends TransformerAbstract
             // 'invoice_url' => $offer->payment_status == Offer::PAYMENT_STATUS_UNPAID ? $offer->invoice_url : null,
             'invoice_url' => $offer->invoice_url,
             'available_payment_method' => $hangout ? $hangout->payment_method : null,
-            'crypto_currency' => $wallet ? $wallet->currency : null,
+            'crypto_currency' => $crypto_currency,
         ];
 
         if ($this->isSender($offer)) {

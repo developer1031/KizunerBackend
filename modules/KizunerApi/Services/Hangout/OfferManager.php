@@ -413,9 +413,9 @@ class OfferManager
 
                 break;
             case 'reject':
-                if ($offer->status != Offer::$status['completed']) {
-                    throw new InCorrectFormatException('Cannot change to ' . $request->get('status'));
-                }
+                // if ($offer->status != Offer::$status['completed']) {
+                //     throw new InCorrectFormatException('Cannot change to ' . $request->get('status'));
+                // }
 
                 $offer->status = Offer::$status[$request->get('status')];
                 $offer->subject_reject = $request->get('subject_reject');
