@@ -26,9 +26,11 @@ class OfferTransform extends TransformerAbstract
         $short_address = $hangout ? ($hangout->location ? $hangout->location->short_address : '') : '';
 
         $crypto_currency = null;
-        if ($hangout->crypto_wallet_id) {
-            $wallet = CryptoWalletEntity::where('id', $hangout->crypto_wallet_id)->first();
-            $crypto_currency = $wallet ? $wallet->currency : null;
+        if ($hangout != null) {
+            if ($hangout->crypto_wallet_id) {
+                $wallet = CryptoWalletEntity::where('id', $hangout->crypto_wallet_id)->first();
+                $crypto_currency = $wallet ? $wallet->currency : null;
+            }
         }
 
         $transform = [
